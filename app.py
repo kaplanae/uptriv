@@ -1081,7 +1081,16 @@ def api_leaderboard():
 # ============ MAIN ============
 
 # Initialize database on app load (works with gunicorn)
-init_db()
+try:
+    print("Starting database initialization...")
+    print(f"USE_POSTGRES: {USE_POSTGRES}")
+    print(f"DATABASE_URL set: {bool(DATABASE_URL)}")
+    init_db()
+    print("Database initialized successfully!")
+except Exception as e:
+    print(f"ERROR initializing database: {e}")
+    import traceback
+    traceback.print_exc()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
