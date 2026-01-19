@@ -10,9 +10,22 @@
     </div>
 
     <div class="friends-content">
+        <!-- Invite by Email Section -->
+        <div class="friends-section invite-section">
+            <h2>Invite a Friend</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                Send an email invitation to someone who isn't on UpTriv yet
+            </p>
+            <div class="search-box">
+                <input type="email" id="invite-email" placeholder="friend@email.com" autocomplete="off">
+                <button id="invite-btn" class="btn btn-primary">Send Invite</button>
+            </div>
+            <div id="invite-result" class="invite-result"></div>
+        </div>
+
         <!-- Search Section -->
         <div class="friends-section search-section">
-            <h2>Find Friends</h2>
+            <h2>Find Existing Users</h2>
             <div class="search-box">
                 <input type="text" id="user-search" placeholder="Search by username..." autocomplete="off">
                 <button id="search-btn" class="btn btn-primary">Search</button>
@@ -247,10 +260,47 @@ async function removeFriend(userId) {
     }
 }
 
+// Send email invite
+async function sendInvite() {
+    const email = document.getElementById('invite-email').value.trim();
+    const resultDiv = document.getElementById('invite-result');
+
+    if (!email || !email.includes('@')) {
+        resultDiv.innerHTML = '<p class="error-text">Please enter a valid email address</p>';
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/friends/invite', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            resultDiv.innerHTML = `<p class="success-text">${data.message}</p>`;
+            if (data.invite_url) {
+                resultDiv.innerHTML += `<p class="invite-link">Or share this link: <input type="text" value="${data.invite_url}" readonly onclick="this.select()"></p>`;
+            }
+            document.getElementById('invite-email').value = '';
+        } else {
+            resultDiv.innerHTML = `<p class="error-text">${data.error}</p>`;
+        }
+    } catch (e) {
+        console.error('Error sending invite:', e);
+        resultDiv.innerHTML = '<p class="error-text">Failed to send invite</p>';
+    }
+}
+
 // Event listeners
 document.getElementById('search-btn').addEventListener('click', searchUsers);
 document.getElementById('user-search').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') searchUsers();
+});
+document.getElementById('invite-btn').addEventListener('click', sendInvite);
+document.getElementById('invite-email').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendInvite();
 });
 
 // Load data on page load

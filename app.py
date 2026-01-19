@@ -8,12 +8,15 @@ try:
     print("Flask imported")
     from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
     print("Flask-Login imported")
+    from flask_mail import Mail, Message
+    print("Flask-Mail imported")
     from authlib.integrations.flask_client import OAuth
     print("Authlib imported")
     import sqlite3
     import json
     import random
-    from datetime import datetime, date
+    import uuid
+    from datetime import datetime, date, timedelta
     import hashlib
     import os
     from dotenv import load_dotenv
@@ -33,6 +36,15 @@ app.secret_key = os.environ.get('SECRET_KEY', 'uptriv-dev-secret-key-change-in-p
 # Trust proxy headers for HTTPS (Railway runs behind a proxy)
 from werkzeug.middleware.proxy_fix import ProxyFix
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
+# Flask-Mail setup
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@uptriv.app')
+mail = Mail(app)
 
 # Flask-Login setup
 login_manager = LoginManager()
@@ -290,6 +302,18 @@ def init_db():
                 UNIQUE(requester_id, addressee_id)
             )
         ''')
+
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS invites (
+                id SERIAL PRIMARY KEY,
+                inviter_id INTEGER NOT NULL REFERENCES users(id),
+                email TEXT NOT NULL,
+                token TEXT UNIQUE NOT NULL,
+                status TEXT DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                expires_at TIMESTAMP NOT NULL
+            )
+        ''')
     else:
         # SQLite schema
         cur.execute('''
@@ -340,6 +364,19 @@ def init_db():
                 FOREIGN KEY (requester_id) REFERENCES users(id),
                 FOREIGN KEY (addressee_id) REFERENCES users(id),
                 UNIQUE(requester_id, addressee_id)
+            )
+        ''')
+
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS invites (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                inviter_id INTEGER NOT NULL,
+                email TEXT NOT NULL,
+                token TEXT UNIQUE NOT NULL,
+                status TEXT DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                expires_at TIMESTAMP NOT NULL,
+                FOREIGN KEY (inviter_id) REFERENCES users(id)
             )
         ''')
 
@@ -615,12 +652,47 @@ def google_callback():
             )
             login_user(user)
 
+            # Check for invite token and create friendship
+            invite_token = session.pop('invite_token', None)
+            if invite_token:
+                process_invite(invite_token, user.id, user_info['email'])
+
             return redirect(url_for('play'))
     except Exception as e:
         print(f"OAuth error: {e}")
         return redirect(url_for('index'))
 
     return redirect(url_for('index'))
+
+
+def process_invite(token, new_user_id, email):
+    """Process an invite after user signs up."""
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    # Get the invite
+    cur.execute(f"SELECT * FROM invites WHERE token = {ph} AND status = 'pending'", (token,))
+    invite = cur.fetchone()
+
+    if invite:
+        inviter_id = invite['inviter_id'] if hasattr(invite, '__getitem__') and isinstance(invite, dict) else invite[1]
+
+        # Mark invite as accepted
+        cur.execute(f"UPDATE invites SET status = 'accepted' WHERE token = {ph}", (token,))
+
+        # Create automatic friendship (already accepted)
+        try:
+            cur.execute(f'''
+                INSERT INTO friendships (requester_id, addressee_id, status)
+                VALUES ({ph}, {ph}, 'accepted')
+            ''', (inviter_id, new_user_id))
+        except:
+            pass  # Friendship might already exist
+
+        conn.commit()
+
+    conn.close()
 
 
 @app.route('/auth/logout')
@@ -1041,6 +1113,117 @@ def api_remove_friend(friend_id):
     conn.close()
 
     return jsonify({'success': True})
+
+
+@app.route('/api/friends/invite', methods=['POST'])
+@login_required
+def api_invite_friend():
+    """Send an email invite to a friend."""
+    data = request.get_json()
+    email = data.get('email', '').strip().lower()
+
+    if not email or '@' not in email:
+        return jsonify({'error': 'Invalid email address'}), 400
+
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    # Check if user already exists with this email
+    cur.execute(f'SELECT id FROM users WHERE email = {ph}', (email,))
+    existing_user = cur.fetchone()
+
+    if existing_user:
+        # User exists - just send a friend request instead
+        conn.close()
+        return jsonify({'error': 'User already exists. Send a friend request instead.', 'user_exists': True}), 400
+
+    # Check if invite already sent
+    cur.execute(f"SELECT id FROM invites WHERE inviter_id = {ph} AND email = {ph} AND status = 'pending'",
+               (current_user.id, email))
+    existing_invite = cur.fetchone()
+
+    if existing_invite:
+        conn.close()
+        return jsonify({'error': 'Invite already sent to this email'}), 400
+
+    # Create invite token
+    token = str(uuid.uuid4())
+    expires_at = datetime.now() + timedelta(days=7)
+
+    cur.execute(f'''
+        INSERT INTO invites (inviter_id, email, token, expires_at)
+        VALUES ({ph}, {ph}, {ph}, {ph})
+    ''', (current_user.id, email, token, expires_at))
+
+    conn.commit()
+    conn.close()
+
+    # Send invite email
+    invite_url = url_for('accept_invite', token=token, _external=True)
+
+    try:
+        msg = Message(
+            subject=f'{current_user.username} invited you to UpTriv!',
+            recipients=[email],
+            html=f'''
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #667eea;">You're Invited to UpTriv!</h1>
+                <p><strong>{current_user.username}</strong> wants you to join them on UpTriv - a daily brain training trivia game.</p>
+                <p>Challenge yourself with 6 questions across different categories:</p>
+                <ul>
+                    <li>World & U.S. News</li>
+                    <li>History</li>
+                    <li>Science & Nature</li>
+                    <li>Entertainment</li>
+                    <li>Sports</li>
+                    <li>Geography</li>
+                </ul>
+                <p>
+                    <a href="{invite_url}" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                        Join UpTriv
+                    </a>
+                </p>
+                <p style="color: #666; font-size: 14px;">This invite expires in 7 days.</p>
+            </div>
+            '''
+        )
+        mail.send(msg)
+        return jsonify({'success': True, 'message': f'Invite sent to {email}'})
+    except Exception as e:
+        print(f"Email error: {e}")
+        return jsonify({'success': True, 'message': f'Invite created. Share this link: {invite_url}', 'invite_url': invite_url})
+
+
+@app.route('/invite/<token>')
+def accept_invite(token):
+    """Handle invite link - redirect to sign up."""
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    cur.execute(f"SELECT * FROM invites WHERE token = {ph} AND status = 'pending'", (token,))
+    invite = cur.fetchone()
+
+    if not invite:
+        conn.close()
+        return redirect(url_for('index'))
+
+    # Check if expired
+    expires_at = invite['expires_at'] if hasattr(invite, '__getitem__') else invite[6]
+    if isinstance(expires_at, str):
+        expires_at = datetime.fromisoformat(expires_at)
+
+    if datetime.now() > expires_at:
+        conn.close()
+        return redirect(url_for('index'))
+
+    # Store invite token in session for after OAuth
+    session['invite_token'] = token
+    conn.close()
+
+    # Redirect to Google sign in
+    return redirect(url_for('google_login'))
 
 
 # ============ LEADERBOARD API ============

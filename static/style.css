@@ -1856,6 +1856,38 @@ footer {
     }
 }
 
+/* Invite Result Styles */
+.invite-result {
+    margin-top: 1rem;
+}
+
+.invite-result .success-text {
+    color: var(--success);
+    font-weight: 500;
+}
+
+.invite-result .error-text {
+    color: var(--error);
+    font-weight: 500;
+}
+
+.invite-result .invite-link {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.invite-result .invite-link input {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+}
+
 /* ============================================
    LEADERBOARD PAGE
    ============================================ */
