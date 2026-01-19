@@ -1090,7 +1090,7 @@ def get_share_text():
     date_obj = datetime.strptime(game_date, '%Y-%m-%d')
     date_str = date_obj.strftime('%b %d, %Y')
 
-    share_text = f"UpTriv {date_str}\n{score}/{total}\n" + "".join(squares) + "\nhttps://www.uptriv.com"
+    share_text = f"UpTriv {date_str}\n" + "".join(squares) + "\nhttps://www.uptriv.com"
 
     return jsonify({'share_text': share_text, 'score': score, 'total': total})
 
