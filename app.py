@@ -30,6 +30,10 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'uptriv-dev-secret-key-change-in-production')
 
+# Trust proxy headers for HTTPS (Railway runs behind a proxy)
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
 # Flask-Login setup
 login_manager = LoginManager()
 login_manager.init_app(app)
