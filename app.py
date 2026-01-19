@@ -433,13 +433,14 @@ def get_or_create_user_by_google(google_id, email, name, picture):
 
 
 def get_daily_questions_for_user(user_id):
-    """Get or generate questions for today for a specific user, excluding questions they've already seen."""
+    """Get today's questions - same for all users (like Wordle/Connections)."""
     today = get_user_today().isoformat()
     conn = get_db()
     cur = conn.cursor()
 
     placeholder = '%s' if USE_POSTGRES else '?'
 
+    # Check if user already has today's questions cached
     cur.execute(f'SELECT questions_json FROM daily_questions WHERE game_date = {placeholder} AND user_id = {placeholder}', (today, user_id))
     result = cur.fetchone()
 
@@ -447,19 +448,13 @@ def get_daily_questions_for_user(user_id):
         conn.close()
         return json.loads(result['questions_json'])
 
-    cur.execute(f'SELECT DISTINCT question FROM game_results WHERE user_id = {placeholder}', (user_id,))
-    seen_questions = set(row['question'] for row in cur.fetchall())
-
-    seed = int(hashlib.md5(f"{today}-{user_id}".encode()).hexdigest(), 16)
+    # Generate questions using ONLY the date as seed - same for everyone
+    seed = int(hashlib.md5(today.encode()).hexdigest(), 16)
     random.seed(seed)
 
     questions = []
     for cat_key in ['news', 'history', 'science', 'entertainment', 'sports', 'geography']:
-        available = [q for q in QUESTIONS[cat_key] if q['q'] not in seen_questions]
-        if not available:
-            available = QUESTIONS[cat_key]
-
-        q = random.choice(available)
+        q = random.choice(QUESTIONS[cat_key])
         questions.append({
             'category': cat_key,
             'category_name': CATEGORIES[cat_key]['name'],
@@ -469,6 +464,7 @@ def get_daily_questions_for_user(user_id):
 
     random.shuffle(questions)
 
+    # Cache for this user
     cur.execute(
         f'INSERT INTO daily_questions (game_date, user_id, questions_json) VALUES ({placeholder}, {placeholder}, {placeholder})',
         (today, user_id, json.dumps(questions))
