@@ -77,7 +77,7 @@
                     </g>
                 </svg>
             </div>
-            <h2>Ready to Play, <span id="player-name"></span>?</h2>
+            <h2>Ready to Play<span id="player-name-wrapper">, <span id="player-name"></span></span>?</h2>
             <p>6 questions, 10 seconds each. Let's train your brain!</p>
             <button id="start-game-btn" class="play-button" style="margin: 1rem auto 0; display: flex;">
                 <span>Start Game</span>
@@ -241,18 +241,19 @@ async function initGame() {
         const data = await res.json();
 
         if (data.authenticated) {
-            // Google user
+            // Google user - show their name
             currentUsername = data.user.username;
             isGoogleUser = true;
             document.getElementById('player-name').textContent = currentUsername;
+            document.getElementById('player-name-wrapper').style.display = 'inline';
             localStorage.setItem('uptriv_username', currentUsername);
             showScreen('ready-screen');
         } else {
-            // Anonymous user - create or get session
+            // Anonymous user - create or get session, hide name
             const session = await getOrCreateSession();
             if (session) {
                 currentUsername = session.username;
-                document.getElementById('player-name').textContent = currentUsername;
+                document.getElementById('player-name-wrapper').style.display = 'none';
                 showScreen('ready-screen');
             } else {
                 // Fallback to login screen if session creation fails
@@ -266,7 +267,7 @@ async function initGame() {
             const session = await getOrCreateSession();
             if (session) {
                 currentUsername = session.username;
-                document.getElementById('player-name').textContent = currentUsername;
+                document.getElementById('player-name-wrapper').style.display = 'none';
                 showScreen('ready-screen');
             } else {
                 showScreen('login-screen');
