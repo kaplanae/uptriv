@@ -426,7 +426,7 @@ def get_or_create_user_by_google(google_id, email, name, picture):
 
 def get_daily_questions_for_user(user_id):
     """Get or generate questions for today for a specific user, excluding questions they've already seen."""
-    today = date.today().isoformat()
+    today = get_user_today().isoformat()
     conn = get_db()
     cur = conn.cursor()
 
@@ -562,9 +562,19 @@ def calculate_user_stats(user_id):
     }
 
 
+def get_user_today():
+    """Get today's date adjusted for US Eastern timezone."""
+    from datetime import timezone
+    utc_now = datetime.now(timezone.utc)
+    # Offset for US Eastern (UTC-5, or UTC-4 during DST)
+    # Simple approach: subtract 5 hours from UTC
+    eastern_offset = timedelta(hours=-5)
+    eastern_now = utc_now + eastern_offset
+    return eastern_now.date()
+
 def has_played_today(user_id):
     """Check if user has already played today."""
-    today = date.today().isoformat()
+    today = get_user_today().isoformat()
     conn = get_db()
     cur = conn.cursor()
     placeholder = '%s' if USE_POSTGRES else '?'
