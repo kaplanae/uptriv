@@ -22,13 +22,25 @@ login_manager.login_view = 'login_page'
 
 # OAuth setup
 oauth = OAuth(app)
-google = oauth.register(
-    name='google',
-    client_id=os.environ.get('GOOGLE_CLIENT_ID'),
-    client_secret=os.environ.get('GOOGLE_CLIENT_SECRET'),
-    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-    client_kwargs={'scope': 'openid email profile'}
-)
+google = None
+
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+
+print(f"GOOGLE_CLIENT_ID set: {bool(GOOGLE_CLIENT_ID)}")
+print(f"GOOGLE_CLIENT_SECRET set: {bool(GOOGLE_CLIENT_SECRET)}")
+
+if GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET:
+    google = oauth.register(
+        name='google',
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={'scope': 'openid email profile'}
+    )
+    print("Google OAuth registered successfully")
+else:
+    print("WARNING: Google OAuth not configured - missing credentials")
 
 # Database configuration
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
