@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - UpTriv{% endblock %}
+
+{% block content %}
+<div class="leaderboard-container">
+    <div class="leaderboard-header">
+        <h1>Leaderboard</h1>
+        <p class="leaderboard-subtitle">See how you rank against your friends</p>
+    </div>
+
+    <div class="leaderboard-tabs">
+        <button class="tab-btn active" data-category="overall">Overall</button>
+        <button class="tab-btn" data-category="news">News</button>
+        <button class="tab-btn" data-category="history">History</button>
+        <button class="tab-btn" data-category="science">Science</button>
+        <button class="tab-btn" data-category="entertainment">Entertainment</button>
+        <button class="tab-btn" data-category="sports">Sports</button>
+        <button class="tab-btn" data-category="geography">Geography</button>
+    </div>
+
+    <div id="leaderboard-content">
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading leaderboard...</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let leaderboardData = null;
+let currentCategory = 'overall';
+let currentUsername = null;
+
+// Load leaderboard data
+async function loadLeaderboard() {
+    try {
+        // Get current user
+        const meRes = await fetch('/api/me');
+        const meData = await meRes.json();
+        if (meData.authenticated) {
+            currentUsername = meData.user.username;
+        }
+
+        const res = await fetch('/api/leaderboard');
+        const data = await res.json();
+
+        if (data.error) {
+            showNoFriendsMessage();
+            return;
+        }
+
+        leaderboardData = data;
+        renderLeaderboard();
+    } catch (e) {
+        console.error('Error loading leaderboard:', e);
+        showNoFriendsMessage();
+    }
+}
+
+function showNoFriendsMessage() {
+    const container = document.getElementById('leaderboard-content');
+    container.innerHTML = `
+        <div class="no-friends-message">
+            <h3>No Friends Yet</h3>
+            <p>Add some friends to see how you compare on the leaderboard!</p>
+            <a href="{{ url_for('friends_page') }}" class="btn btn-primary">Find Friends</a>
+        </div>
+    `;
+}
+
+function renderLeaderboard() {
+    const container = document.getElementById('leaderboard-content');
+
+    let rankings;
+    if (currentCategory === 'overall') {
+        rankings = leaderboardData.overall || [];
+    } else {
+        rankings = (leaderboardData.categories && leaderboardData.categories[currentCategory]) || [];
+    }
+
+    if (rankings.length === 0) {
+        container.innerHTML = `
+            <div class="no-friends-message">
+                <h3>No Data Yet</h3>
+                <p>Play some games to see rankings for this category!</p>
+                <a href="{{ url_for('play') }}" class="btn btn-primary">Play Now</a>
+            </div>
+        `;
+        return;
+    }
+
+    const rows = rankings.map((entry, index) => {
+        const rank = index + 1;
+        const rankClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+        const isCurrentUser = entry.username === currentUsername;
+        const pct = entry.percentage || 0;
+        const pctClass = pct >= 70 ? 'high' : pct >= 50 ? 'medium' : 'low';
+
+        return `
+            <div class="leaderboard-row ${isCurrentUser ? 'current-user' : ''}" style="animation-delay: ${index * 0.05}s">
+                <div class="rank ${rankClass}">#${rank}</div>
+                <div class="user-info">
+                    <img src="${entry.profile_picture || '/static/default-avatar.png'}"
+                         alt="${entry.username}" class="leaderboard-avatar">
+                    <span class="leaderboard-username">${entry.username}${isCurrentUser ? ' (You)' : ''}</span>
+                </div>
+                <div class="games-count">${entry.games_played || 0} games</div>
+                <div class="score-pct ${pctClass}">${pct.toFixed(0)}%</div>
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = `<div class="leaderboard-table">${rows}</div>`;
+}
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        if (leaderboardData) {
+            renderLeaderboard();
+        }
+    });
+});
+
+// Load data on page load
+loadLeaderboard();
+</script>
+{% endblock %}

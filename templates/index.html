@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}UpTriv - Daily Trivia Challenge{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <div class="hero-brain">
+            <svg viewBox="0 0 200 195" fill="none" xmlns="http://www.w3.org/2000/svg" class="hero-brain-svg">
+                <defs>
+                    <filter id="hero-shadow" x="-10%" y="-10%" width="120%" height="130%">
+                        <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+                    </filter>
+                </defs>
+                <g transform="translate(10, 5)" filter="url(#hero-shadow)">
+                    <!-- FRONTAL LOBE - News (coral red) -->
+                    <path d="M30 90C25 70 30 45 50 27.5C70 12.5 100 7.5 115 11L100 37.5C85 42.5 72.5 55 65 72.5C57.5 87.5 50 95 37.5 97.5C32.5 95 28 92 30 90Z"
+                        fill="#FF6B6B" stroke="#FF6B6B" stroke-width="1" class="brain-section s1"/>
+                    <!-- PARIETAL LOBE - History (teal) -->
+                    <path d="M115 11C140 15 160 25 172.5 45C180 60 182.5 77.5 180 92.5L155 87.5C145 77.5 130 70 115 67.5C100 65 95 55 100 37.5L115 11Z"
+                        fill="#4ECDC4" stroke="#4ECDC4" stroke-width="1" class="brain-section s2"/>
+                    <!-- TEMPORAL LOBE - Science (blue) -->
+                    <path d="M37.5 97.5C50 95 57.5 87.5 65 72.5C72.5 57.5 82.5 50 97.5 50L97.5 80C87.5 87.5 80 100 77.5 115C75 130 72.5 137.5 72.5 147.5C55 140 40 127.5 32.5 110C27.5 97.5 30 95 37.5 97.5Z"
+                        fill="#45B7D1" stroke="#45B7D1" stroke-width="1" class="brain-section s3"/>
+                    <!-- OCCIPITAL LOBE - Entertainment (green) -->
+                    <path d="M180 92.5C182.5 107.5 175 125 160 137.5C150 147.5 135 150 130 147.5L127.5 122.5C135 112.5 145 100 155 87.5L180 92.5Z"
+                        fill="#96CEB4" stroke="#96CEB4" stroke-width="1" class="brain-section s4"/>
+                    <!-- CEREBELLUM - Sports (yellow) -->
+                    <path d="M72.5 147.5C72.5 137.5 75 127.5 77.5 115C80 100 87.5 87.5 97.5 80L97.5 50C112.5 50 125 57.5 115 67.5C130 70 145 77.5 155 87.5C145 100 135 112.5 127.5 122.5L130 147.5C120 140 100 137.5 87.5 140C77.5 142.5 72.5 145 72.5 147.5Z"
+                        fill="#FFEAA7" stroke="#FFEAA7" stroke-width="1" class="brain-section s5"/>
+                    <!-- BRAIN STEM - Geography (plum) -->
+                    <path d="M77.5 147.5C87.5 142.5 100 140 110 140C120 140 127.5 142.5 130 147.5C120 155 117.5 165 120 175L87.5 175C90 165 87.5 155 77.5 147.5Z"
+                        fill="#DDA0DD" stroke="#DDA0DD" stroke-width="1" class="brain-section s6"/>
+                    <!-- Brain folds for realism -->
+                    <g stroke="rgba(255,255,255,0.5)" stroke-linecap="round" fill="none">
+                        <path d="M45 35 Q60 27.5, 80 25" stroke-width="2"/>
+                        <path d="M40 50 Q55 42.5, 75 40" stroke-width="2"/>
+                        <path d="M37.5 65 Q52.5 60, 70 57.5" stroke-width="1.5"/>
+                        <path d="M120 20 Q140 22.5, 160 35" stroke-width="2"/>
+                        <path d="M125 35 Q142.5 40, 165 55" stroke-width="2"/>
+                        <path d="M130 50 Q145 57.5, 170 72.5" stroke-width="1.5"/>
+                        <path d="M42.5 100 Q55 105, 65 120" stroke-width="1.5"/>
+                        <path d="M47.5 115 Q57.5 122.5, 67.5 135" stroke-width="1.5"/>
+                        <path d="M160 100 Q167.5 110, 165 125" stroke-width="1.5"/>
+                        <path d="M82.5 115 Q100 112.5, 120 115" stroke-width="1.5"/>
+                        <path d="M87.5 127.5 Q102.5 125, 122.5 127.5" stroke-width="1.5"/>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <h1>Train Your Brain Daily</h1>
+        <p class="hero-subtitle">6 categories. 6 questions. 1 minute. How smart are you?</p>
+        <a href="{{ url_for('play') }}" class="cta-button">
+            <span>Play Today's Challenge</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </a>
+    </div>
+</div>
+
+<section class="categories-preview">
+    <h2>6 Categories to Master</h2>
+    <div class="categories-grid">
+        {% for key, cat in categories.items() %}
+        <div class="category-card" style="--cat-color: {{ cat.color }}">
+            <div class="category-icon">
+                {% if key == 'news' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                {% elif key == 'history' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 21h18M5 21V7l8-4 8 4v14M9 21v-6h6v6"/>
+                </svg>
+                {% elif key == 'science' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 3h6M12 3v7m0 0l-4 9a1 1 0 001 1h6a1 1 0 001-1l-4-9z"/>
+                </svg>
+                {% elif key == 'entertainment' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="2.18"/>
+                    <path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/>
+                </svg>
+                {% elif key == 'sports' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9H4.5a2.5 2.5 0 010-5H6M18 9h1.5a2.5 2.5 0 000-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0012 0V2z"/>
+                </svg>
+                {% elif key == 'geography' %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                {% endif %}
+            </div>
+            <h3>{{ cat.name }}</h3>
+            <p class="category-topics">
+                {% if key == 'news' %}Current events, headlines, famous people
+                {% elif key == 'history' %}Wars, presidents, famous dates
+                {% elif key == 'science' %}Space, animals, physics
+                {% elif key == 'entertainment' %}Movies, TV, music
+                {% elif key == 'sports' %}Teams, records, athletes
+                {% elif key == 'geography' %}Countries, capitals, landmarks
+                {% endif %}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Play Daily</h3>
+            <p>New questions every day. One chance to prove yourself.</p>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Beat the Clock</h3>
+            <p>10 seconds per question. 6 questions. 1 minute total.</p>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Build Your Brain</h3>
+            <p>Track your strengths and weaknesses with your personal brain map.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

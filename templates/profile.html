@@ -1,0 +1,552 @@
+{% extends 'base.html' %}
+
+{% block title %}Brain Map - UpTriv{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Username input for viewing profiles -->
+    <div class="profile-header">
+        <h1>Your Brain Map</h1>
+        <div class="username-lookup">
+            <input type="text" id="lookup-username" placeholder="Enter username to view"
+                   value="{{ view_username if view_username else '' }}">
+            <button id="lookup-btn" class="btn btn-secondary">View</button>
+        </div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loading-state" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading brain data...</p>
+    </div>
+
+    <!-- No data state -->
+    <div id="no-data-state" class="no-data-state" style="display: none;">
+        <div class="no-data-icon">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 15h8M9 9h.01M15 9h.01"/>
+            </svg>
+        </div>
+        <h2>No Data Yet</h2>
+        <p>Play some games to start building your brain map!</p>
+        <a href="{{ url_for('play') }}" class="btn btn-primary">Play Now</a>
+    </div>
+
+    <!-- Profile content -->
+    <div id="profile-content" style="display: none;">
+        <div class="brain-map-section">
+            <div class="brain-visualization">
+                <svg viewBox="0 0 400 380" id="brain-svg" class="brain-svg">
+                    <defs>
+                        <!-- Gradients for each section - fill level controlled by stop offset -->
+                        <linearGradient id="fill-news" x1="0%" y1="100%" x2="0%" y2="0%">
+                            <stop offset="0%" stop-color="#FF6B6B" stop-opacity="1"/>
+                            <stop id="fill-stop-news" offset="0%" stop-color="#FF6B6B" stop-opacity="1"/>
+                            <stop offset="0%" stop-color="#FF6B6B" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#FF6B6B" stop-opacity="0.15"/>
+                        </linearGradient>
+                        <linearGradient id="fill-history" x1="0%" y1="100%" x2="0%" y2="0%">
+                            <stop offset="0%" stop-color="#4ECDC4" stop-opacity="1"/>
+                            <stop id="fill-stop-history" offset="0%" stop-color="#4ECDC4" stop-opacity="1"/>
+                            <stop offset="0%" stop-color="#4ECDC4" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#4ECDC4" stop-opacity="0.15"/>
+                        </linearGradient>
+                        <linearGradient id="fill-science" x1="0%" y1="100%" x2="0%" y2="0%">
+                            <stop offset="0%" stop-color="#45B7D1" stop-opacity="1"/>
+                            <stop id="fill-stop-science" offset="0%" stop-color="#45B7D1" stop-opacity="1"/>
+                            <stop offset="0%" stop-color="#45B7D1" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#45B7D1" stop-opacity="0.15"/>
+                        </linearGradient>
+                        <linearGradient id="fill-entertainment" x1="0%" y1="100%" x2="0%" y2="0%">
+                            <stop offset="0%" stop-color="#96CEB4" stop-opacity="1"/>
+                            <stop id="fill-stop-entertainment" offset="0%" stop-color="#96CEB4" stop-opacity="1"/>
+                            <stop offset="0%" stop-color="#96CEB4" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#96CEB4" stop-opacity="0.15"/>
+                        </linearGradient>
+                        <linearGradient id="fill-sports" x1="0%" y1="100%" x2="0%" y2="0%">
+                            <stop offset="0%" stop-color="#FFEAA7" stop-opacity="1"/>
+                            <stop id="fill-stop-sports" offset="0%" stop-color="#FFEAA7" stop-opacity="1"/>
+                            <stop offset="0%" stop-color="#FFEAA7" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#FFEAA7" stop-opacity="0.15"/>
+                        </linearGradient>
+                        <linearGradient id="fill-geography" x1="0%" y1="100%" x2="0%" y2="0%">
+                            <stop offset="0%" stop-color="#DDA0DD" stop-opacity="1"/>
+                            <stop id="fill-stop-geography" offset="0%" stop-color="#DDA0DD" stop-opacity="1"/>
+                            <stop offset="0%" stop-color="#DDA0DD" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#DDA0DD" stop-opacity="0.15"/>
+                        </linearGradient>
+
+                        <!-- Glow filter -->
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+
+                        <!-- Drop shadow -->
+                        <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+                            <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+                        </filter>
+                    </defs>
+
+                    <g transform="translate(20, 10)" filter="url(#shadow)">
+                        <!-- Brain outline for depth -->
+                        <path class="brain-outline"
+                            d="M60 180
+                               C50 140, 60 90, 100 55
+                               C140 25, 200 15, 250 25
+                               C300 35, 340 55, 355 100
+                               C370 145, 365 190, 345 225
+                               C330 255, 300 280, 270 295
+                               L260 295
+                               C240 310, 235 330, 240 350
+                               L175 350
+                               C180 330, 175 310, 155 295
+                               L145 295
+                               C110 280, 80 255, 65 220
+                               C55 195, 55 185, 60 180Z"
+                            fill="none" stroke="#2a2a3a" stroke-width="3"/>
+
+                        <!-- FRONTAL LOBE - News (coral red) - Front upper portion -->
+                        <path id="section-news" class="brain-section" data-category="news"
+                            d="M60 180
+                               C50 140, 60 90, 100 55
+                               C140 25, 200 15, 230 22
+                               L200 75
+                               C170 85, 145 110, 130 145
+                               C115 175, 100 190, 75 195
+                               C65 190, 58 185, 60 180Z"
+                            fill="url(#fill-news)" stroke="#FF6B6B" stroke-width="2"/>
+
+                        <!-- PARIETAL LOBE - History (teal) - Top back portion -->
+                        <path id="section-history" class="brain-section" data-category="history"
+                            d="M230 22
+                               C280 30, 320 50, 345 90
+                               C360 120, 365 155, 358 185
+                               L310 175
+                               C290 155, 260 140, 230 135
+                               C200 130, 190 110, 200 75
+                               L230 22Z"
+                            fill="url(#fill-history)" stroke="#4ECDC4" stroke-width="2"/>
+
+                        <!-- TEMPORAL LOBE - Science (blue) - Middle side portion -->
+                        <path id="section-science" class="brain-section" data-category="science"
+                            d="M75 195
+                               C100 190, 115 175, 130 145
+                               C145 115, 165 100, 195 100
+                               L195 160
+                               C175 175, 160 200, 155 230
+                               C150 255, 145 275, 145 295
+                               L145 295
+                               C110 280, 80 255, 65 220
+                               C55 195, 60 190, 75 195Z"
+                            fill="url(#fill-science)" stroke="#45B7D1" stroke-width="2"/>
+
+                        <!-- OCCIPITAL LOBE - Entertainment (green) - Back portion -->
+                        <path id="section-entertainment" class="brain-section" data-category="entertainment"
+                            d="M358 185
+                               C365 215, 350 250, 320 275
+                               C295 295, 270 300, 260 295
+                               L255 245
+                               C270 225, 290 200, 310 175
+                               L358 185Z"
+                            fill="url(#fill-entertainment)" stroke="#96CEB4" stroke-width="2"/>
+
+                        <!-- CEREBELLUM - Sports (yellow) - Lower back -->
+                        <path id="section-sports" class="brain-section" data-category="sports"
+                            d="M145 295
+                               C145 275, 150 255, 155 230
+                               C160 205, 175 180, 195 160
+                               L195 100
+                               C225 100, 250 115, 230 135
+                               C260 140, 290 155, 310 175
+                               C290 200, 270 225, 255 245
+                               L260 295
+                               C240 280, 200 275, 175 280
+                               C155 285, 145 290, 145 295Z"
+                            fill="url(#fill-sports)" stroke="#FFEAA7" stroke-width="2"/>
+
+                        <!-- BRAIN STEM - Geography (plum) - Bottom stem -->
+                        <path id="section-geography" class="brain-section" data-category="geography"
+                            d="M155 295
+                               C175 285, 200 280, 220 280
+                               C240 280, 255 285, 260 295
+                               C240 310, 235 330, 240 350
+                               L175 350
+                               C180 330, 175 310, 155 295Z"
+                            fill="url(#fill-geography)" stroke="#DDA0DD" stroke-width="2"/>
+
+                        <!-- Brain folds/sulci for realism -->
+                        <g class="brain-folds" stroke="rgba(255,255,255,0.4)" stroke-linecap="round" fill="none">
+                            <!-- Frontal folds -->
+                            <path d="M90 70 Q120 55, 160 50" stroke-width="2"/>
+                            <path d="M80 100 Q110 85, 150 80" stroke-width="2"/>
+                            <path d="M75 130 Q105 120, 140 115" stroke-width="1.5"/>
+                            <!-- Parietal folds -->
+                            <path d="M240 40 Q280 45, 320 70" stroke-width="2"/>
+                            <path d="M250 70 Q285 80, 330 110" stroke-width="2"/>
+                            <path d="M260 100 Q290 115, 340 145" stroke-width="1.5"/>
+                            <!-- Temporal folds -->
+                            <path d="M85 200 Q110 210, 130 240" stroke-width="1.5"/>
+                            <path d="M95 230 Q115 245, 135 270" stroke-width="1.5"/>
+                            <!-- Occipital folds -->
+                            <path d="M320 200 Q335 220, 330 250" stroke-width="1.5"/>
+                            <!-- Cerebellum lines -->
+                            <path d="M165 230 Q200 225, 240 230" stroke-width="1.5"/>
+                            <path d="M175 255 Q205 250, 245 255" stroke-width="1.5"/>
+                        </g>
+                    </g>
+
+                    <!-- Category labels positioned outside the brain -->
+                    <g class="brain-labels" font-family="'Space Grotesk', sans-serif">
+                        <!-- News label - top left -->
+                        <g class="label-group" data-category="news">
+                            <line x1="95" y1="85" x2="15" y2="45" stroke="#FF6B6B" stroke-width="1" opacity="0.5"/>
+                            <text x="12" y="35" fill="#FF6B6B" font-size="11" font-weight="600">NEWS</text>
+                            <text id="pct-news" x="12" y="52" fill="#FF6B6B" font-size="16" font-weight="700">0%</text>
+                        </g>
+
+                        <!-- History label - top right -->
+                        <g class="label-group" data-category="history">
+                            <line x1="320" y1="75" x2="375" y2="35" stroke="#4ECDC4" stroke-width="1" opacity="0.5"/>
+                            <text x="378" y="28" fill="#4ECDC4" font-size="11" font-weight="600">HISTORY</text>
+                            <text id="pct-history" x="378" y="45" fill="#4ECDC4" font-size="16" font-weight="700">0%</text>
+                        </g>
+
+                        <!-- Science label - left side -->
+                        <g class="label-group" data-category="science">
+                            <line x1="85" y1="220" x2="15" y2="220" stroke="#45B7D1" stroke-width="1" opacity="0.5"/>
+                            <text x="12" y="210" fill="#45B7D1" font-size="11" font-weight="600">SCIENCE</text>
+                            <text id="pct-science" x="12" y="227" fill="#45B7D1" font-size="16" font-weight="700">0%</text>
+                        </g>
+
+                        <!-- Entertainment label - right side -->
+                        <g class="label-group" data-category="entertainment">
+                            <line x1="355" y1="230" x2="385" y2="260" stroke="#96CEB4" stroke-width="1" opacity="0.5"/>
+                            <text x="340" y="280" fill="#96CEB4" font-size="10" font-weight="600">ENTERTAIN</text>
+                            <text id="pct-entertainment" x="340" y="297" fill="#96CEB4" font-size="16" font-weight="700">0%</text>
+                        </g>
+
+                        <!-- Sports label - center -->
+                        <g class="label-group" data-category="sports">
+                            <text x="215" y="195" fill="#FFEAA7" font-size="11" font-weight="600" text-anchor="middle">SPORTS</text>
+                            <text id="pct-sports" x="215" y="212" fill="#FFEAA7" font-size="16" font-weight="700" text-anchor="middle">0%</text>
+                        </g>
+
+                        <!-- Geography label - bottom -->
+                        <g class="label-group" data-category="geography">
+                            <text x="225" y="345" fill="#DDA0DD" font-size="11" font-weight="600" text-anchor="middle">GEOGRAPHY</text>
+                            <text id="pct-geography" x="225" y="362" fill="#DDA0DD" font-size="16" font-weight="700" text-anchor="middle">0%</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="stats-panel">
+                <div class="overall-score">
+                    <div class="overall-circle" id="overall-circle">
+                        <span class="overall-pct" id="overall-pct">0%</span>
+                    </div>
+                    <div class="overall-label">Overall Score</div>
+                    <div class="games-played" id="games-played">0 games played</div>
+                </div>
+
+                <div class="category-bars" id="category-bars">
+                    <!-- Will be populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="insights-section">
+            <div class="insight-card strengths">
+                <h3>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    Strengths
+                </h3>
+                <ul id="strengths-list">
+                    <li class="no-data">Play more to discover your strengths!</li>
+                </ul>
+            </div>
+
+            <div class="insight-card weaknesses">
+                <h3>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    Areas to Improve
+                </h3>
+                <ul id="weaknesses-list">
+                    <li class="no-data">Play more to identify areas for growth!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Subcategory Breakdown Section -->
+        <div class="subcategory-section">
+            <h2 class="section-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 3h18v18H3z"/>
+                    <path d="M3 9h18"/>
+                    <path d="M3 15h18"/>
+                    <path d="M9 3v18"/>
+                </svg>
+                Topic Breakdown
+            </h2>
+            <p class="section-subtitle">Detailed performance by subtopic</p>
+            <div id="subcategory-breakdown" class="subcategory-breakdown">
+                <!-- Will be populated by JS -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const CATEGORIES = {{ categories | tojson }};
+
+async function loadStats(username = null) {
+    document.getElementById('loading-state').style.display = 'flex';
+    document.getElementById('no-data-state').style.display = 'none';
+    document.getElementById('profile-content').style.display = 'none';
+
+    let url = '/api/get-stats';
+    if (username) {
+        url += `?username=${encodeURIComponent(username)}`;
+    }
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        document.getElementById('loading-state').style.display = 'none';
+
+        if (data.total_games === 0) {
+            document.getElementById('no-data-state').style.display = 'flex';
+            return;
+        }
+
+        document.getElementById('profile-content').style.display = 'block';
+        renderStats(data);
+    } catch (err) {
+        console.error(err);
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('no-data-state').style.display = 'flex';
+    }
+}
+
+function renderStats(data) {
+    // Update brain sections with gradient fill based on percentage
+    for (const [cat, stats] of Object.entries(data.categories)) {
+        const section = document.getElementById(`section-${cat}`);
+        const pctLabel = document.getElementById(`pct-${cat}`);
+        const fillStop = document.getElementById(`fill-stop-${cat}`);
+
+        if (pctLabel) {
+            pctLabel.textContent = `${stats.percentage}%`;
+        }
+
+        if (fillStop) {
+            // Update the gradient stop to control fill level
+            // The gradient goes from bottom (0%) to top (100%)
+            // So we set the stop offset to the percentage value
+            fillStop.setAttribute('offset', `${stats.percentage}%`);
+
+            // Also update the third stop (the dim portion start)
+            const nextStop = fillStop.nextElementSibling;
+            if (nextStop) {
+                nextStop.setAttribute('offset', `${stats.percentage}%`);
+            }
+        }
+
+        if (section) {
+            // Add glow effect for high scores
+            if (stats.percentage >= 70) {
+                section.style.filter = 'url(#glow)';
+            } else {
+                section.style.filter = 'none';
+            }
+        }
+    }
+
+    // Update overall score
+    document.getElementById('overall-pct').textContent = `${data.overall_percentage}%`;
+    document.getElementById('games-played').textContent = `${data.total_games} games played`;
+
+    // Color the overall circle
+    const overallCircle = document.getElementById('overall-circle');
+    const pct = data.overall_percentage;
+    let color;
+    if (pct >= 80) color = '#22c55e';
+    else if (pct >= 60) color = '#84cc16';
+    else if (pct >= 40) color = '#eab308';
+    else color = '#ef4444';
+
+    overallCircle.style.background = `conic-gradient(${color} ${pct * 3.6}deg, #2a2a2a ${pct * 3.6}deg)`;
+
+    // Update category bars
+    const barsContainer = document.getElementById('category-bars');
+    barsContainer.innerHTML = '';
+
+    for (const [cat, catMeta] of Object.entries(CATEGORIES)) {
+        const stats = data.categories[cat] || { percentage: 0, total: 0 };
+        const bar = document.createElement('div');
+        bar.className = 'category-bar';
+        bar.innerHTML = `
+            <div class="bar-header">
+                <span class="bar-name" style="color: ${catMeta.color}">${catMeta.name}</span>
+                <span class="bar-pct">${stats.percentage}%</span>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width: ${stats.percentage}%; background: ${catMeta.color}"></div>
+            </div>
+            <div class="bar-detail">${stats.correct}/${stats.total} correct</div>
+        `;
+        barsContainer.appendChild(bar);
+    }
+
+    // Calculate days remaining for insights (need ~10 days for patterns to emerge)
+    const daysPlayed = data.total_games || 0;
+    const daysNeeded = 10;
+    const daysRemaining = Math.max(0, daysNeeded - daysPlayed);
+
+    // Update strengths
+    const strengthsList = document.getElementById('strengths-list');
+    if (data.strengths && data.strengths.length > 0) {
+        strengthsList.innerHTML = data.strengths.map(s => {
+            const catColor = CATEGORIES[s.category]?.color || '#fff';
+            return `<li><span class="insight-tag" style="background: ${catColor}20; color: ${catColor}">${s.name}</span> <span class="insight-pct">${s.percentage}%</span></li>`;
+        }).join('');
+    } else {
+        const msg = daysRemaining > 0
+            ? `Play ${daysRemaining} more day${daysRemaining === 1 ? '' : 's'} to unlock!`
+            : 'Keep playing to discover your strengths!';
+        strengthsList.innerHTML = `<li class="no-data">${msg}</li>`;
+    }
+
+    // Update weaknesses
+    const weaknessesList = document.getElementById('weaknesses-list');
+    if (data.weaknesses && data.weaknesses.length > 0) {
+        weaknessesList.innerHTML = data.weaknesses.map(w => {
+            const catColor = CATEGORIES[w.category]?.color || '#fff';
+            return `<li><span class="insight-tag" style="background: ${catColor}20; color: ${catColor}">${w.name}</span> <span class="insight-pct">${w.percentage}%</span></li>`;
+        }).join('');
+    } else {
+        const msg = daysRemaining > 0
+            ? `Play ${daysRemaining} more day${daysRemaining === 1 ? '' : 's'} to unlock!`
+            : 'Keep playing to identify growth areas!';
+        weaknessesList.innerHTML = `<li class="no-data">${msg}</li>`;
+    }
+
+    // Render subcategory breakdown
+    renderSubcategoryBreakdown(data);
+}
+
+function renderSubcategoryBreakdown(data) {
+    const container = document.getElementById('subcategory-breakdown');
+    container.innerHTML = '';
+
+    if (!data.subcategories || Object.keys(data.subcategories).length === 0) {
+        container.innerHTML = '<p class="no-data-text">Play more games to see your topic breakdown!</p>';
+        return;
+    }
+
+    // Group subcategories by their parent category
+    const subcatsByCategory = {};
+    for (const [subName, subStats] of Object.entries(data.subcategories)) {
+        const cat = subStats.category;
+        if (!subcatsByCategory[cat]) {
+            subcatsByCategory[cat] = [];
+        }
+        subcatsByCategory[cat].push({
+            name: subName,
+            ...subStats
+        });
+    }
+
+    // Create a card for each category that has subcategory data
+    for (const [catKey, catMeta] of Object.entries(CATEGORIES)) {
+        const subs = subcatsByCategory[catKey];
+        if (!subs || subs.length === 0) continue;
+
+        // Sort by total attempts descending
+        subs.sort((a, b) => b.total - a.total);
+
+        const card = document.createElement('div');
+        card.className = 'subcat-card';
+        card.innerHTML = `
+            <div class="subcat-card-header" style="border-left-color: ${catMeta.color}">
+                <span class="subcat-cat-name" style="color: ${catMeta.color}">${catMeta.name}</span>
+                <span class="subcat-expand">▼</span>
+            </div>
+            <div class="subcat-card-body">
+                ${subs.map(sub => {
+                    const pctClass = sub.percentage >= 70 ? 'high' : sub.percentage >= 40 ? 'medium' : 'low';
+                    return `
+                        <div class="subcat-item">
+                            <div class="subcat-info">
+                                <span class="subcat-name">${sub.name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>
+                                <span class="subcat-attempts">${sub.correct}/${sub.total}</span>
+                            </div>
+                            <div class="subcat-bar-track">
+                                <div class="subcat-bar-fill ${pctClass}" style="width: ${sub.percentage}%; background: ${catMeta.color}"></div>
+                            </div>
+                            <span class="subcat-pct ${pctClass}">${sub.percentage}%</span>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+
+        // Toggle expand/collapse
+        const header = card.querySelector('.subcat-card-header');
+        const body = card.querySelector('.subcat-card-body');
+        const expand = card.querySelector('.subcat-expand');
+
+        header.addEventListener('click', () => {
+            body.classList.toggle('collapsed');
+            expand.textContent = body.classList.contains('collapsed') ? '▶' : '▼';
+        });
+
+        container.appendChild(card);
+    }
+}
+
+// Lookup functionality
+document.getElementById('lookup-btn').addEventListener('click', () => {
+    const username = document.getElementById('lookup-username').value.trim();
+    if (username) {
+        loadStats(username);
+        // Update URL without reload
+        history.pushState(null, '', `/profile/${username}`);
+    }
+});
+
+document.getElementById('lookup-username').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        document.getElementById('lookup-btn').click();
+    }
+});
+
+// Initial load
+{% if view_username %}
+loadStats('{{ view_username }}');
+{% else %}
+const savedUsername = localStorage.getItem('uptriv_username');
+if (savedUsername) {
+    document.getElementById('lookup-username').value = savedUsername;
+    loadStats(savedUsername);
+} else {
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('no-data-state').style.display = 'flex';
+}
+{% endif %}
+</script>
+{% endblock %}

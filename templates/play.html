@@ -1,0 +1,477 @@
+{% extends 'base.html' %}
+
+{% block title %}Play - UpTriv{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <!-- Login Screen (for unauthenticated users) -->
+    <div id="login-screen" class="game-screen">
+        <div class="login-card">
+            <div class="login-brain">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="login-shadow" x="-10%" y="-10%" width="120%" height="130%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+                        </filter>
+                    </defs>
+                    <g transform="translate(5, 3)" filter="url(#login-shadow)">
+                        <!-- FRONTAL LOBE - News (coral red) -->
+                        <path d="M15 45C12.5 35 15 22.5 25 14C35 6.5 50 4 57.5 5.5L50 19C42.5 21.5 36 28 33 36.5C29 44 25 48 19 49C16 48 14 46 15 45Z" fill="#FF6B6B" stroke="#FF6B6B" stroke-width="0.5"/>
+                        <!-- PARIETAL LOBE - History (teal) -->
+                        <path d="M57.5 5.5C70 7.5 80 12.5 86 22.5C90 30 91 39 90 46.5L77.5 44C72.5 39 65 35 57.5 34C50 33 47.5 28 50 19L57.5 5.5Z" fill="#4ECDC4" stroke="#4ECDC4" stroke-width="0.5"/>
+                        <!-- TEMPORAL LOBE - Science (blue) -->
+                        <path d="M19 49C25 48 29 44 33 36.5C36 29 41 25 49 25L49 40C44 44 40 50 39 58C38 65 36 69 36 74C27.5 70 20 64 16 55C14 49 15 47 19 49Z" fill="#45B7D1" stroke="#45B7D1" stroke-width="0.5"/>
+                        <!-- OCCIPITAL LOBE - Entertainment (green) -->
+                        <path d="M90 46.5C91 54 87.5 63 80 69C75 74 67.5 75 65 74L64 61.5C68 56.5 72.5 50 77.5 44L90 46.5Z" fill="#96CEB4" stroke="#96CEB4" stroke-width="0.5"/>
+                        <!-- CEREBELLUM - Sports (yellow) -->
+                        <path d="M36 74C36 69 38 64 39 58C40 50 44 44 49 40L49 25C56.5 25 62.5 29 57.5 34C65 35 72.5 39 77.5 44C72.5 50 68 56.5 64 61.5L65 74C60 70 50 69 44 70C39 71 36 73 36 74Z" fill="#FFEAA7" stroke="#FFEAA7" stroke-width="0.5"/>
+                        <!-- BRAIN STEM - Geography (plum) -->
+                        <path d="M39 74C44 71.5 50 70 55 70C60 70 64 71.5 65 74C60 78 59 83 60 88L44 88C45 83 44 78 39 74Z" fill="#DDA0DD" stroke="#DDA0DD" stroke-width="0.5"/>
+                        <!-- Brain folds -->
+                        <g stroke="rgba(255,255,255,0.5)" stroke-linecap="round" fill="none" stroke-width="1">
+                            <path d="M23 18 Q30 14, 40 13"/>
+                            <path d="M20 25 Q28 21, 38 20"/>
+                            <path d="M60 10 Q70 11, 80 18"/>
+                            <path d="M63 18 Q71 20, 82 28"/>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <h2>Sign In to Play</h2>
+            <p>Sign in with Google to track your progress and compete with friends</p>
+            <a href="{{ url_for('google_login') }}" class="auth-btn login-btn" style="margin-top: 1rem; justify-content: center;">
+                <svg width="18" height="18" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Sign In with Google
+            </a>
+        </div>
+    </div>
+
+    <!-- Ready Screen (for authenticated users) -->
+    <div id="ready-screen" class="game-screen">
+        <div class="login-card">
+            <div class="login-brain">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="ready-shadow" x="-10%" y="-10%" width="120%" height="130%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+                        </filter>
+                    </defs>
+                    <g transform="translate(5, 3)" filter="url(#ready-shadow)">
+                        <path d="M15 45C12.5 35 15 22.5 25 14C35 6.5 50 4 57.5 5.5L50 19C42.5 21.5 36 28 33 36.5C29 44 25 48 19 49C16 48 14 46 15 45Z" fill="#FF6B6B" stroke="#FF6B6B" stroke-width="0.5"/>
+                        <path d="M57.5 5.5C70 7.5 80 12.5 86 22.5C90 30 91 39 90 46.5L77.5 44C72.5 39 65 35 57.5 34C50 33 47.5 28 50 19L57.5 5.5Z" fill="#4ECDC4" stroke="#4ECDC4" stroke-width="0.5"/>
+                        <path d="M19 49C25 48 29 44 33 36.5C36 29 41 25 49 25L49 40C44 44 40 50 39 58C38 65 36 69 36 74C27.5 70 20 64 16 55C14 49 15 47 19 49Z" fill="#45B7D1" stroke="#45B7D1" stroke-width="0.5"/>
+                        <path d="M90 46.5C91 54 87.5 63 80 69C75 74 67.5 75 65 74L64 61.5C68 56.5 72.5 50 77.5 44L90 46.5Z" fill="#96CEB4" stroke="#96CEB4" stroke-width="0.5"/>
+                        <path d="M36 74C36 69 38 64 39 58C40 50 44 44 49 40L49 25C56.5 25 62.5 29 57.5 34C65 35 72.5 39 77.5 44C72.5 50 68 56.5 64 61.5L65 74C60 70 50 69 44 70C39 71 36 73 36 74Z" fill="#FFEAA7" stroke="#FFEAA7" stroke-width="0.5"/>
+                        <path d="M39 74C44 71.5 50 70 55 70C60 70 64 71.5 65 74C60 78 59 83 60 88L44 88C45 83 44 78 39 74Z" fill="#DDA0DD" stroke="#DDA0DD" stroke-width="0.5"/>
+                        <g stroke="rgba(255,255,255,0.5)" stroke-linecap="round" fill="none" stroke-width="1">
+                            <path d="M23 18 Q30 14, 40 13"/>
+                            <path d="M20 25 Q28 21, 38 20"/>
+                            <path d="M60 10 Q70 11, 80 18"/>
+                            <path d="M63 18 Q71 20, 82 28"/>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <h2>Ready to Play, <span id="player-name"></span>?</h2>
+            <p>6 questions, 10 seconds each. Let's train your brain!</p>
+            <button id="start-game-btn" class="play-button">
+                <span>Start Game</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="game-screen active">
+        <div class="login-card">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Countdown Screen -->
+    <div id="countdown-screen" class="game-screen">
+        <div class="countdown-display">
+            <div class="countdown-number" id="countdown-number">3</div>
+            <p>Get Ready!</p>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="game-screen">
+        <div class="game-header">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="game-info">
+                <div class="question-counter">
+                    <span id="current-question">1</span> / <span id="total-questions">5</span>
+                </div>
+                <div class="category-badge" id="category-badge">
+                    <span class="category-name" id="category-name">Category</span>
+                </div>
+                <div class="timer" id="timer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span id="time-left">10</span>s
+                </div>
+            </div>
+        </div>
+
+        <div class="question-area">
+            <h2 class="question-text" id="question-text">Loading question...</h2>
+        </div>
+
+        <div class="options-grid" id="options-grid">
+            <!-- Options will be inserted here -->
+        </div>
+
+        <div class="answer-feedback" id="answer-feedback">
+            <div class="feedback-content">
+                <div class="feedback-icon" id="feedback-icon"></div>
+                <p class="feedback-text" id="feedback-text"></p>
+                <p class="correct-answer" id="correct-answer"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="game-screen">
+        <div class="results-card">
+            <h2>Game Complete!</h2>
+            <div class="score-display">
+                <div class="score-circle" id="score-circle">
+                    <span class="score-number" id="score-number">0</span>
+                    <span class="score-label">/ 6</span>
+                </div>
+            </div>
+            <div class="results-breakdown" id="results-breakdown">
+                <!-- Results will be inserted here -->
+            </div>
+            <div class="results-actions">
+                <a href="{{ url_for('profile') }}" class="btn btn-primary">View Brain Map</a>
+                <p class="come-back">Come back tomorrow for new questions!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Already Played Screen -->
+    <div id="already-played-screen" class="game-screen">
+        <div class="already-played-card">
+            <div class="check-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+            </div>
+            <h2>You Already Played Today!</h2>
+            <p>New questions drop at midnight. Come back tomorrow!</p>
+            <div class="already-played-actions">
+                <a href="{{ url_for('profile') }}" class="btn btn-primary">View Your Brain Map</a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Go Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const QUESTION_TIME = 10;
+const FEEDBACK_TIME = 1500;
+
+let questions = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let timer = null;
+let timeLeft = QUESTION_TIME;
+let questionStartTime = null;
+let results = [];
+let currentUsername = null;
+
+// Screen management
+function showScreen(screenId) {
+    document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+// Check authentication and initialize
+async function initGame() {
+    try {
+        const res = await fetch('/api/me');
+        const data = await res.json();
+
+        if (data.authenticated) {
+            currentUsername = data.user.username;
+            document.getElementById('player-name').textContent = currentUsername;
+            showScreen('ready-screen');
+        } else {
+            showScreen('login-screen');
+        }
+    } catch (e) {
+        console.error('Error checking auth:', e);
+        showScreen('login-screen');
+    }
+}
+
+// Start game button (for authenticated users)
+document.getElementById('start-game-btn').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/api/start-game', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        });
+
+        const data = await response.json();
+
+        if (data.error === 'already_played') {
+            showScreen('already-played-screen');
+            return;
+        }
+
+        if (data.error === 'require_login') {
+            showScreen('login-screen');
+            return;
+        }
+
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        questions = data.questions;
+        startCountdown();
+    } catch (err) {
+        console.error(err);
+        alert('Error starting game');
+    }
+});
+
+// Initialize on page load
+initGame();
+
+function startCountdown() {
+    showScreen('countdown-screen');
+    let count = 3;
+    const countdownEl = document.getElementById('countdown-number');
+    countdownEl.textContent = count;
+
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownEl.textContent = count;
+            countdownEl.classList.add('pulse');
+            setTimeout(() => countdownEl.classList.remove('pulse'), 300);
+        } else {
+            clearInterval(interval);
+            startGame();
+        }
+    }, 1000);
+}
+
+function startGame() {
+    showScreen('game-screen');
+    currentQuestionIndex = 0;
+    score = 0;
+    results = [];
+    showQuestion();
+}
+
+function showQuestion() {
+    const q = questions[currentQuestionIndex];
+
+    // Update UI
+    document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+    document.getElementById('total-questions').textContent = questions.length;
+    document.getElementById('category-name').textContent = q.category_name;
+    document.getElementById('category-badge').style.setProperty('--cat-color', q.color);
+    document.getElementById('question-text').textContent = q.question;
+
+    // Update progress bar
+    const progress = (currentQuestionIndex / questions.length) * 100;
+    document.getElementById('progress-fill').style.width = `${progress}%`;
+
+    // Create options
+    const optionsGrid = document.getElementById('options-grid');
+    optionsGrid.innerHTML = '';
+
+    // Shuffle options
+    const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+    shuffledOptions.forEach((option, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = option;
+        btn.style.animationDelay = `${i * 0.1}s`;
+        btn.addEventListener('click', () => selectAnswer(option));
+        optionsGrid.appendChild(btn);
+    });
+
+    // Hide feedback
+    document.getElementById('answer-feedback').classList.remove('show', 'correct', 'incorrect');
+
+    // Start timer
+    timeLeft = QUESTION_TIME;
+    questionStartTime = Date.now();
+    updateTimerDisplay();
+    timer = setInterval(updateTimer, 100);
+}
+
+function updateTimer() {
+    const elapsed = (Date.now() - questionStartTime) / 1000;
+    timeLeft = Math.max(0, QUESTION_TIME - elapsed);
+    updateTimerDisplay();
+
+    if (timeLeft <= 0) {
+        clearInterval(timer);
+        selectAnswer(null); // Time's up
+    }
+}
+
+function updateTimerDisplay() {
+    const timerEl = document.getElementById('time-left');
+    timerEl.textContent = Math.ceil(timeLeft);
+
+    // Change color when low
+    const timerContainer = document.getElementById('timer');
+    if (timeLeft <= 3) {
+        timerContainer.classList.add('danger');
+    } else {
+        timerContainer.classList.remove('danger');
+    }
+}
+
+async function selectAnswer(answer) {
+    clearInterval(timer);
+    const timeTaken = QUESTION_TIME - timeLeft;
+
+    // Disable all options
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === answer) {
+            btn.classList.add('selected');
+        }
+    });
+
+    // Submit answer
+    try {
+        const response = await fetch('/api/submit-answer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                question_index: currentQuestionIndex,
+                answer: answer,
+                time_taken: timeTaken
+            })
+        });
+
+        const data = await response.json();
+        const correct = data.correct;
+
+        // Store result
+        results.push({
+            category: questions[currentQuestionIndex].category_name,
+            color: questions[currentQuestionIndex].color,
+            correct: correct
+        });
+
+        if (correct) score++;
+
+        // Show correct/incorrect on options
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            if (btn.textContent === data.correct_answer) {
+                btn.classList.add('correct');
+            } else if (btn.textContent === answer && !correct) {
+                btn.classList.add('incorrect');
+            }
+        });
+
+        // Show feedback
+        showFeedback(correct, data.correct_answer, answer === null);
+
+    } catch (err) {
+        console.error('Error submitting answer:', err);
+        // Still show feedback and move to next question on error
+        showFeedback(false, 'Error', false);
+    }
+}
+
+function showFeedback(correct, correctAnswer, timedOut) {
+    const feedback = document.getElementById('answer-feedback');
+    const icon = document.getElementById('feedback-icon');
+    const text = document.getElementById('feedback-text');
+    const correctEl = document.getElementById('correct-answer');
+
+    if (correct) {
+        feedback.classList.add('correct');
+        icon.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+        text.textContent = 'Correct!';
+        correctEl.textContent = '';
+    } else {
+        feedback.classList.add('incorrect');
+        icon.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+        text.textContent = timedOut ? "Time's up!" : 'Incorrect';
+        correctEl.textContent = `Answer: ${correctAnswer}`;
+    }
+
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+        feedback.classList.remove('show', 'correct', 'incorrect');
+        nextQuestion();
+    }, FEEDBACK_TIME);
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex >= questions.length) {
+        showResults();
+    } else {
+        showQuestion();
+    }
+}
+
+function showResults() {
+    showScreen('results-screen');
+
+    // Update score
+    document.getElementById('score-number').textContent = score;
+
+    // Color the score circle based on performance
+    const scoreCircle = document.getElementById('score-circle');
+    if (score === 6) {
+        scoreCircle.classList.add('perfect');
+    } else if (score >= 4) {
+        scoreCircle.classList.add('good');
+    } else {
+        scoreCircle.classList.add('needs-work');
+    }
+
+    // Show breakdown
+    const breakdown = document.getElementById('results-breakdown');
+    breakdown.innerHTML = '';
+
+    results.forEach((r, i) => {
+        const item = document.createElement('div');
+        item.className = `result-item ${r.correct ? 'correct' : 'incorrect'}`;
+        item.style.animationDelay = `${i * 0.1}s`;
+        item.innerHTML = `
+            <span class="result-category" style="color: ${r.color}">${r.category}</span>
+            <span class="result-icon">${r.correct ? '✓' : '✗'}</span>
+        `;
+        breakdown.appendChild(item);
+    });
+}
+</script>
+{% endblock %}
