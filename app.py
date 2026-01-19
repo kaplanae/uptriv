@@ -776,6 +776,25 @@ def leaderboard_page():
 
 # ============ GAME API ROUTES ============
 
+@app.route('/api/reset-today', methods=['POST'])
+@login_required
+def reset_today():
+    """Reset today's game for testing/timezone issues."""
+    today = get_user_today().isoformat()
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    # Delete today's questions and results
+    cur.execute(f'DELETE FROM daily_questions WHERE user_id = {ph} AND game_date = {ph}', (current_user.id, today))
+    cur.execute(f'DELETE FROM game_results WHERE user_id = {ph} AND game_date = {ph}', (current_user.id, today))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({'success': True, 'message': f'Reset game for {today}'})
+
+
 @app.route('/api/start-game', methods=['POST'])
 def start_game():
     if not current_user.is_authenticated:
