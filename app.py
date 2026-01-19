@@ -1003,13 +1003,16 @@ def get_share_text():
     lines = []
     for r in results:
         emoji = cat_emojis.get(r['category'], '❓')
-        result = '🟩' if r['correct'] else '🟥'
-        lines.append(f"{emoji}{result}")
+        # Use box-style: colored square before and after emoji to create "boxed" look
+        if r['correct']:
+            lines.append(f"🟩{emoji}🟩")
+        else:
+            lines.append(f"🟥{emoji}🟥")
 
     date_obj = datetime.strptime(game_date, '%Y-%m-%d')
     date_str = date_obj.strftime('%b %d, %Y')
 
-    share_text = f"UpTriv {date_str}\n{score}/{total}\n\n" + " ".join(lines) + "\n\nuptriv.com"
+    share_text = f"UpTriv {date_str}\n{score}/{total}\n\n" + "\n".join(lines) + "\n\nuptriv.com"
 
     return jsonify({'share_text': share_text, 'score': score, 'total': total})
 
