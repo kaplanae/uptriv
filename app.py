@@ -838,7 +838,8 @@ def start_game():
     return jsonify({
         'success': True,
         'questions': safe_questions,
-        'user': {'id': user_id, 'username': current_user.username}
+        'user': {'id': user_id, 'username': current_user.username},
+        'game_date': get_user_today().isoformat()
     })
 
 
@@ -874,7 +875,8 @@ def submit_answer():
 
     return jsonify({
         'correct': correct,
-        'correct_answer': q['a']
+        'correct_answer': q['a'],
+        'saved_date': get_user_today().isoformat()
     })
 
 
