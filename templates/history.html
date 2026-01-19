@@ -99,8 +99,8 @@ function renderHistory(games) {
         gameCard.className = 'game-card';
         gameCard.style.animationDelay = `${index * 0.05}s`;
 
-        // Format date
-        const dateObj = new Date(game.date);
+        // Format date (use UTC to prevent timezone shift)
+        const dateObj = new Date(game.date + 'T00:00:00');
         const formattedDate = dateObj.toLocaleDateString('en-US', {
             weekday: 'long',
             month: 'long',
