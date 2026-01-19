@@ -776,6 +776,20 @@ def leaderboard_page():
 
 # ============ GAME API ROUTES ============
 
+@app.route('/api/debug-time')
+def debug_time():
+    """Debug endpoint to check server time."""
+    from datetime import timezone as tz
+    utc_now = datetime.now(tz.utc)
+    eastern_offset = timedelta(hours=-5)
+    eastern_now = utc_now + eastern_offset
+    return jsonify({
+        'utc_now': utc_now.isoformat(),
+        'eastern_now': eastern_now.isoformat(),
+        'get_user_today': get_user_today().isoformat(),
+        'server_date_today': date.today().isoformat()
+    })
+
 @app.route('/api/reset-today', methods=['POST'])
 @login_required
 def reset_today():
