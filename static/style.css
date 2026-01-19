@@ -2056,3 +2056,203 @@ footer {
         height: 32px;
     }
 }
+
+/* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 600px) {
+    /* Game container */
+    .game-container {
+        padding: 1rem;
+    }
+
+    /* Login/Ready cards */
+    .login-card {
+        padding: 1.5rem;
+        margin: 0.5rem;
+    }
+
+    .login-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .login-brain {
+        width: 100px;
+        height: 100px;
+    }
+
+    /* Game screen */
+    .game-header {
+        margin-bottom: 1rem;
+    }
+
+    .game-info {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .question-counter {
+        font-size: 0.9rem;
+    }
+
+    .category-badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .timer {
+        font-size: 1rem;
+    }
+
+    /* Question area */
+    .question-area {
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        min-height: 80px;
+    }
+
+    .question-text {
+        font-size: 1.1rem;
+        line-height: 1.4;
+    }
+
+    /* Options - touch friendly */
+    .options-grid {
+        gap: 0.75rem;
+    }
+
+    .option-btn {
+        padding: 1rem;
+        font-size: 0.95rem;
+        min-height: 50px;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Results screen */
+    .results-card {
+        padding: 1.5rem;
+    }
+
+    .score-circle {
+        width: 100px;
+        height: 100px;
+    }
+
+    .score-number {
+        font-size: 2rem;
+    }
+
+    .results-breakdown {
+        gap: 0.5rem;
+    }
+
+    .result-item {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Already played screen */
+    .already-played-card {
+        padding: 1.5rem;
+    }
+
+    .check-icon svg {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* History page */
+    .history-container {
+        padding: 1rem;
+    }
+
+    .history-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .game-card-header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .game-date {
+        font-size: 0.9rem;
+    }
+
+    .emoji-preview {
+        gap: 0.25rem;
+    }
+
+    .preview-emoji {
+        font-size: 1.1rem;
+        padding: 0.25rem;
+    }
+
+    /* Profile page */
+    .profile-container {
+        padding: 1rem;
+    }
+
+    .brain-svg {
+        max-width: 280px;
+    }
+
+    /* Friends page */
+    .friends-container {
+        padding: 1rem;
+    }
+
+    .friend-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .friend-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    /* Buttons */
+    .play-button {
+        padding: 0.9rem 2rem;
+        font-size: 1rem;
+    }
+
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-sm {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+    .game-info {
+        justify-content: center;
+    }
+
+    .question-text {
+        font-size: 1rem;
+    }
+
+    .option-btn {
+        padding: 0.85rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-links {
+        gap: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .logo-text {
+        font-size: 1.25rem;
+    }
+}
