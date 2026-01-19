@@ -269,8 +269,9 @@ def init_db():
         # Add anonymous_id column if it doesn't exist (for existing databases)
         try:
             cur.execute('ALTER TABLE users ADD COLUMN anonymous_id TEXT UNIQUE')
-        except:
-            pass  # Column already exists
+            conn.commit()
+        except Exception as e:
+            conn.rollback()  # Rollback failed ALTER TABLE
 
         cur.execute('''
             CREATE TABLE IF NOT EXISTS game_results (
@@ -750,48 +751,52 @@ def get_or_create_anonymous_session():
     data = request.get_json() or {}
     anonymous_id = data.get('anonymous_id')
 
-    conn = get_db()
-    cur = conn.cursor()
-    ph = get_placeholder()
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        ph = get_placeholder()
 
-    if anonymous_id:
-        # Check if this anonymous user exists
-        cur.execute(f'SELECT * FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
-        user = cur.fetchone()
-        if user:
-            conn.close()
-            return jsonify({
-                'success': True,
-                'anonymous_id': anonymous_id,
-                'user_id': user['id'],
-                'username': user['username']
-            })
+        if anonymous_id:
+            # Check if this anonymous user exists
+            cur.execute(f'SELECT * FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
+            user = cur.fetchone()
+            if user:
+                conn.close()
+                return jsonify({
+                    'success': True,
+                    'anonymous_id': anonymous_id,
+                    'user_id': user['id'],
+                    'username': user['username']
+                })
 
-    # Create new anonymous user
-    new_anonymous_id = str(uuid.uuid4())
-    # Generate a fun random username
-    adjectives = ['Swift', 'Clever', 'Bright', 'Quick', 'Sharp', 'Keen', 'Bold', 'Wise']
-    nouns = ['Owl', 'Fox', 'Eagle', 'Wolf', 'Hawk', 'Bear', 'Tiger', 'Lion']
-    import random
-    username = f"{random.choice(adjectives)}{random.choice(nouns)}{random.randint(100, 999)}"
+        # Create new anonymous user
+        new_anonymous_id = str(uuid.uuid4())
+        # Generate a fun random username
+        adjectives = ['Swift', 'Clever', 'Bright', 'Quick', 'Sharp', 'Keen', 'Bold', 'Wise']
+        nouns = ['Owl', 'Fox', 'Eagle', 'Wolf', 'Hawk', 'Bear', 'Tiger', 'Lion']
+        import random
+        username = f"{random.choice(adjectives)}{random.choice(nouns)}{random.randint(100, 999)}"
 
-    cur.execute(
-        f'INSERT INTO users (username, anonymous_id) VALUES ({ph}, {ph})',
-        (username, new_anonymous_id)
-    )
-    conn.commit()
+        cur.execute(
+            f'INSERT INTO users (username, anonymous_id) VALUES ({ph}, {ph})',
+            (username, new_anonymous_id)
+        )
+        conn.commit()
 
-    # Get the new user's ID
-    cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (new_anonymous_id,))
-    new_user = cur.fetchone()
-    conn.close()
+        # Get the new user's ID
+        cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (new_anonymous_id,))
+        new_user = cur.fetchone()
+        conn.close()
 
-    return jsonify({
-        'success': True,
-        'anonymous_id': new_anonymous_id,
-        'user_id': new_user['id'],
-        'username': username
-    })
+        return jsonify({
+            'success': True,
+            'anonymous_id': new_anonymous_id,
+            'user_id': new_user['id'],
+            'username': username
+        })
+    except Exception as e:
+        print(f"Error creating anonymous session: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 # ============ PAGE ROUTES ============
