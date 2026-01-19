@@ -1080,8 +1080,10 @@ def api_leaderboard():
 
 # ============ MAIN ============
 
+# Initialize database on app load (works with gunicorn)
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     port = int(os.environ.get('PORT', 5001))
     debug = os.environ.get('FLASK_ENV', 'development') == 'development'
     app.run(debug=debug, port=port, host='0.0.0.0')
