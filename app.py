@@ -200,11 +200,16 @@ class User(UserMixin):
         self.profile_picture = profile_picture
 
 
+def get_placeholder():
+    """Return the correct placeholder for the current database."""
+    return '%s' if USE_POSTGRES else '?'
+
 @login_manager.user_loader
 def load_user(user_id):
     conn = get_db()
     cur = conn.cursor()
-    cur.execute('SELECT * FROM users WHERE id = ?', (user_id,))
+    ph = get_placeholder()
+    cur.execute(f'SELECT * FROM users WHERE id = {ph}', (user_id,))
     user_row = cur.fetchone()
     conn.close()
 
@@ -212,9 +217,9 @@ def load_user(user_id):
         return User(
             id=user_row['id'],
             username=user_row['username'],
-            email=user_row['email'] if 'email' in user_row.keys() else None,
-            google_id=user_row['google_id'] if 'google_id' in user_row.keys() else None,
-            profile_picture=user_row['profile_picture'] if 'profile_picture' in user_row.keys() else None
+            email=user_row.get('email') if hasattr(user_row, 'get') else user_row['email'],
+            google_id=user_row.get('google_id') if hasattr(user_row, 'get') else user_row['google_id'],
+            profile_picture=user_row.get('profile_picture') if hasattr(user_row, 'get') else user_row['profile_picture']
         )
     return None
 
@@ -346,35 +351,36 @@ def get_or_create_user_by_google(google_id, email, name, picture):
     """Get or create user from Google OAuth data."""
     conn = get_db()
     cur = conn.cursor()
+    ph = get_placeholder()
 
     # Check if user exists by google_id
-    cur.execute('SELECT * FROM users WHERE google_id = ?', (google_id,))
+    cur.execute(f'SELECT * FROM users WHERE google_id = {ph}', (google_id,))
     user = cur.fetchone()
 
     if user:
         # Update profile picture if changed
-        cur.execute('UPDATE users SET profile_picture = ? WHERE google_id = ?', (picture, google_id))
+        cur.execute(f'UPDATE users SET profile_picture = {ph} WHERE google_id = {ph}', (picture, google_id))
         conn.commit()
     else:
         # Check if email already exists (user previously created without OAuth)
-        cur.execute('SELECT * FROM users WHERE email = ?', (email,))
+        cur.execute(f'SELECT * FROM users WHERE email = {ph}', (email,))
         existing = cur.fetchone()
 
         if existing:
             # Link Google account to existing user
-            cur.execute('UPDATE users SET google_id = ?, profile_picture = ? WHERE email = ?',
+            cur.execute(f'UPDATE users SET google_id = {ph}, profile_picture = {ph} WHERE email = {ph}',
                        (google_id, picture, email))
             conn.commit()
-            cur.execute('SELECT * FROM users WHERE email = ?', (email,))
+            cur.execute(f'SELECT * FROM users WHERE email = {ph}', (email,))
             user = cur.fetchone()
         else:
             # Create new user
-            cur.execute('''
+            cur.execute(f'''
                 INSERT INTO users (username, email, google_id, profile_picture)
-                VALUES (?, ?, ?, ?)
+                VALUES ({ph}, {ph}, {ph}, {ph})
             ''', (name, email, google_id, picture))
             conn.commit()
-            cur.execute('SELECT * FROM users WHERE google_id = ?', (google_id,))
+            cur.execute(f'SELECT * FROM users WHERE google_id = {ph}', (google_id,))
             user = cur.fetchone()
 
     conn.close()
