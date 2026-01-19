@@ -259,12 +259,18 @@ def init_db():
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 username TEXT UNIQUE NOT NULL,
-                email TEXT UNIQUE,
+                email TEXT,
                 google_id TEXT UNIQUE,
+                anonymous_id TEXT UNIQUE,
                 profile_picture TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
+        # Add anonymous_id column if it doesn't exist (for existing databases)
+        try:
+            cur.execute('ALTER TABLE users ADD COLUMN anonymous_id TEXT UNIQUE')
+        except:
+            pass  # Column already exists
 
         cur.execute('''
             CREATE TABLE IF NOT EXISTS game_results (
@@ -320,8 +326,9 @@ def init_db():
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
-                email TEXT UNIQUE,
+                email TEXT,
                 google_id TEXT UNIQUE,
+                anonymous_id TEXT UNIQUE,
                 profile_picture TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
@@ -735,6 +742,58 @@ def get_current_user():
     return jsonify({'authenticated': False})
 
 
+@app.route('/api/anonymous-session', methods=['POST'])
+def get_or_create_anonymous_session():
+    """Get or create an anonymous user session for cookie-based play."""
+    import uuid
+
+    data = request.get_json() or {}
+    anonymous_id = data.get('anonymous_id')
+
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    if anonymous_id:
+        # Check if this anonymous user exists
+        cur.execute(f'SELECT * FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
+        user = cur.fetchone()
+        if user:
+            conn.close()
+            return jsonify({
+                'success': True,
+                'anonymous_id': anonymous_id,
+                'user_id': user['id'],
+                'username': user['username']
+            })
+
+    # Create new anonymous user
+    new_anonymous_id = str(uuid.uuid4())
+    # Generate a fun random username
+    adjectives = ['Swift', 'Clever', 'Bright', 'Quick', 'Sharp', 'Keen', 'Bold', 'Wise']
+    nouns = ['Owl', 'Fox', 'Eagle', 'Wolf', 'Hawk', 'Bear', 'Tiger', 'Lion']
+    import random
+    username = f"{random.choice(adjectives)}{random.choice(nouns)}{random.randint(100, 999)}"
+
+    cur.execute(
+        f'INSERT INTO users (username, anonymous_id) VALUES ({ph}, {ph})',
+        (username, new_anonymous_id)
+    )
+    conn.commit()
+
+    # Get the new user's ID
+    cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (new_anonymous_id,))
+    new_user = cur.fetchone()
+    conn.close()
+
+    return jsonify({
+        'success': True,
+        'anonymous_id': new_anonymous_id,
+        'user_id': new_user['id'],
+        'username': username
+    })
+
+
 # ============ PAGE ROUTES ============
 
 @app.route('/')
@@ -809,12 +868,34 @@ def reset_today():
     return jsonify({'success': True, 'message': f'Reset game for {today}'})
 
 
+def get_user_from_request():
+    """Get user from either session (Google login) or anonymous_id."""
+    if current_user.is_authenticated:
+        return current_user.id, current_user.username
+
+    # Check for anonymous user
+    data = request.get_json() or {}
+    anonymous_id = data.get('anonymous_id')
+
+    if anonymous_id:
+        conn = get_db()
+        cur = conn.cursor()
+        ph = get_placeholder()
+        cur.execute(f'SELECT id, username FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
+        user = cur.fetchone()
+        conn.close()
+        if user:
+            return user['id'], user['username']
+
+    return None, None
+
+
 @app.route('/api/start-game', methods=['POST'])
 def start_game():
-    if not current_user.is_authenticated:
-        return jsonify({'error': 'Please sign in to play', 'require_login': True}), 401
+    user_id, username = get_user_from_request()
 
-    user_id = current_user.id
+    if not user_id:
+        return jsonify({'error': 'No user session. Please refresh the page.', 'require_session': True}), 401
 
     if has_played_today(user_id):
         return jsonify({
@@ -838,18 +919,18 @@ def start_game():
     return jsonify({
         'success': True,
         'questions': safe_questions,
-        'user': {'id': user_id, 'username': current_user.username},
+        'user': {'id': user_id, 'username': username},
         'game_date': get_user_today().isoformat()
     })
 
 
 @app.route('/api/submit-answer', methods=['POST'])
 def submit_answer():
-    if not current_user.is_authenticated:
-        return jsonify({'error': 'Not logged in'}), 401
-
     data = request.get_json()
-    user_id = current_user.id
+    user_id, username = get_user_from_request()
+
+    if not user_id:
+        return jsonify({'error': 'No user session'}), 401
 
     question_index = data.get('question_index')
     answer = data.get('answer')
@@ -1000,19 +1081,15 @@ def get_share_text():
         'entertainment': '🎬', 'sports': '🏆', 'geography': '🗺️'
     }
 
-    lines = []
+    # Build share grid - colored squares only (like Wordle)
+    squares = []
     for r in results:
-        emoji = cat_emojis.get(r['category'], '❓')
-        # Use box-style: colored square before and after emoji to create "boxed" look
-        if r['correct']:
-            lines.append(f"🟩{emoji}🟩")
-        else:
-            lines.append(f"🟥{emoji}🟥")
+        squares.append('🟩' if r['correct'] else '🟥')
 
     date_obj = datetime.strptime(game_date, '%Y-%m-%d')
     date_str = date_obj.strftime('%b %d, %Y')
 
-    share_text = f"UpTriv {date_str}\n{score}/{total}\n\n" + "\n".join(lines) + "\n\nuptriv.com"
+    share_text = f"UpTriv {date_str}\n{score}/{total}\n\n" + "".join(squares) + "\n\nuptriv.com"
 
     return jsonify({'share_text': share_text, 'score': score, 'total': total})
 
