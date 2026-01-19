@@ -1,13 +1,28 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from authlib.integrations.flask_client import OAuth
-import sqlite3
-import json
-import random
-from datetime import datetime, date
-import hashlib
-import os
-from dotenv import load_dotenv
+print("=== APP.PY STARTING ===")
+
+import sys
+print(f"Python version: {sys.version}")
+
+try:
+    from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+    print("Flask imported")
+    from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+    print("Flask-Login imported")
+    from authlib.integrations.flask_client import OAuth
+    print("Authlib imported")
+    import sqlite3
+    import json
+    import random
+    from datetime import datetime, date
+    import hashlib
+    import os
+    from dotenv import load_dotenv
+    print("All imports successful")
+except Exception as e:
+    print(f"IMPORT ERROR: {e}")
+    import traceback
+    traceback.print_exc()
+    raise
 
 # Load environment variables
 load_dotenv()
