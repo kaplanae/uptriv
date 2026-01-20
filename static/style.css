@@ -779,12 +779,18 @@ footer {
 
 .result-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     padding: 0.75rem 1rem;
     background: var(--bg-secondary);
     border-radius: 10px;
     animation: slideUp 0.3s ease backwards;
+}
+
+.result-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .result-category {
@@ -801,6 +807,20 @@ footer {
 
 .result-item.incorrect .result-icon {
     color: var(--error);
+}
+
+.result-percent {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* Percentage stat in feedback */
+.percent-stat {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
 }
 
 .results-actions {

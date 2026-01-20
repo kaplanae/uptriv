@@ -948,17 +948,32 @@ def submit_answer():
     conn = get_db()
     cur = conn.cursor()
     placeholder = '%s' if USE_POSTGRES else '?'
+
+    # Save the answer
     cur.execute(f'''
         INSERT INTO game_results (user_id, game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken)
         VALUES ({placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder})
     ''', (user_id, get_user_today().isoformat(), q['category'], q['sub'], q['q'], q['a'], answer, 1 if correct else 0, time_taken))
     conn.commit()
+
+    # Get stats for this question (how many got it right)
+    cur.execute(f'''
+        SELECT COUNT(*) as total, SUM(correct) as correct_count
+        FROM game_results
+        WHERE question = {placeholder}
+    ''', (q['q'],))
+    stats = cur.fetchone()
     conn.close()
+
+    total_answers = stats['total'] or 1
+    correct_count = stats['correct_count'] or 0
+    percent_correct = round((correct_count / total_answers) * 100)
 
     return jsonify({
         'correct': correct,
         'correct_answer': q['a'],
-        'saved_date': get_user_today().isoformat()
+        'percent_correct': percent_correct,
+        'total_answers': total_answers
     })
 
 

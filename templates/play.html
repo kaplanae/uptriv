@@ -459,32 +459,41 @@ async function selectAnswer(answer) {
             }
         });
 
-        // Show feedback
-        showFeedback(correct, data.correct_answer, answer === null);
+        // Store percentage for results
+        results[results.length - 1].percent_correct = data.percent_correct;
+        results[results.length - 1].total_answers = data.total_answers;
+
+        // Show feedback with percentage
+        showFeedback(correct, data.correct_answer, answer === null, data.percent_correct);
 
     } catch (err) {
         console.error('Error submitting answer:', err);
         // Still show feedback and move to next question on error
-        showFeedback(false, 'Error', false);
+        showFeedback(false, 'Error', false, null);
     }
 }
 
-function showFeedback(correct, correctAnswer, timedOut) {
+function showFeedback(correct, correctAnswer, timedOut, percentCorrect) {
     const feedback = document.getElementById('answer-feedback');
     const icon = document.getElementById('feedback-icon');
     const text = document.getElementById('feedback-text');
     const correctEl = document.getElementById('correct-answer');
 
+    let percentText = '';
+    if (percentCorrect !== null) {
+        percentText = `<span class="percent-stat">${percentCorrect}% of players got this right</span>`;
+    }
+
     if (correct) {
         feedback.classList.add('correct');
         icon.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
         text.textContent = 'Correct!';
-        correctEl.textContent = '';
+        correctEl.innerHTML = percentText;
     } else {
         feedback.classList.add('incorrect');
         icon.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
         text.textContent = timedOut ? "Time's up!" : 'Incorrect';
-        correctEl.textContent = `Answer: ${correctAnswer}`;
+        correctEl.innerHTML = `Answer: ${correctAnswer}${percentText ? '<br>' + percentText : ''}`;
     }
 
     feedback.classList.add('show');
@@ -521,7 +530,7 @@ function showResults() {
         scoreCircle.classList.add('needs-work');
     }
 
-    // Show breakdown
+    // Show breakdown with percentages
     const breakdown = document.getElementById('results-breakdown');
     breakdown.innerHTML = '';
 
@@ -529,9 +538,13 @@ function showResults() {
         const item = document.createElement('div');
         item.className = `result-item ${r.correct ? 'correct' : 'incorrect'}`;
         item.style.animationDelay = `${i * 0.1}s`;
+        const pct = r.percent_correct || 0;
         item.innerHTML = `
-            <span class="result-category" style="color: ${r.color}">${r.category}</span>
-            <span class="result-icon">${r.correct ? '✓' : '✗'}</span>
+            <div class="result-main">
+                <span class="result-category" style="color: ${r.color}">${r.category}</span>
+                <span class="result-icon">${r.correct ? '✓' : '✗'}</span>
+            </div>
+            <span class="result-percent">${pct}% got it right</span>
         `;
         breakdown.appendChild(item);
     });
