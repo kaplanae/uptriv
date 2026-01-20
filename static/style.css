@@ -1624,6 +1624,14 @@ footer {
     color: var(--error);
 }
 
+.question-stat {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+}
+
 /* Share Toast */
 .share-toast {
     position: fixed;

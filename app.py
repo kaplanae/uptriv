@@ -1032,6 +1032,20 @@ def get_history():
         ORDER BY game_date DESC, created_at ASC
     ''', (user_id,))
     results = cur.fetchall()
+
+    # Get percentage stats for all questions this user has answered
+    questions_list = list(set(r['question'] for r in results))
+    question_stats = {}
+    for q in questions_list:
+        cur.execute(f'''
+            SELECT COUNT(*) as total, SUM(correct) as correct_count
+            FROM game_results WHERE question = {placeholder}
+        ''', (q,))
+        stats = cur.fetchone()
+        total = stats['total'] or 1
+        correct_count = stats['correct_count'] or 0
+        question_stats[q] = round((correct_count / total) * 100)
+
     conn.close()
 
     games = {}
@@ -1047,7 +1061,8 @@ def get_history():
             'correct_answer': r['correct_answer'],
             'user_answer': r['user_answer'] or '(No answer)',
             'correct': r['correct'],
-            'time_taken': round(r['time_taken'], 1)
+            'time_taken': round(r['time_taken'], 1),
+            'percent_correct': question_stats.get(r['question'], 0)
         })
         games[game_date]['total'] += 1
         if r['correct']:
