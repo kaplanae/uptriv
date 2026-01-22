@@ -1134,13 +1134,19 @@ def get_daily_questions_for_user(user_id):
     cur = conn.cursor()
     placeholder = '%s' if USE_POSTGRES else '?'
 
-    # Check if user already has today's questions cached
+    # Check if user already has today's questions cached FOR THIS DIFFICULTY
     cur.execute(f'SELECT questions_json FROM daily_questions WHERE game_date = {placeholder} AND user_id = {placeholder}', (today, user_id))
     result = cur.fetchone()
 
     if result:
-        conn.close()
-        return json.loads(result['questions_json'])
+        cached_questions = json.loads(result['questions_json'])
+        # Only use cache if it matches the current difficulty
+        if cached_questions and cached_questions[0].get('difficulty') == difficulty:
+            conn.close()
+            return cached_questions
+        # Otherwise, delete the old cache and generate new questions
+        cur.execute(f'DELETE FROM daily_questions WHERE game_date = {placeholder} AND user_id = {placeholder}', (today, user_id))
+        conn.commit()
 
     # Check if ANY user has today's questions for this difficulty (global cache)
     # This ensures all users at same difficulty get the same questions

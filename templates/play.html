@@ -732,15 +732,7 @@ document.getElementById('play-hard-now-btn').addEventListener('click', async () 
 
         if (data.error === 'already_played') {
             // Already played hard mode too
-            document.getElementById('play-hard-now').innerHTML = `
-                <div class="hard-mode-offer">
-                    <span class="offer-icon">✅</span>
-                    <div class="offer-text">
-                        <strong>You've completed both modes today!</strong>
-                        <p>Come back tomorrow for new questions.</p>
-                    </div>
-                </div>
-            `;
+            alert("You've already completed both easy and hard mode today! Come back tomorrow.");
             return;
         }
 
