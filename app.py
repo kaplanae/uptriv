@@ -899,7 +899,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS game_results (
                 id SERIAL PRIMARY KEY,
                 user_id INTEGER NOT NULL REFERENCES users(id),
-                game_date DATE NOT NULL,
+                game_date TEXT NOT NULL,
                 category TEXT NOT NULL,
                 subcategory TEXT NOT NULL,
                 question TEXT NOT NULL,
@@ -915,6 +915,13 @@ def init_db():
         # Add difficulty column to game_results if it doesn't exist
         try:
             cur.execute("ALTER TABLE game_results ADD COLUMN difficulty TEXT DEFAULT 'easy'")
+            conn.commit()
+        except Exception:
+            conn.rollback()
+
+        # Change game_date from DATE to TEXT to support onboarding prefix
+        try:
+            cur.execute("ALTER TABLE game_results ALTER COLUMN game_date TYPE TEXT")
             conn.commit()
         except Exception:
             conn.rollback()
@@ -971,7 +978,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS game_results (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
-                game_date DATE NOT NULL,
+                game_date TEXT NOT NULL,
                 category TEXT NOT NULL,
                 subcategory TEXT NOT NULL,
                 question TEXT NOT NULL,
@@ -979,6 +986,7 @@ def init_db():
                 user_answer TEXT,
                 correct INTEGER NOT NULL,
                 time_taken REAL NOT NULL,
+                difficulty TEXT DEFAULT 'easy',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
@@ -1019,6 +1027,16 @@ def init_db():
                 FOREIGN KEY (inviter_id) REFERENCES users(id)
             )
         ''')
+
+        # SQLite migrations for existing databases
+        for col_sql in [
+            'ALTER TABLE game_results ADD COLUMN difficulty TEXT DEFAULT \'easy\''
+        ]:
+            try:
+                cur.execute(col_sql)
+                conn.commit()
+            except Exception:
+                pass  # Column already exists
 
     # Create indexes for better query performance
     # These speed up the most common queries significantly
