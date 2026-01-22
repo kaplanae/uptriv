@@ -707,47 +707,52 @@ function initAlreadyPlayedDifficulty() {
 }
 
 // Play Hard Mode Now button handler
-document.getElementById('play-hard-now-btn').addEventListener('click', async () => {
-    try {
-        // Switch to hard mode
-        await fetch('/api/set-difficulty', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ difficulty: 'hard', anonymous_id: anonymousId })
-        });
+const playHardBtn = document.getElementById('play-hard-now-btn');
+if (playHardBtn) {
+    playHardBtn.addEventListener('click', async () => {
+        try {
+            // Switch to hard mode
+            const setDiffRes = await fetch('/api/set-difficulty', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ difficulty: 'hard', anonymous_id: anonymousId })
+            });
 
-        // Update local state
-        currentDifficulty = 'hard';
-        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('[data-difficulty="hard"]').classList.add('active');
+            if (!setDiffRes.ok) {
+                alert('Failed to set difficulty. Please try again.');
+                return;
+            }
 
-        // Start the game
-        const response = await fetch('/api/start-game', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ anonymous_id: anonymousId })
-        });
+            // Update local state
+            currentDifficulty = 'hard';
 
-        const data = await response.json();
+            // Start the game
+            const response = await fetch('/api/start-game', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ anonymous_id: anonymousId })
+            });
 
-        if (data.error === 'already_played') {
-            // Already played hard mode too
-            alert("You've already completed both easy and hard mode today! Come back tomorrow.");
-            return;
+            const data = await response.json();
+
+            if (data.error === 'already_played') {
+                alert("You've already completed both easy and hard mode today! Come back tomorrow.");
+                return;
+            }
+
+            if (data.error) {
+                alert('Server error: ' + data.error);
+                return;
+            }
+
+            questions = data.questions;
+            startCountdown();
+        } catch (e) {
+            console.error('Error starting hard mode:', e);
+            alert('Error starting hard mode: ' + e.message);
         }
-
-        if (data.error) {
-            alert(data.error);
-            return;
-        }
-
-        questions = data.questions;
-        startCountdown();
-    } catch (e) {
-        console.error('Error starting hard mode:', e);
-        alert('Error starting hard mode');
-    }
-});
+    });
+}
 
 // Hard mode button handler
 document.getElementById('try-hard-mode-btn').addEventListener('click', async () => {
