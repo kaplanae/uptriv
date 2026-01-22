@@ -907,9 +907,17 @@ def init_db():
                 user_answer TEXT,
                 correct INTEGER NOT NULL,
                 time_taken REAL NOT NULL,
+                difficulty TEXT DEFAULT 'easy',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
+
+        # Add difficulty column to game_results if it doesn't exist
+        try:
+            cur.execute("ALTER TABLE game_results ADD COLUMN difficulty TEXT DEFAULT 'easy'")
+            conn.commit()
+        except Exception:
+            conn.rollback()
 
         cur.execute('''
             CREATE TABLE IF NOT EXISTS daily_questions (
