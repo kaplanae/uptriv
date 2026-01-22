@@ -1817,7 +1817,7 @@ def onboarding_results():
     conn.close()
 
     if not results:
-        return jsonify({'error': 'No onboarding results found'}), 404
+        return jsonify({'success': False, 'error': 'No onboarding results found'})
 
     # Calculate stats by category
     category_stats = {}
@@ -1845,6 +1845,7 @@ def onboarding_results():
         'overall': {
             'correct': total_correct,
             'total': total_questions,
+            'completed': total_questions,
             'percentage': overall_percentage
         },
         'categories': category_stats,
@@ -2265,7 +2266,7 @@ def get_history():
     cur.execute(f'''
         SELECT game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken, COALESCE(difficulty, 'easy') as difficulty
         FROM game_results
-        WHERE user_id = {placeholder}
+        WHERE user_id = {placeholder} AND game_date NOT LIKE 'onboarding-%'
         ORDER BY game_date DESC, difficulty DESC, created_at ASC
     ''', (user_id,))
     results = cur.fetchall()
