@@ -2088,45 +2088,51 @@ def get_user_from_request():
 
 @app.route('/api/start-game', methods=['POST'])
 def start_game():
-    user_id, username = get_user_from_request()
+    try:
+        user_id, username = get_user_from_request()
 
-    if not user_id:
-        return jsonify({'error': 'No user session. Please refresh the page.', 'require_session': True}), 401
+        if not user_id:
+            return jsonify({'error': 'No user session. Please refresh the page.', 'require_session': True}), 401
 
-    # Get user's current difficulty and what they've played today
-    current_difficulty = get_user_difficulty(user_id)
-    played_today = get_played_difficulties_today(user_id)
+        # Get user's current difficulty and what they've played today
+        current_difficulty = get_user_difficulty(user_id)
+        played_today = get_played_difficulties_today(user_id)
 
-    # Check if they've already played at their current difficulty
-    if current_difficulty in played_today:
-        # If they played easy but not hard, they can still play hard
-        can_play_hard = 'easy' in played_today and 'hard' not in played_today
+        # Check if they've already played at their current difficulty
+        if current_difficulty in played_today:
+            # If they played easy but not hard, they can still play hard
+            can_play_hard = 'easy' in played_today and 'hard' not in played_today
+            return jsonify({
+                'error': 'already_played',
+                'message': 'You already played today! Come back tomorrow for new questions.',
+                'played_difficulties': played_today,
+                'can_play_hard': can_play_hard
+            }), 400
+
+        questions = get_daily_questions_for_user(user_id)
+
+        safe_questions = []
+        for q in questions:
+            safe_questions.append({
+                'category': q['category'],
+                'category_name': q['category_name'],
+                'color': q['color'],
+                'question': q['q'],
+                'options': q['options'],
+                'subcategory': q['sub']
+            })
+
         return jsonify({
-            'error': 'already_played',
-            'message': 'You already played today! Come back tomorrow for new questions.',
-            'played_difficulties': played_today,
-            'can_play_hard': can_play_hard
-        }), 400
-
-    questions = get_daily_questions_for_user(user_id)
-
-    safe_questions = []
-    for q in questions:
-        safe_questions.append({
-            'category': q['category'],
-            'category_name': q['category_name'],
-            'color': q['color'],
-            'question': q['q'],
-            'options': q['options'],
-            'subcategory': q['sub']
+            'success': True,
+            'questions': safe_questions,
+            'user': {'id': user_id, 'username': username},
+            'game_date': get_user_today().isoformat()
         })
-
-    return jsonify({
-        'success': True,
-        'questions': safe_questions,
-        'user': {'id': user_id, 'username': username},
-        'game_date': get_user_today().isoformat()
-    })
+    except Exception as e:
+        import traceback
+        print(f"Error in start_game: {e}")
+        print(traceback.format_exc())
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
 
 
 @app.route('/api/submit-answer', methods=['POST'])
