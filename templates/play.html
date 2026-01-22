@@ -79,6 +79,19 @@
             </div>
             <h2>Ready to Play<span id="player-name-wrapper">, <span id="player-name"></span></span>?</h2>
             <p>6 questions, 10 seconds each. Let's train your brain!</p>
+
+            <!-- Difficulty Toggle -->
+            <div class="difficulty-toggle">
+                <button class="difficulty-btn active" data-difficulty="easy" id="easy-btn">
+                    <span class="diff-icon">🎯</span>
+                    <span class="diff-label">Easy</span>
+                </button>
+                <button class="difficulty-btn" data-difficulty="hard" id="hard-btn">
+                    <span class="diff-icon">🔥</span>
+                    <span class="diff-label">Hard</span>
+                </button>
+            </div>
+
             <button id="start-game-btn" class="play-button" style="margin: 1rem auto 0; display: flex;">
                 <span>Start Game</span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -157,6 +170,19 @@
             <div class="results-breakdown" id="results-breakdown">
                 <!-- Results will be inserted here -->
             </div>
+
+            <!-- Hard Mode Prompt (shown to top performers) -->
+            <div id="hard-mode-prompt" class="hard-mode-prompt" style="display: none;">
+                <div class="prompt-content">
+                    <span class="prompt-icon">🔥</span>
+                    <div class="prompt-text">
+                        <strong>You're in the top 20%!</strong>
+                        <p>Ready for a challenge? Try Hard Mode for tougher questions.</p>
+                    </div>
+                    <button id="try-hard-mode-btn" class="btn btn-danger btn-sm">Try Hard Mode</button>
+                </div>
+            </div>
+
             <div class="results-actions">
                 <a href="{{ url_for('profile') }}" class="btn btn-primary">View Brain Map</a>
                 <p class="come-back">Come back tomorrow for new questions!</p>
@@ -174,7 +200,31 @@
                 </svg>
             </div>
             <h2>You Already Played Today!</h2>
-            <p>New questions drop at midnight. Come back tomorrow!</p>
+            <p id="already-played-message">New questions drop at midnight. Come back tomorrow!</p>
+
+            <!-- Hard Mode Button -->
+            <div style="background: #fee2e2; border: 2px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
+                <p style="margin: 0 0 1rem 0; font-size: 1.1rem;">🔥 <strong>Want a challenge?</strong> Try hard mode!</p>
+                <button id="play-hard-now-btn" style="background: #ef4444; color: white; border: none; padding: 0.875rem 2rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">
+                    Play Hard Mode Now
+                </button>
+            </div>
+
+            <!-- Difficulty Toggle for Tomorrow -->
+            <div id="tomorrow-difficulty-section" class="tomorrow-difficulty">
+                <p class="tomorrow-label">Difficulty for tomorrow:</p>
+                <div class="difficulty-toggle">
+                    <button class="difficulty-btn" data-difficulty="easy" id="ap-easy-btn">
+                        <span class="diff-icon">🎯</span>
+                        <span class="diff-label">Easy</span>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="hard" id="ap-hard-btn">
+                        <span class="diff-icon">🔥</span>
+                        <span class="diff-label">Hard</span>
+                    </button>
+                </div>
+            </div>
+
             <div class="already-played-actions">
                 <a href="{{ url_for('profile') }}" class="btn btn-primary">View Your Brain Map</a>
                 <a href="{{ url_for('index') }}" class="btn btn-secondary">Go Home</a>
@@ -199,6 +249,49 @@ let results = [];
 let currentUsername = null;
 let anonymousId = null;
 let isGoogleUser = false;
+let currentDifficulty = 'easy';
+
+// Difficulty toggle handling
+document.querySelectorAll('.difficulty-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const difficulty = btn.dataset.difficulty;
+        if (difficulty === currentDifficulty) return;
+
+        // Update UI
+        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDifficulty = difficulty;
+
+        // Save to server
+        try {
+            await fetch('/api/set-difficulty', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ difficulty, anonymous_id: anonymousId })
+            });
+        } catch (e) {
+            console.error('Error setting difficulty:', e);
+        }
+    });
+});
+
+// Load user's difficulty setting
+async function loadDifficulty() {
+    try {
+        const url = anonymousId
+            ? `/api/get-difficulty?anonymous_id=${encodeURIComponent(anonymousId)}`
+            : '/api/get-difficulty';
+        const res = await fetch(url);
+        const data = await res.json();
+        currentDifficulty = data.difficulty || 'easy';
+
+        // Update UI
+        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`[data-difficulty="${currentDifficulty}"]`).classList.add('active');
+    } catch (e) {
+        console.error('Error loading difficulty:', e);
+    }
+}
 
 // Screen management
 function showScreen(screenId) {
@@ -247,6 +340,7 @@ async function initGame() {
             document.getElementById('player-name').textContent = currentUsername;
             document.getElementById('player-name-wrapper').style.display = 'inline';
             localStorage.setItem('uptriv_username', currentUsername);
+            await loadDifficulty();
             showScreen('ready-screen');
         } else {
             // Anonymous user - create or get session, hide name
@@ -254,6 +348,7 @@ async function initGame() {
             if (session) {
                 currentUsername = session.username;
                 document.getElementById('player-name-wrapper').style.display = 'none';
+                await loadDifficulty();
                 showScreen('ready-screen');
             } else {
                 // Fallback to login screen if session creation fails
@@ -268,6 +363,7 @@ async function initGame() {
             if (session) {
                 currentUsername = session.username;
                 document.getElementById('player-name-wrapper').style.display = 'none';
+                await loadDifficulty();
                 showScreen('ready-screen');
             } else {
                 showScreen('login-screen');
@@ -290,6 +386,14 @@ document.getElementById('start-game-btn').addEventListener('click', async () => 
         const data = await response.json();
 
         if (data.error === 'already_played') {
+            await loadDifficulty();
+            initAlreadyPlayedDifficulty();
+
+            // Hide hard mode option if already played hard
+            if (data.played_difficulties && data.played_difficulties.includes('hard')) {
+                document.getElementById('play-hard-now').style.display = 'none';
+            }
+
             showScreen('already-played-screen');
             return;
         }
@@ -548,6 +652,138 @@ function showResults() {
         `;
         breakdown.appendChild(item);
     });
+
+    // Check if user qualifies for hard mode (only for easy mode players)
+    if (currentDifficulty === 'easy') {
+        checkHardModeEligibility();
+    }
 }
+
+async function checkHardModeEligibility() {
+    try {
+        const url = anonymousId
+            ? `/api/check-hard-mode-eligibility?anonymous_id=${encodeURIComponent(anonymousId)}`
+            : '/api/check-hard-mode-eligibility';
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.eligible) {
+            document.getElementById('hard-mode-prompt').style.display = 'block';
+        }
+    } catch (e) {
+        console.error('Error checking hard mode eligibility:', e);
+    }
+}
+
+// Already-played screen difficulty toggle
+document.querySelectorAll('#already-played-screen .difficulty-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const difficulty = btn.dataset.difficulty;
+        if (difficulty === currentDifficulty) return;
+
+        // Update UI
+        document.querySelectorAll('#already-played-screen .difficulty-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDifficulty = difficulty;
+
+        // Save to server
+        try {
+            await fetch('/api/set-difficulty', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ difficulty, anonymous_id: anonymousId })
+            });
+        } catch (e) {
+            console.error('Error setting difficulty:', e);
+        }
+    });
+});
+
+// Initialize already-played screen difficulty buttons when shown
+function initAlreadyPlayedDifficulty() {
+    document.querySelectorAll('#already-played-screen .difficulty-btn').forEach(b => b.classList.remove('active'));
+    const activeBtn = document.querySelector(`#already-played-screen [data-difficulty="${currentDifficulty}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+}
+
+// Play Hard Mode Now button handler
+document.getElementById('play-hard-now-btn').addEventListener('click', async () => {
+    try {
+        // Switch to hard mode
+        await fetch('/api/set-difficulty', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ difficulty: 'hard', anonymous_id: anonymousId })
+        });
+
+        // Update local state
+        currentDifficulty = 'hard';
+        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-difficulty="hard"]').classList.add('active');
+
+        // Start the game
+        const response = await fetch('/api/start-game', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ anonymous_id: anonymousId })
+        });
+
+        const data = await response.json();
+
+        if (data.error === 'already_played') {
+            // Already played hard mode too
+            document.getElementById('play-hard-now').innerHTML = `
+                <div class="hard-mode-offer">
+                    <span class="offer-icon">✅</span>
+                    <div class="offer-text">
+                        <strong>You've completed both modes today!</strong>
+                        <p>Come back tomorrow for new questions.</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        questions = data.questions;
+        startCountdown();
+    } catch (e) {
+        console.error('Error starting hard mode:', e);
+        alert('Error starting hard mode');
+    }
+});
+
+// Hard mode button handler
+document.getElementById('try-hard-mode-btn').addEventListener('click', async () => {
+    try {
+        await fetch('/api/set-difficulty', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ difficulty: 'hard', anonymous_id: anonymousId })
+        });
+        // Update local state
+        currentDifficulty = 'hard';
+        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-difficulty="hard"]').classList.add('active');
+
+        // Hide the prompt and show confirmation
+        const prompt = document.getElementById('hard-mode-prompt');
+        prompt.innerHTML = `
+            <div class="prompt-content confirmed">
+                <span class="prompt-icon">🔥</span>
+                <div class="prompt-text">
+                    <strong>Hard Mode Activated!</strong>
+                    <p>Tomorrow's questions will be more challenging.</p>
+                </div>
+            </div>
+        `;
+    } catch (e) {
+        console.error('Error setting hard mode:', e);
+    }
+});
 </script>
 {% endblock %}

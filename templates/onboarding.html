@@ -1,0 +1,631 @@
+{% extends 'base.html' %}
+
+{% block title %}Knowledge Profile Quiz - UpTriv{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="game-screen active">
+        <div class="login-card">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Intro Screen -->
+    <div id="intro-screen" class="game-screen">
+        <div class="onboarding-card">
+            <div class="onboarding-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <h2>Build Your Knowledge Profile</h2>
+            <p class="onboarding-desc">Answer 50 questions across 6 categories to help us understand your strengths and areas for growth.</p>
+
+            <div class="onboarding-progress-overview">
+                <div class="progress-stat">
+                    <span class="stat-number" id="completed-count">0</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="stat-number">50</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="stat-number" id="sets-remaining">5</span>
+                    <span class="stat-label">Sets Left</span>
+                </div>
+            </div>
+
+            <button id="start-onboarding-btn" class="play-button">
+                <span id="start-btn-text">Start Quiz</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+            </button>
+
+            <a href="{{ url_for('play') }}" class="skip-link">Skip for now - play daily game</a>
+        </div>
+    </div>
+
+    <!-- Already Complete Screen -->
+    <div id="complete-screen" class="game-screen">
+        <div class="onboarding-card">
+            <div class="complete-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+            </div>
+            <h2>Profile Complete!</h2>
+            <p>You've answered all 50 questions. Here's your knowledge breakdown:</p>
+
+            <div id="results-summary" class="results-summary">
+                <!-- Will be populated by JS -->
+            </div>
+
+            <div class="complete-actions">
+                <a href="{{ url_for('play') }}" class="btn btn-primary">Play Daily Game</a>
+                <a href="{{ url_for('profile') }}" class="btn btn-secondary">View Brain Map</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown Screen -->
+    <div id="countdown-screen" class="game-screen">
+        <div class="countdown-display">
+            <div class="countdown-number" id="countdown-number">3</div>
+            <p>Get Ready!</p>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="game-screen">
+        <div class="game-header">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="game-info">
+                <div class="question-counter">
+                    Set <span id="current-set">1</span>/5 - Q<span id="current-question">1</span>/<span id="total-questions">10</span>
+                </div>
+                <div class="category-badge" id="category-badge">
+                    <span class="category-name" id="category-name">Category</span>
+                </div>
+                <div class="timer" id="timer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span id="time-left">15</span>s
+                </div>
+            </div>
+        </div>
+
+        <div class="question-area">
+            <h2 class="question-text" id="question-text">Loading question...</h2>
+        </div>
+
+        <div class="options-grid" id="options-grid">
+            <!-- Options will be inserted here -->
+        </div>
+
+        <div class="answer-feedback" id="answer-feedback">
+            <div class="feedback-content">
+                <div class="feedback-icon" id="feedback-icon"></div>
+                <p class="feedback-text" id="feedback-text"></p>
+                <p class="correct-answer" id="correct-answer"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Set Complete Screen -->
+    <div id="set-complete-screen" class="game-screen">
+        <div class="onboarding-card">
+            <div class="set-complete-icon">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <h2>Set <span id="completed-set-num">1</span> Complete!</h2>
+            <p>You got <span id="set-score">0</span>/10 correct</p>
+
+            <div class="set-progress">
+                <div class="set-progress-bar">
+                    <div class="set-progress-fill" id="overall-progress-fill"></div>
+                </div>
+                <span class="set-progress-text"><span id="total-completed">10</span>/50 questions</span>
+            </div>
+
+            <div class="set-actions">
+                <button id="continue-btn" class="btn btn-primary">Continue to Set <span id="next-set-num">2</span></button>
+                <a href="{{ url_for('play') }}" class="btn btn-secondary">Take a Break</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Results Screen -->
+    <div id="final-screen" class="game-screen">
+        <div class="onboarding-card">
+            <div class="final-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="5"/>
+                    <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/>
+                    <path d="M16 3l2 2 4-4"/>
+                </svg>
+            </div>
+            <h2>Knowledge Profile Complete!</h2>
+            <p class="final-score">Overall Score: <span id="final-percentage">0</span>%</p>
+
+            <div id="category-breakdown" class="category-breakdown">
+                <!-- Will be populated by JS -->
+            </div>
+
+            <div id="difficulty-recommendation" class="difficulty-recommendation">
+                <!-- Will be populated by JS -->
+            </div>
+
+            <div class="final-actions">
+                <a href="{{ url_for('play') }}" class="btn btn-primary">Play Daily Game</a>
+                <a href="{{ url_for('profile') }}" class="btn btn-secondary">View Brain Map</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const QUESTION_TIME = 15;
+const FEEDBACK_TIME = 1500;
+const CATEGORIES = {{ categories | tojson }};
+
+let questions = [];
+let currentQuestionIndex = 0;
+let setScore = 0;
+let timer = null;
+let timeLeft = QUESTION_TIME;
+let questionStartTime = null;
+let anonymousId = null;
+let completedSoFar = 0;
+let currentSet = 1;
+
+// Screen management
+function showScreen(screenId) {
+    document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+// Get or create anonymous session
+async function getOrCreateSession() {
+    anonymousId = localStorage.getItem('uptriv_anonymous_id');
+
+    try {
+        const res = await fetch('/api/anonymous-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ anonymous_id: anonymousId })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            anonymousId = data.anonymous_id;
+            localStorage.setItem('uptriv_anonymous_id', anonymousId);
+            return true;
+        }
+        return false;
+    } catch (e) {
+        console.error('Error creating session:', e);
+        return false;
+    }
+}
+
+// Check onboarding status
+async function checkStatus() {
+    try {
+        // Ensure we have a session first
+        const hasSession = await getOrCreateSession();
+        if (!hasSession) {
+            showScreen('intro-screen');
+            return;
+        }
+
+        const url = anonymousId
+            ? `/api/onboarding-status?anonymous_id=${encodeURIComponent(anonymousId)}`
+            : '/api/onboarding-status';
+        const res = await fetch(url);
+        const data = await res.json();
+
+        completedSoFar = data.completed;
+        currentSet = Math.floor(completedSoFar / 10) + 1;
+
+        document.getElementById('completed-count').textContent = completedSoFar;
+        document.getElementById('sets-remaining').textContent = Math.ceil((50 - completedSoFar) / 10);
+
+        if (data.is_complete) {
+            // Show results
+            await loadResults();
+            showScreen('complete-screen');
+        } else {
+            // Update button text
+            if (completedSoFar > 0) {
+                document.getElementById('start-btn-text').textContent = `Continue Set ${currentSet}`;
+            }
+            showScreen('intro-screen');
+        }
+    } catch (e) {
+        console.error('Error checking status:', e);
+        showScreen('intro-screen');
+    }
+}
+
+// Load final results
+async function loadResults() {
+    try {
+        const url = anonymousId
+            ? `/api/onboarding-results?anonymous_id=${encodeURIComponent(anonymousId)}`
+            : '/api/onboarding-results';
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.success) {
+            // Show results summary
+            const summary = document.getElementById('results-summary');
+            let html = `<div class="overall-score">${data.overall.percentage}% Overall</div>`;
+            html += '<div class="category-bars">';
+
+            for (const [cat, stats] of Object.entries(data.categories)) {
+                const catInfo = CATEGORIES[cat] || {};
+                html += `
+                    <div class="category-bar-item">
+                        <span class="cat-name" style="color: ${catInfo.color || '#fff'}">${catInfo.name || cat}</span>
+                        <div class="cat-bar">
+                            <div class="cat-bar-fill" style="width: ${stats.percentage}%; background: ${catInfo.color || '#667eea'}"></div>
+                        </div>
+                        <span class="cat-pct">${stats.percentage}%</span>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            summary.innerHTML = html;
+        }
+    } catch (e) {
+        console.error('Error loading results:', e);
+    }
+}
+
+// Start onboarding button
+document.getElementById('start-onboarding-btn').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/api/start-onboarding', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ anonymous_id: anonymousId })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            if (data.is_complete) {
+                await loadResults();
+                showScreen('complete-screen');
+            } else {
+                alert(data.error);
+            }
+            return;
+        }
+
+        questions = data.questions;
+        currentSet = data.set_number;
+        completedSoFar = data.completed_so_far;
+        startCountdown();
+    } catch (err) {
+        console.error(err);
+        alert('Error starting quiz');
+    }
+});
+
+// Continue button
+document.getElementById('continue-btn').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/api/start-onboarding', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ anonymous_id: anonymousId })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            if (data.is_complete) {
+                await showFinalResults();
+            } else {
+                alert(data.error);
+            }
+            return;
+        }
+
+        questions = data.questions;
+        currentSet = data.set_number;
+        completedSoFar = data.completed_so_far;
+        startCountdown();
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+// Initialize
+checkStatus();
+
+function startCountdown() {
+    showScreen('countdown-screen');
+    let count = 3;
+    const countdownEl = document.getElementById('countdown-number');
+    countdownEl.textContent = count;
+
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownEl.textContent = count;
+            countdownEl.classList.add('pulse');
+            setTimeout(() => countdownEl.classList.remove('pulse'), 300);
+        } else {
+            clearInterval(interval);
+            startQuiz();
+        }
+    }, 1000);
+}
+
+function startQuiz() {
+    showScreen('game-screen');
+    currentQuestionIndex = 0;
+    setScore = 0;
+    showQuestion();
+}
+
+function showQuestion() {
+    const q = questions[currentQuestionIndex];
+
+    // Update UI
+    document.getElementById('current-set').textContent = currentSet;
+    document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+    document.getElementById('total-questions').textContent = questions.length;
+    document.getElementById('category-name').textContent = q.category_name;
+    document.getElementById('category-badge').style.setProperty('--cat-color', q.color);
+    document.getElementById('question-text').textContent = q.question;
+
+    // Update progress bar
+    const totalProgress = ((completedSoFar + currentQuestionIndex) / 50) * 100;
+    document.getElementById('progress-fill').style.width = `${totalProgress}%`;
+
+    // Create options
+    const optionsGrid = document.getElementById('options-grid');
+    optionsGrid.innerHTML = '';
+
+    // Shuffle options
+    const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+    shuffledOptions.forEach((option, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = option;
+        btn.style.animationDelay = `${i * 0.1}s`;
+        btn.addEventListener('click', () => selectAnswer(option));
+        optionsGrid.appendChild(btn);
+    });
+
+    // Hide feedback
+    document.getElementById('answer-feedback').classList.remove('show', 'correct', 'incorrect');
+
+    // Start timer
+    timeLeft = QUESTION_TIME;
+    questionStartTime = Date.now();
+    updateTimerDisplay();
+    timer = setInterval(updateTimer, 100);
+}
+
+function updateTimer() {
+    const elapsed = (Date.now() - questionStartTime) / 1000;
+    timeLeft = Math.max(0, QUESTION_TIME - elapsed);
+    updateTimerDisplay();
+
+    if (timeLeft <= 0) {
+        clearInterval(timer);
+        selectAnswer(null);
+    }
+}
+
+function updateTimerDisplay() {
+    const timerEl = document.getElementById('time-left');
+    timerEl.textContent = Math.ceil(timeLeft);
+
+    const timerContainer = document.getElementById('timer');
+    if (timeLeft <= 3) {
+        timerContainer.classList.add('danger');
+    } else {
+        timerContainer.classList.remove('danger');
+    }
+}
+
+async function selectAnswer(answer) {
+    clearInterval(timer);
+    const timeTaken = QUESTION_TIME - timeLeft;
+    const q = questions[currentQuestionIndex];
+
+    // Disable all options
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === answer) {
+            btn.classList.add('selected');
+        }
+    });
+
+    try {
+        const response = await fetch('/api/submit-onboarding-answer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                question_index: q.index,
+                answer: answer,
+                time_taken: timeTaken,
+                anonymous_id: anonymousId
+            })
+        });
+
+        const data = await response.json();
+        const correct = data.correct;
+
+        if (correct) setScore++;
+
+        // Show correct/incorrect on options
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            if (btn.textContent === data.correct_answer) {
+                btn.classList.add('correct');
+            } else if (btn.textContent === answer && !correct) {
+                btn.classList.add('incorrect');
+            }
+        });
+
+        showFeedback(correct, data.correct_answer, answer === null, data);
+
+    } catch (err) {
+        console.error('Error submitting answer:', err);
+        showFeedback(false, 'Error', false, {});
+    }
+}
+
+function showFeedback(correct, correctAnswer, timedOut, data) {
+    const feedback = document.getElementById('answer-feedback');
+    const icon = document.getElementById('feedback-icon');
+    const text = document.getElementById('feedback-text');
+    const correctEl = document.getElementById('correct-answer');
+
+    if (correct) {
+        feedback.classList.add('correct');
+        icon.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+        text.textContent = 'Correct!';
+        correctEl.textContent = '';
+    } else {
+        feedback.classList.add('incorrect');
+        icon.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+        text.textContent = timedOut ? "Time's up!" : 'Incorrect';
+        correctEl.textContent = `Answer: ${correctAnswer}`;
+    }
+
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+        feedback.classList.remove('show', 'correct', 'incorrect');
+
+        if (data.onboarding_complete) {
+            showFinalResults();
+        } else if (data.set_complete) {
+            showSetComplete(data.completed);
+        } else {
+            nextQuestion();
+        }
+    }, FEEDBACK_TIME);
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex >= questions.length) {
+        // This shouldn't happen as set_complete should trigger
+        showSetComplete(completedSoFar + questions.length);
+    } else {
+        showQuestion();
+    }
+}
+
+function showSetComplete(totalCompleted) {
+    document.getElementById('completed-set-num').textContent = currentSet;
+    document.getElementById('set-score').textContent = setScore;
+    document.getElementById('total-completed').textContent = totalCompleted;
+    document.getElementById('overall-progress-fill').style.width = `${(totalCompleted / 50) * 100}%`;
+    document.getElementById('next-set-num').textContent = currentSet + 1;
+
+    completedSoFar = totalCompleted;
+
+    showScreen('set-complete-screen');
+}
+
+async function showFinalResults() {
+    try {
+        const url = anonymousId
+            ? `/api/onboarding-results?anonymous_id=${encodeURIComponent(anonymousId)}`
+            : '/api/onboarding-results';
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.success) {
+            document.getElementById('final-percentage').textContent = data.overall.percentage;
+
+            // Category breakdown
+            const breakdown = document.getElementById('category-breakdown');
+            let html = '';
+            for (const [cat, stats] of Object.entries(data.categories)) {
+                const catInfo = CATEGORIES[cat] || {};
+                html += `
+                    <div class="category-result">
+                        <span class="cat-name" style="color: ${catInfo.color || '#fff'}">${catInfo.name || cat}</span>
+                        <div class="cat-bar">
+                            <div class="cat-bar-fill" style="width: ${stats.percentage}%; background: ${catInfo.color || '#667eea'}"></div>
+                        </div>
+                        <span class="cat-pct">${stats.percentage}%</span>
+                    </div>
+                `;
+            }
+            breakdown.innerHTML = html;
+
+            // Difficulty recommendation
+            const rec = document.getElementById('difficulty-recommendation');
+            if (data.recommended_difficulty === 'hard') {
+                rec.innerHTML = `
+                    <div class="recommendation hard">
+                        <span class="rec-icon">🔥</span>
+                        <div class="rec-text">
+                            <strong>You're ready for Hard Mode!</strong>
+                            <p>Your score qualifies you for more challenging questions.</p>
+                        </div>
+                        <button onclick="setDifficultyAndPlay('hard')" class="btn btn-primary btn-sm">Try Hard Mode</button>
+                    </div>
+                `;
+            } else {
+                rec.innerHTML = `
+                    <div class="recommendation easy">
+                        <span class="rec-icon">🎯</span>
+                        <div class="rec-text">
+                            <strong>Start with Easy Mode</strong>
+                            <p>Build your knowledge and unlock Hard Mode!</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        showScreen('final-screen');
+    } catch (e) {
+        console.error('Error loading final results:', e);
+        showScreen('final-screen');
+    }
+}
+
+async function setDifficultyAndPlay(difficulty) {
+    try {
+        await fetch('/api/set-difficulty', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ difficulty, anonymous_id: anonymousId })
+        });
+        window.location.href = '{{ url_for("play") }}';
+    } catch (e) {
+        console.error('Error setting difficulty:', e);
+        window.location.href = '{{ url_for("play") }}';
+    }
+}
+</script>
+{% endblock %}
