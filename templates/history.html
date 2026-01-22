@@ -115,15 +115,20 @@ function renderHistory(games) {
             return `<span class="preview-emoji ${statusClass}">${emoji}</span>`;
         }).join('');
 
+        const difficulty = game.difficulty || 'easy';
+        const difficultyLabel = difficulty === 'hard' ? '🔥 Hard' : '🎯 Easy';
+        const difficultyClass = difficulty === 'hard' ? 'hard' : 'easy';
+
         gameCard.innerHTML = `
             <div class="game-card-header" onclick="toggleGame(this)">
                 <div class="game-date-score">
+                    <span class="difficulty-badge ${difficultyClass}">${difficultyLabel}</span>
                     <span class="game-date">${formattedDate}</span>
                     <span class="game-score">${game.score}/${game.total}</span>
                 </div>
                 <div class="game-preview">
                     <div class="emoji-preview">${emojiPreview}</div>
-                    <button class="share-btn" onclick="shareGame(event, '${game.date}')">
+                    <button class="share-btn" onclick="shareGame(event, '${game.date}', '${difficulty}')">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="18" cy="5" r="3"/>
                             <circle cx="6" cy="12" r="3"/>

@@ -2245,10 +2245,10 @@ def get_history():
     user_id = user['id']
 
     cur.execute(f'''
-        SELECT game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken
+        SELECT game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken, COALESCE(difficulty, 'easy') as difficulty
         FROM game_results
         WHERE user_id = {placeholder}
-        ORDER BY game_date DESC, created_at ASC
+        ORDER BY game_date DESC, difficulty DESC, created_at ASC
     ''', (user_id,))
     results = cur.fetchall()
 
@@ -2267,12 +2267,22 @@ def get_history():
 
     conn.close()
 
+    # Group by date AND difficulty (so easy and hard on same day are separate rows)
     games = {}
     for r in results:
         game_date = r['game_date'] if isinstance(r['game_date'], str) else r['game_date'].isoformat()
-        if game_date not in games:
-            games[game_date] = {'date': game_date, 'questions': [], 'score': 0, 'total': 0}
-        games[game_date]['questions'].append({
+        difficulty = r['difficulty'] or 'easy'
+        game_key = f"{game_date}_{difficulty}"
+
+        if game_key not in games:
+            games[game_key] = {
+                'date': game_date,
+                'difficulty': difficulty,
+                'questions': [],
+                'score': 0,
+                'total': 0
+            }
+        games[game_key]['questions'].append({
             'category': r['category'],
             'category_name': CATEGORIES.get(r['category'], {}).get('name', r['category']),
             'color': CATEGORIES.get(r['category'], {}).get('color', '#888'),
@@ -2283,11 +2293,12 @@ def get_history():
             'time_taken': round(r['time_taken'], 1),
             'percent_correct': question_stats.get(r['question'], 0)
         })
-        games[game_date]['total'] += 1
+        games[game_key]['total'] += 1
         if r['correct']:
-            games[game_date]['score'] += 1
+            games[game_key]['score'] += 1
 
-    games_list = sorted(games.values(), key=lambda x: x['date'], reverse=True)
+    # Sort by date desc, then hard before easy
+    games_list = sorted(games.values(), key=lambda x: (x['date'], x['difficulty']), reverse=True)
     return jsonify({'games': games_list})
 
 
