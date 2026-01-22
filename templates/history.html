@@ -94,13 +94,23 @@ function renderHistory(games) {
     const historyList = document.getElementById('history-list');
     historyList.innerHTML = '';
 
-    games.forEach((game, index) => {
-        const gameCard = document.createElement('div');
-        gameCard.className = 'game-card';
-        gameCard.style.animationDelay = `${index * 0.05}s`;
+    // Group games by date
+    const gamesByDate = {};
+    games.forEach(game => {
+        if (!gamesByDate[game.date]) {
+            gamesByDate[game.date] = [];
+        }
+        gamesByDate[game.date].push(game);
+    });
 
-        // Format date (use UTC to prevent timezone shift)
-        const dateObj = new Date(game.date + 'T00:00:00');
+    // Sort dates descending
+    const sortedDates = Object.keys(gamesByDate).sort((a, b) => b.localeCompare(a));
+
+    sortedDates.forEach((date, dateIndex) => {
+        const dayGames = gamesByDate[date];
+
+        // Format date
+        const dateObj = new Date(date + 'T00:00:00');
         const formattedDate = dateObj.toLocaleDateString('en-US', {
             weekday: 'long',
             month: 'long',
@@ -108,70 +118,96 @@ function renderHistory(games) {
             year: 'numeric'
         });
 
-        // Build emoji row for preview with colored borders
-        const emojiPreview = game.questions.map(r => {
-            const emoji = CAT_EMOJIS[r.category] || '❓';
-            const statusClass = r.correct ? 'correct' : 'incorrect';
-            return `<span class="preview-emoji ${statusClass}">${emoji}</span>`;
-        }).join('');
+        // Create date group container
+        const dateGroup = document.createElement('div');
+        dateGroup.className = 'date-group';
+        dateGroup.style.animationDelay = `${dateIndex * 0.05}s`;
 
-        const difficulty = game.difficulty || 'easy';
-        const difficultyLabel = difficulty === 'hard' ? '🔥 Hard' : '🎯 Easy';
-        const difficultyClass = difficulty === 'hard' ? 'hard' : 'easy';
+        // Date header
+        const dateHeader = document.createElement('div');
+        dateHeader.className = 'date-header';
+        dateHeader.innerHTML = `<h3>${formattedDate}</h3>`;
+        dateGroup.appendChild(dateHeader);
 
-        gameCard.innerHTML = `
-            <div class="game-card-header" onclick="toggleGame(this)">
-                <div class="game-date-score">
-                    <span class="difficulty-badge ${difficultyClass}">${difficultyLabel}</span>
-                    <span class="game-date">${formattedDate}</span>
-                    <span class="game-score">${game.score}/${game.total}</span>
-                </div>
-                <div class="game-preview">
-                    <div class="emoji-preview">${emojiPreview}</div>
-                    <button class="share-btn" onclick="shareGame(event, '${game.date}', '${difficulty}')">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="18" cy="5" r="3"/>
-                            <circle cx="6" cy="12" r="3"/>
-                            <circle cx="18" cy="19" r="3"/>
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                        </svg>
-                    </button>
-                    <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="game-card-details">
-                ${game.questions.map((r, i) => `
-                    <div class="result-row ${r.correct ? 'correct' : 'incorrect'}">
-                        <div class="result-category">
-                            <span class="cat-emoji-box ${r.correct ? 'correct' : 'incorrect'}">${CAT_EMOJIS[r.category] || '❓'}</span>
-                            <span class="cat-name" style="color: ${CATEGORIES[r.category]?.color || '#fff'}">${r.category_name}</span>
-                        </div>
-                        <div class="result-question">
-                            <p class="question-text">${r.question}</p>
-                            <div class="answers">
-                                <div class="correct-answer">
-                                    <span class="answer-label">Correct:</span>
-                                    <span class="answer-value">${r.correct_answer}</span>
-                                </div>
-                                ${!r.correct ? `
-                                <div class="user-answer">
-                                    <span class="answer-label">Your answer:</span>
-                                    <span class="answer-value">${r.user_answer || 'No answer (timed out)'}</span>
-                                </div>
-                                ` : ''}
-                            </div>
-                            <div class="question-stat">${r.percent_correct}% of players got this right</div>
-                        </div>
+        // Sort games: hard first, then easy
+        dayGames.sort((a, b) => (b.difficulty || 'easy').localeCompare(a.difficulty || 'easy'));
+
+        // Render each difficulty as a sub-row
+        dayGames.forEach((game, gameIndex) => {
+            const difficulty = game.difficulty || 'easy';
+            const difficultyLabel = difficulty === 'hard' ? '🔥 Hard' : '🎯 Easy';
+            const difficultyClass = difficulty === 'hard' ? 'hard' : 'easy';
+
+            // Build emoji row for preview
+            const emojiPreview = game.questions.map(r => {
+                const emoji = CAT_EMOJIS[r.category] || '❓';
+                const statusClass = r.correct ? 'correct' : 'incorrect';
+                return `<span class="preview-emoji ${statusClass}">${emoji}</span>`;
+            }).join('');
+
+            const gameRow = document.createElement('div');
+            gameRow.className = 'game-row';
+
+            gameRow.innerHTML = `
+                <div class="game-row-header" onclick="toggleGameRow(this)">
+                    <div class="difficulty-label ${difficultyClass}">${difficultyLabel}</div>
+                    <div class="game-row-content">
+                        <div class="emoji-preview">${emojiPreview}</div>
+                        <span class="game-score">${game.score}/${game.total}</span>
                     </div>
-                `).join('')}
-            </div>
-        `;
+                    <div class="game-row-actions">
+                        <button class="share-btn" onclick="shareGame(event, '${game.date}', '${difficulty}')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="game-row-details">
+                    ${game.questions.map((r, i) => `
+                        <div class="result-row ${r.correct ? 'correct' : 'incorrect'}">
+                            <div class="result-category">
+                                <span class="cat-emoji-box ${r.correct ? 'correct' : 'incorrect'}">${CAT_EMOJIS[r.category] || '❓'}</span>
+                                <span class="cat-name" style="color: ${CATEGORIES[r.category]?.color || '#fff'}">${r.category_name}</span>
+                            </div>
+                            <div class="result-question">
+                                <p class="question-text">${r.question}</p>
+                                <div class="answers">
+                                    <div class="correct-answer">
+                                        <span class="answer-label">Correct:</span>
+                                        <span class="answer-value">${r.correct_answer}</span>
+                                    </div>
+                                    ${!r.correct ? `
+                                    <div class="user-answer">
+                                        <span class="answer-label">Your answer:</span>
+                                        <span class="answer-value">${r.user_answer || 'No answer (timed out)'}</span>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                                <div class="question-stat">${r.percent_correct}% of players got this right</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
 
-        historyList.appendChild(gameCard);
+            dateGroup.appendChild(gameRow);
+        });
+
+        historyList.appendChild(dateGroup);
     });
+}
+
+function toggleGameRow(header) {
+    const row = header.closest('.game-row');
+    row.classList.toggle('expanded');
 }
 
 function toggleGame(header) {

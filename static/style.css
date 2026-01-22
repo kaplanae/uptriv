@@ -1660,6 +1660,97 @@ footer {
     color: var(--error);
 }
 
+/* Date-grouped history layout */
+.date-group {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    animation: slideUp 0.3s ease backwards;
+}
+
+.date-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+}
+
+.date-header h3 {
+    margin: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.game-row {
+    border-bottom: 1px solid var(--border);
+}
+
+.game-row:last-child {
+    border-bottom: none;
+}
+
+.game-row-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    gap: 1rem;
+}
+
+.game-row-header:hover {
+    background: var(--bg-hover);
+}
+
+.difficulty-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.difficulty-label.easy {
+    background: rgba(102, 126, 234, 0.15);
+    color: var(--accent-primary);
+}
+
+.difficulty-label.hard {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--error);
+}
+
+.game-row-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.game-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.game-row-details {
+    display: none;
+    padding: 0 1.5rem 1rem;
+    background: var(--bg-secondary);
+}
+
+.game-row.expanded .game-row-details {
+    display: block;
+}
+
+.game-row.expanded .expand-icon {
+    transform: rotate(180deg);
+}
+
 .game-preview {
     display: flex;
     align-items: center;
