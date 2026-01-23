@@ -1372,13 +1372,22 @@ def get_played_difficulties_today(user_id):
     conn = get_db()
     cur = conn.cursor()
     placeholder = '%s' if USE_POSTGRES else '?'
+    # Fetch all results for user and filter in Python to avoid SQL type issues
     cur.execute(
-        f'SELECT DISTINCT COALESCE(difficulty, \'easy\') as difficulty FROM game_results WHERE user_id = {placeholder} AND game_date = {placeholder}',
-        (user_id, today)
+        f'SELECT game_date, COALESCE(difficulty, \'easy\') as difficulty FROM game_results WHERE user_id = {placeholder}',
+        (user_id,)
     )
     results = cur.fetchall()
     conn.close()
-    return [r['difficulty'] for r in results if r['difficulty']]
+
+    # Filter to today's games in Python
+    difficulties = set()
+    for r in results:
+        game_date = str(r['game_date'])
+        # Handle both DATE objects and strings
+        if game_date == today or game_date.startswith(today):
+            difficulties.add(r['difficulty'] or 'easy')
+    return list(difficulties)
 
 
 def get_friends(user_id):
@@ -1784,73 +1793,81 @@ def submit_onboarding_answer():
 @app.route('/api/onboarding-results')
 def onboarding_results():
     """Get summary of onboarding quiz results."""
-    user_id = None
+    try:
+        user_id = None
 
-    if current_user.is_authenticated:
-        user_id = current_user.id
-    else:
-        anonymous_id = request.args.get('anonymous_id')
-        if anonymous_id:
-            conn = get_db()
-            cur = conn.cursor()
-            ph = get_placeholder()
-            cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
-            user = cur.fetchone()
-            conn.close()
-            if user:
-                user_id = user['id']
+        if current_user.is_authenticated:
+            user_id = current_user.id
+        else:
+            anonymous_id = request.args.get('anonymous_id')
+            if anonymous_id:
+                conn = get_db()
+                cur = conn.cursor()
+                ph = get_placeholder()
+                cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
+                user = cur.fetchone()
+                conn.close()
+                if user:
+                    user_id = user['id']
 
-    if not user_id:
-        return jsonify({'error': 'No user session'}), 401
+        if not user_id:
+            return jsonify({'success': False, 'error': 'No user session'})
 
-    conn = get_db()
-    cur = conn.cursor()
-    ph = get_placeholder()
+        conn = get_db()
+        cur = conn.cursor()
+        ph = get_placeholder()
 
-    # Get all onboarding results
-    cur.execute(f'''
-        SELECT category, correct
-        FROM game_results
-        WHERE user_id = {ph} AND game_date LIKE 'onboarding-%'
-    ''', (user_id,))
-    results = cur.fetchall()
-    conn.close()
+        # Get all results and filter in Python to avoid SQL type issues
+        cur.execute(f'''
+            SELECT game_date, category, correct
+            FROM game_results
+            WHERE user_id = {ph}
+        ''', (user_id,))
+        all_results = cur.fetchall()
+        conn.close()
 
-    if not results:
-        return jsonify({'success': False, 'error': 'No onboarding results found'})
+        # Filter to onboarding results in Python
+        results = [r for r in all_results if str(r['game_date']).startswith('onboarding')]
 
-    # Calculate stats by category
-    category_stats = {}
-    total_correct = 0
-    total_questions = len(results)
+        if not results:
+            return jsonify({'success': False, 'error': 'No onboarding results found'})
 
-    for r in results:
-        cat = r['category']
-        if cat not in category_stats:
-            category_stats[cat] = {'correct': 0, 'total': 0}
-        category_stats[cat]['total'] += 1
-        if r['correct']:
-            category_stats[cat]['correct'] += 1
-            total_correct += 1
+        # Calculate stats by category
+        category_stats = {}
+        total_correct = 0
+        total_questions = len(results)
 
-    # Calculate percentages
-    for cat in category_stats:
-        stats = category_stats[cat]
-        stats['percentage'] = round((stats['correct'] / stats['total']) * 100) if stats['total'] > 0 else 0
+        for r in results:
+            cat = r['category']
+            if cat not in category_stats:
+                category_stats[cat] = {'correct': 0, 'total': 0}
+            category_stats[cat]['total'] += 1
+            if r['correct']:
+                category_stats[cat]['correct'] += 1
+                total_correct += 1
 
-    overall_percentage = round((total_correct / total_questions) * 100) if total_questions > 0 else 0
+        # Calculate percentages
+        for cat in category_stats:
+            stats = category_stats[cat]
+            stats['percentage'] = round((stats['correct'] / stats['total']) * 100) if stats['total'] > 0 else 0
 
-    return jsonify({
-        'success': True,
-        'overall': {
-            'correct': total_correct,
-            'total': total_questions,
-            'completed': total_questions,
-            'percentage': overall_percentage
-        },
-        'categories': category_stats,
-        'recommended_difficulty': 'hard' if overall_percentage >= 80 else 'easy'
-    })
+        overall_percentage = round((total_correct / total_questions) * 100) if total_questions > 0 else 0
+
+        return jsonify({
+            'success': True,
+            'overall': {
+                'correct': total_correct,
+                'total': total_questions,
+                'completed': total_questions,
+                'percentage': overall_percentage
+            },
+            'categories': category_stats,
+            'recommended_difficulty': 'hard' if overall_percentage >= 80 else 'easy'
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @app.route('/api/check-hard-mode-eligibility')
