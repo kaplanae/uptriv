@@ -2252,102 +2252,108 @@ def get_stats():
 
 @app.route('/api/get-history', methods=['GET'])
 def get_history():
-    username = request.args.get('username')
-    anonymous_id = request.args.get('anonymous_id')
-    user_id = None
-    auth_method = None
+    try:
+        username = request.args.get('username')
+        anonymous_id = request.args.get('anonymous_id')
+        user_id = None
+        auth_method = None
 
-    conn = get_db()
-    cur = conn.cursor()
-    placeholder = '%s' if USE_POSTGRES else '?'
+        conn = get_db()
+        cur = conn.cursor()
+        placeholder = '%s' if USE_POSTGRES else '?'
 
-    # Try to find user by various methods
-    if current_user.is_authenticated:
-        user_id = current_user.id
-        auth_method = 'google_session'
-    elif username:
-        cur.execute(f'SELECT id FROM users WHERE username = {placeholder}', (username,))
-        user = cur.fetchone()
-        if user:
-            user_id = user['id']
-            auth_method = 'username'
+        # Try to find user by various methods
+        if current_user.is_authenticated:
+            user_id = current_user.id
+            auth_method = 'google_session'
+        elif username:
+            cur.execute(f'SELECT id FROM users WHERE username = {placeholder}', (username,))
+            user = cur.fetchone()
+            if user:
+                user_id = user['id']
+                auth_method = 'username'
 
-    # Also try anonymous_id if we still don't have a user
-    if not user_id and anonymous_id:
-        cur.execute(f'SELECT id FROM users WHERE anonymous_id = {placeholder}', (anonymous_id,))
-        user = cur.fetchone()
-        if user:
-            user_id = user['id']
-            auth_method = 'anonymous_id'
+        # Also try anonymous_id if we still don't have a user
+        if not user_id and anonymous_id:
+            cur.execute(f'SELECT id FROM users WHERE anonymous_id = {placeholder}', (anonymous_id,))
+            user = cur.fetchone()
+            if user:
+                user_id = user['id']
+                auth_method = 'anonymous_id'
 
-    if not user_id:
-        conn.close()
-        return jsonify({'error': 'User not found', 'games': [], 'debug': {'username': username, 'anonymous_id': anonymous_id, 'is_authenticated': current_user.is_authenticated if hasattr(current_user, 'is_authenticated') else False}})
+        if not user_id:
+            conn.close()
+            return jsonify({'error': 'User not found', 'games': [], 'debug': {'username': username, 'anonymous_id': anonymous_id, 'is_authenticated': current_user.is_authenticated if hasattr(current_user, 'is_authenticated') else False}})
 
-    cur.execute(f'''
-        SELECT game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken, COALESCE(difficulty, 'easy') as difficulty
-        FROM game_results
-        WHERE user_id = {placeholder} AND game_date NOT LIKE 'onboarding-%'
-        ORDER BY game_date DESC, difficulty DESC, created_at ASC
-    ''', (user_id,))
-    results = cur.fetchall()
-
-    # Get percentage stats for all questions this user has answered
-    questions_list = list(set(r['question'] for r in results))
-    question_stats = {}
-    for q in questions_list:
         cur.execute(f'''
-            SELECT COUNT(*) as total, SUM(correct) as correct_count
-            FROM game_results WHERE question = {placeholder}
-        ''', (q,))
-        stats = cur.fetchone()
-        total = stats['total'] or 1
-        correct_count = stats['correct_count'] or 0
-        question_stats[q] = round((correct_count / total) * 100)
+            SELECT game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken, COALESCE(difficulty, 'easy') as difficulty
+            FROM game_results
+            WHERE user_id = {placeholder} AND CAST(game_date AS TEXT) NOT LIKE 'onboarding-%'
+            ORDER BY game_date DESC, difficulty DESC, created_at ASC
+        ''', (user_id,))
+        results = cur.fetchall()
 
-    conn.close()
+        # Get percentage stats for all questions this user has answered
+        questions_list = list(set(r['question'] for r in results))
+        question_stats = {}
+        for q in questions_list:
+            cur.execute(f'''
+                SELECT COUNT(*) as total, SUM(correct) as correct_count
+                FROM game_results WHERE question = {placeholder}
+            ''', (q,))
+            stats = cur.fetchone()
+            total = stats['total'] or 1
+            correct_count = stats['correct_count'] or 0
+            question_stats[q] = round((correct_count / total) * 100)
 
-    # Group by date AND difficulty (so easy and hard on same day are separate rows)
-    games = {}
-    for r in results:
-        game_date = r['game_date'] if isinstance(r['game_date'], str) else r['game_date'].isoformat()
-        difficulty = r['difficulty'] or 'easy'
-        game_key = f"{game_date}_{difficulty}"
+        conn.close()
 
-        if game_key not in games:
-            games[game_key] = {
-                'date': game_date,
-                'difficulty': difficulty,
-                'questions': [],
-                'score': 0,
-                'total': 0
+        # Group by date AND difficulty (so easy and hard on same day are separate rows)
+        games = {}
+        for r in results:
+            game_date = r['game_date'] if isinstance(r['game_date'], str) else r['game_date'].isoformat()
+            difficulty = r['difficulty'] or 'easy'
+            game_key = f"{game_date}_{difficulty}"
+
+            if game_key not in games:
+                games[game_key] = {
+                    'date': game_date,
+                    'difficulty': difficulty,
+                    'questions': [],
+                    'score': 0,
+                    'total': 0
+                }
+            games[game_key]['questions'].append({
+                'category': r['category'],
+                'category_name': CATEGORIES.get(r['category'], {}).get('name', r['category']),
+                'color': CATEGORIES.get(r['category'], {}).get('color', '#888'),
+                'question': r['question'],
+                'correct_answer': r['correct_answer'],
+                'user_answer': r['user_answer'] or '(No answer)',
+                'correct': r['correct'],
+                'time_taken': round(r['time_taken'], 1),
+                'percent_correct': question_stats.get(r['question'], 0)
+            })
+            games[game_key]['total'] += 1
+            if r['correct']:
+                games[game_key]['score'] += 1
+
+        # Sort by date desc, then hard before easy
+        games_list = sorted(games.values(), key=lambda x: (x['date'], x['difficulty']), reverse=True)
+        return jsonify({
+            'games': games_list,
+            'debug': {
+                'user_id': user_id,
+                'auth_method': auth_method,
+                'total_results': len(results),
+                'total_games': len(games_list)
             }
-        games[game_key]['questions'].append({
-            'category': r['category'],
-            'category_name': CATEGORIES.get(r['category'], {}).get('name', r['category']),
-            'color': CATEGORIES.get(r['category'], {}).get('color', '#888'),
-            'question': r['question'],
-            'correct_answer': r['correct_answer'],
-            'user_answer': r['user_answer'] or '(No answer)',
-            'correct': r['correct'],
-            'time_taken': round(r['time_taken'], 1),
-            'percent_correct': question_stats.get(r['question'], 0)
         })
-        games[game_key]['total'] += 1
-        if r['correct']:
-            games[game_key]['score'] += 1
-
-    # Sort by date desc, then hard before easy
-    games_list = sorted(games.values(), key=lambda x: (x['date'], x['difficulty']), reverse=True)
-    return jsonify({
-        'games': games_list,
-        'debug': {
-            'user_id': user_id,
-            'auth_method': auth_method,
-            'total_results': len(results),
-            'total_games': len(games_list)
-        }
-    })
+    except Exception as e:
+        import traceback
+        print(f"Error in get_history: {e}")
+        print(traceback.format_exc())
+        return jsonify({'error': str(e), 'games': []}), 500
 
 
 @app.route('/api/get-share-text', methods=['GET'])
