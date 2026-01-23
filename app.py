@@ -2283,15 +2283,19 @@ def get_history():
 
         if not user_id:
             conn.close()
-            return jsonify({'error': 'User not found', 'games': [], 'debug': {'username': username, 'anonymous_id': anonymous_id, 'is_authenticated': current_user.is_authenticated if hasattr(current_user, 'is_authenticated') else False}})
+            return jsonify({'error': 'User not found', 'games': []})
 
+        # Simple query without the LIKE filter to test
         cur.execute(f'''
             SELECT game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken, COALESCE(difficulty, 'easy') as difficulty
             FROM game_results
-            WHERE user_id = {placeholder} AND CAST(game_date AS TEXT) NOT LIKE 'onboarding-%'
-            ORDER BY game_date DESC, difficulty DESC, created_at ASC
+            WHERE user_id = {placeholder}
+            ORDER BY created_at DESC
         ''', (user_id,))
-        results = cur.fetchall()
+        all_results = cur.fetchall()
+
+        # Filter out onboarding in Python instead of SQL
+        results = [r for r in all_results if not str(r['game_date']).startswith('onboarding')]
 
         # Get percentage stats for all questions this user has answered
         questions_list = list(set(r['question'] for r in results))
@@ -2345,14 +2349,14 @@ def get_history():
             'debug': {
                 'user_id': user_id,
                 'auth_method': auth_method,
-                'total_results': len(results),
+                'total_results': len(all_results),
+                'filtered_results': len(results),
                 'total_games': len(games_list)
             }
         })
     except Exception as e:
         import traceback
-        print(f"Error in get_history: {e}")
-        print(traceback.format_exc())
+        traceback.print_exc()
         return jsonify({'error': str(e), 'games': []}), 500
 
 
