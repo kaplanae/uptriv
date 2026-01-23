@@ -2269,8 +2269,6 @@ def get_history():
         conn.close()
         return jsonify({'error': 'User not found', 'games': []})
 
-    user_id = user['id']
-
     cur.execute(f'''
         SELECT game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken, COALESCE(difficulty, 'easy') as difficulty
         FROM game_results
