@@ -203,7 +203,7 @@
             <p id="already-played-message">New questions drop at midnight. Come back tomorrow!</p>
 
             <!-- Hard Mode Button -->
-            <div style="background: #fee2e2; border: 2px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
+            <div id="play-hard-now" style="background: #fee2e2; border: 2px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
                 <p style="margin: 0 0 1rem 0; font-size: 1.1rem;">🔥 <strong>Want a challenge?</strong> Try hard mode!</p>
                 <button onclick="playHardModeNow()" style="background: #ef4444; color: white; border: none; padding: 0.875rem 2rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">
                     Play Hard Mode Now
@@ -411,7 +411,7 @@ document.getElementById('start-game-btn').addEventListener('click', async () => 
         }
 
         if (data.error) {
-            alert(data.error);
+            alert(data.message || data.error);
             return;
         }
 
@@ -419,7 +419,7 @@ document.getElementById('start-game-btn').addEventListener('click', async () => 
         startCountdown();
     } catch (err) {
         console.error(err);
-        alert('Error starting game');
+        alert('Error starting game: ' + err.message);
     }
 });
 
