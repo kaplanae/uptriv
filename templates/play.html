@@ -734,12 +734,12 @@ async function playHardModeNow() {
         const data = await response.json();
 
         if (data.error === 'already_played') {
-            alert("You've already completed both easy and hard mode today! Come back tomorrow.");
+            alert(data.message || "You've already played today! Come back tomorrow.");
             return;
         }
 
         if (data.error) {
-            alert('Hard mode error: ' + data.error);
+            alert(data.message || data.error);
             return;
         }
 

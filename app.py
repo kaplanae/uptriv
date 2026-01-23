@@ -1373,12 +1373,12 @@ def get_played_difficulties_today(user_id):
     cur = conn.cursor()
     placeholder = '%s' if USE_POSTGRES else '?'
     cur.execute(
-        f'SELECT DISTINCT difficulty FROM game_results WHERE user_id = {placeholder} AND game_date = {placeholder}',
+        f'SELECT DISTINCT COALESCE(difficulty, \'easy\') as difficulty FROM game_results WHERE user_id = {placeholder} AND game_date = {placeholder}',
         (user_id, today)
     )
     results = cur.fetchall()
     conn.close()
-    return [r['difficulty'] for r in results]
+    return [r['difficulty'] for r in results if r['difficulty']]
 
 
 def get_friends(user_id):
@@ -2129,9 +2129,18 @@ def start_game():
         if current_difficulty in played_today:
             # If they played easy but not hard, they can still play hard
             can_play_hard = 'easy' in played_today and 'hard' not in played_today
+
+            # Customize message based on what they've played
+            if 'easy' in played_today and 'hard' in played_today:
+                message = "You've completed both Easy and Hard mode today! Come back tomorrow for new questions."
+            elif current_difficulty == 'hard' and 'hard' in played_today:
+                message = "You've already played Hard mode today! Come back tomorrow for new questions."
+            else:
+                message = "You've already played Easy mode today! Try Hard mode for an extra challenge, or come back tomorrow."
+
             return jsonify({
                 'error': 'already_played',
-                'message': 'You already played today! Come back tomorrow for new questions.',
+                'message': message,
                 'played_difficulties': played_today,
                 'can_play_hard': can_play_hard
             }), 400
@@ -2246,6 +2255,7 @@ def get_history():
     username = request.args.get('username')
     anonymous_id = request.args.get('anonymous_id')
     user_id = None
+    auth_method = None
 
     conn = get_db()
     cur = conn.cursor()
@@ -2254,20 +2264,25 @@ def get_history():
     # Try to find user by various methods
     if current_user.is_authenticated:
         user_id = current_user.id
+        auth_method = 'google_session'
     elif username:
         cur.execute(f'SELECT id FROM users WHERE username = {placeholder}', (username,))
         user = cur.fetchone()
         if user:
             user_id = user['id']
-    elif anonymous_id:
+            auth_method = 'username'
+
+    # Also try anonymous_id if we still don't have a user
+    if not user_id and anonymous_id:
         cur.execute(f'SELECT id FROM users WHERE anonymous_id = {placeholder}', (anonymous_id,))
         user = cur.fetchone()
         if user:
             user_id = user['id']
+            auth_method = 'anonymous_id'
 
     if not user_id:
         conn.close()
-        return jsonify({'error': 'User not found', 'games': []})
+        return jsonify({'error': 'User not found', 'games': [], 'debug': {'username': username, 'anonymous_id': anonymous_id, 'is_authenticated': current_user.is_authenticated if hasattr(current_user, 'is_authenticated') else False}})
 
     cur.execute(f'''
         SELECT game_date, category, subcategory, question, correct_answer, user_answer, correct, time_taken, COALESCE(difficulty, 'easy') as difficulty
@@ -2324,7 +2339,15 @@ def get_history():
 
     # Sort by date desc, then hard before easy
     games_list = sorted(games.values(), key=lambda x: (x['date'], x['difficulty']), reverse=True)
-    return jsonify({'games': games_list})
+    return jsonify({
+        'games': games_list,
+        'debug': {
+            'user_id': user_id,
+            'auth_method': auth_method,
+            'total_results': len(results),
+            'total_games': len(games_list)
+        }
+    })
 
 
 @app.route('/api/get-share-text', methods=['GET'])

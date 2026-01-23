@@ -120,6 +120,9 @@ async function loadHistory() {
         const historyData = await historyRes.json();
         const quizData = await quizRes.json();
 
+        console.log('History API response:', historyData);
+        console.log('Quiz API response:', quizData);
+
         document.getElementById('loading-state').style.display = 'none';
 
         let hasContent = false;
