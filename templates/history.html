@@ -108,8 +108,12 @@ async function loadHistory() {
 
     try {
         // Fetch both regular history and profile quiz status
+        const historyParams = new URLSearchParams();
+        if (username) historyParams.set('username', username);
+        if (anonymousId) historyParams.set('anonymous_id', anonymousId);
+
         const [historyRes, quizRes] = await Promise.all([
-            fetch(`/api/get-history?username=${encodeURIComponent(username || '')}`),
+            fetch(`/api/get-history?${historyParams.toString()}`),
             fetch(`/api/onboarding-results?anonymous_id=${encodeURIComponent(anonymousId || '')}`)
         ]);
 

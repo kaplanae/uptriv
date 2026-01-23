@@ -2244,20 +2244,28 @@ def get_stats():
 @app.route('/api/get-history', methods=['GET'])
 def get_history():
     username = request.args.get('username')
-
-    if not username and current_user.is_authenticated:
-        username = current_user.username
-
-    if not username:
-        return jsonify({'error': 'Username required'}), 400
+    anonymous_id = request.args.get('anonymous_id')
+    user_id = None
 
     conn = get_db()
     cur = conn.cursor()
     placeholder = '%s' if USE_POSTGRES else '?'
 
-    cur.execute(f'SELECT id FROM users WHERE username = {placeholder}', (username,))
-    user = cur.fetchone()
-    if not user:
+    # Try to find user by various methods
+    if current_user.is_authenticated:
+        user_id = current_user.id
+    elif username:
+        cur.execute(f'SELECT id FROM users WHERE username = {placeholder}', (username,))
+        user = cur.fetchone()
+        if user:
+            user_id = user['id']
+    elif anonymous_id:
+        cur.execute(f'SELECT id FROM users WHERE anonymous_id = {placeholder}', (anonymous_id,))
+        user = cur.fetchone()
+        if user:
+            user_id = user['id']
+
+    if not user_id:
         conn.close()
         return jsonify({'error': 'User not found', 'games': []})
 
