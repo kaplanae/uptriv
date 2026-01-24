@@ -2972,6 +2972,45 @@ def api_leaderboard():
         for i, entry in enumerate(category_leaderboards[cat]):
             entry['rank'] = i + 1
 
+    # Add fake users to fill leaderboard if less than 10 real users
+    fake_users = [
+        {'name': 'Alex', 'pct': 92, 'games': 45},
+        {'name': 'Jordan', 'pct': 88, 'games': 38},
+        {'name': 'Taylor', 'pct': 85, 'games': 52},
+        {'name': 'Morgan', 'pct': 82, 'games': 41},
+        {'name': 'Casey', 'pct': 79, 'games': 33},
+        {'name': 'Riley', 'pct': 76, 'games': 29},
+        {'name': 'Quinn', 'pct': 73, 'games': 24},
+        {'name': 'Avery', 'pct': 70, 'games': 19},
+        {'name': 'Jamie', 'pct': 67, 'games': 15},
+        {'name': 'Drew', 'pct': 64, 'games': 12},
+    ]
+
+    if len(leaderboard) < 10:
+        # Add fake users to fill to 10
+        existing_count = len(leaderboard)
+        for i, fake in enumerate(fake_users):
+            if len(leaderboard) >= 10:
+                break
+            # Only add if this fake user would fit in the rankings
+            leaderboard.append({
+                'user': {
+                    'id': -1 - i,
+                    'username': fake['name'],
+                    'profile_picture': None,
+                    'is_self': False,
+                    'is_fake': True
+                },
+                'percentage': fake['pct'],
+                'games_played': fake['games'],
+                'rank': existing_count + i + 1
+            })
+
+        # Re-sort and re-rank
+        leaderboard.sort(key=lambda x: (-x['percentage'], -x['games_played']))
+        for i, entry in enumerate(leaderboard):
+            entry['rank'] = i + 1
+
     return jsonify({
         'overall': leaderboard,
         'categories': category_leaderboards
