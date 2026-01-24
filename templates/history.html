@@ -77,6 +77,20 @@
                     <!-- Games will be inserted here -->
                 </div>
             </div>
+
+            <!-- Profile Quiz Results -->
+            <div class="stats-card" id="profile-quiz-section" style="display: none;">
+                <div class="stats-header">
+                    <h2>Profile Quiz</h2>
+                    <span class="quiz-progress" id="quiz-progress">0/50</span>
+                </div>
+                <div id="profile-quiz-content">
+                    <!-- Profile quiz results will be inserted here -->
+                </div>
+                <div id="profile-quiz-cta" style="display: none; margin-top: 1rem;">
+                    <a href="{{ url_for('onboarding') }}" class="btn btn-secondary" style="width: 100%;">Continue Profile Quiz</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -125,23 +139,31 @@ async function loadHistory() {
 
         const statsUrl = username ? `/api/get-stats?username=${encodeURIComponent(username)}` : '/api/get-stats';
 
-        const [historyRes, statsRes] = await Promise.all([
+        // Build onboarding URL with anonymous_id if needed
+        const onboardingParams = new URLSearchParams();
+        if (anonymousId) onboardingParams.set('anonymous_id', anonymousId);
+
+        const [historyRes, statsRes, onboardingRes] = await Promise.all([
             fetch(`/api/get-history?${historyParams.toString()}`),
-            fetch(statsUrl)
+            fetch(statsUrl),
+            fetch(`/api/onboarding-results?${onboardingParams.toString()}`)
         ]);
 
         const historyData = await historyRes.json();
         const statsData = await statsRes.json();
+        const onboardingData = await onboardingRes.json();
 
         console.log('History API response:', historyData);
         console.log('Stats API response:', statsData);
+        console.log('Onboarding API response:', onboardingData);
 
         document.getElementById('loading-state').style.display = 'none';
 
         let hasStats = statsData.total_games > 0;
         let hasHistory = historyData.games && historyData.games.length > 0;
+        let hasOnboarding = onboardingData.success && onboardingData.overall;
 
-        if (hasStats || hasHistory) {
+        if (hasStats || hasHistory || hasOnboarding) {
             document.getElementById('main-content').style.display = 'grid';
 
             if (hasStats) {
@@ -150,6 +172,10 @@ async function loadHistory() {
 
             if (hasHistory) {
                 renderHistory(historyData.games);
+            }
+
+            if (hasOnboarding) {
+                renderProfileQuiz(onboardingData);
             }
         } else {
             document.getElementById('no-data-state').style.display = 'flex';
@@ -355,6 +381,70 @@ function renderSubcategoryStats(data) {
             </div>
         `;
         container.appendChild(row);
+    }
+}
+
+function renderProfileQuiz(data) {
+    const section = document.getElementById('profile-quiz-section');
+    const content = document.getElementById('profile-quiz-content');
+    const progress = document.getElementById('quiz-progress');
+    const cta = document.getElementById('profile-quiz-cta');
+
+    section.style.display = 'block';
+
+    const completed = data.overall.completed || 0;
+    const total = 50;
+    const pct = data.overall.percentage || 0;
+
+    progress.textContent = `${completed}/${total}`;
+
+    // Overall score bar
+    let overallColor;
+    if (pct >= 80) overallColor = '#22c55e';
+    else if (pct >= 60) overallColor = '#84cc16';
+    else if (pct >= 40) overallColor = '#eab308';
+    else overallColor = '#ef4444';
+
+    let html = `
+        <div class="overall-stat-row">
+            <div class="stat-label-row">
+                <span class="stat-label">Overall Score</span>
+                <span class="stat-pct">${pct}%</span>
+            </div>
+            <div class="bar-chart-track">
+                <div class="bar-chart-fill" style="width: ${pct}%; background-color: ${overallColor};"></div>
+            </div>
+        </div>
+        <div class="category-stats" style="margin-top: 1rem;">
+    `;
+
+    // Category breakdown
+    for (const [cat, catMeta] of Object.entries(CATEGORIES)) {
+        const stats = data.categories[cat] || { percentage: 0, correct: 0, total: 0 };
+        if (stats.total > 0) {
+            html += `
+                <div class="cat-stat-row">
+                    <div class="stat-label-row">
+                        <span class="cat-stat-label">
+                            <span class="cat-emoji">${CAT_EMOJIS[cat] || '❓'}</span>
+                            <span style="color: ${catMeta.color}">${catMeta.name}</span>
+                        </span>
+                        <span class="stat-pct">${stats.percentage}%</span>
+                    </div>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width: ${stats.percentage}%; background-color: ${catMeta.color};"></div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    html += '</div>';
+    content.innerHTML = html;
+
+    // Show CTA if not complete
+    if (completed < total) {
+        cta.style.display = 'block';
     }
 }
 
