@@ -740,7 +740,7 @@ HARD_QUESTIONS = {
         {'q': 'What is the capital of Ecuador?', 'a': 'Quito', 'options': ['Quito', 'Guayaquil', 'Cuenca', 'Ambato'], 'sub': 'capitals'},
         {'q': 'Which body of water separates Iran from Arabia?', 'a': 'Persian Gulf', 'options': ['Persian Gulf', 'Red Sea', 'Arabian Sea', 'Gulf of Oman'], 'sub': 'maps'},
         {'q': 'What is the only capital city that borders two countries?', 'a': 'Bratislava', 'options': ['Bratislava', 'Vienna', 'Luxembourg City', 'Bern'], 'sub': 'capitals'},
-        {'q': 'Which African nation is the only one in two hemispheres (N&S and E&W)?', 'a': 'None (trick question)', 'options': ['None (trick question)', 'Democratic Republic of Congo', 'Kenya', 'Uganda'], 'sub': 'countries'},
+        {'q': 'What is the largest country in Africa by area?', 'a': 'Algeria', 'options': ['Algeria', 'Democratic Republic of Congo', 'Sudan', 'Libya'], 'sub': 'countries'},
         {'q': 'What is the world\'s largest coral reef system?', 'a': 'Great Barrier Reef', 'options': ['Great Barrier Reef', 'Belize Barrier Reef', 'Red Sea Coral Reef', 'Maldives Coral Reef'], 'sub': 'landmarks'},
         {'q': 'Which European capital is built on 14 islands?', 'a': 'Stockholm', 'options': ['Stockholm', 'Copenhagen', 'Amsterdam', 'Venice'], 'sub': 'capitals'},
         {'q': 'What is the largest country in South America by area?', 'a': 'Brazil', 'options': ['Brazil', 'Argentina', 'Peru', 'Colombia'], 'sub': 'countries'},
@@ -772,7 +772,7 @@ ONBOARDING_QUESTIONS = [
     {'q': 'Which empire was ruled by Genghis Khan?', 'a': 'Mongol Empire', 'options': ['Mongol Empire', 'Persian Empire', 'Ottoman Empire', 'Roman Empire'], 'category': 'history', 'sub': 'medieval'},
     {'q': 'The assassination of Archduke Franz Ferdinand triggered which war?', 'a': 'World War I', 'options': ['World War I', 'World War II', 'Franco-Prussian War', 'Crimean War'], 'category': 'history', 'sub': 'wars'},
     {'q': 'Who wrote the Declaration of Independence?', 'a': 'Thomas Jefferson', 'options': ['Thomas Jefferson', 'Benjamin Franklin', 'John Adams', 'George Washington'], 'category': 'history', 'sub': 'presidents'},
-    {'q': 'The Great Fire of London occurred in which century?', 'a': '17th century (1666)', 'options': ['17th century (1666)', '18th century', '16th century', '19th century'], 'category': 'history', 'sub': 'world_history'},
+    {'q': 'The Great Fire of London occurred in which century?', 'a': '17th century', 'options': ['17th century', '18th century', '16th century', '19th century'], 'category': 'history', 'sub': 'world_history'},
 
     # Science (9 questions)
     {'q': 'What is the chemical symbol for gold?', 'a': 'Au', 'options': ['Au', 'Ag', 'Go', 'Gd'], 'category': 'science', 'sub': 'chemistry'},
