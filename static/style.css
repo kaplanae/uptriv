@@ -2230,56 +2230,89 @@ footer {
 
 /* Your Username Box */
 .your-username-box {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-    border: 1px solid var(--accent-primary);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     margin-bottom: 1.5rem;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.username-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .username-label {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
-    margin-bottom: 0.5rem;
 }
 
-.username-display {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-}
-
-.username-display span {
+.username-value {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
 }
 
-.username-display .copy-btn {
+.username-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.username-actions .copy-btn,
+.username-actions .edit-btn {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 0.4rem;
+    padding: 0.4rem 0.6rem;
     cursor: pointer;
     color: var(--text-secondary);
     transition: all 0.2s;
     display: flex;
     align-items: center;
-    justify-content: center;
-}
-
-.username-display .copy-btn:hover {
-    background: var(--bg-hover);
-    color: var(--accent-primary);
-}
-
-.username-hint {
+    gap: 0.35rem;
     font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 0.5rem;
+}
+
+.username-actions .copy-btn:hover,
+.username-actions .edit-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.username-edit-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.username-edit-form input {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    width: 150px;
+}
+
+.username-edit-form .btn-small {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 500px) {
+    .your-username-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
 }
 
 .friends-content {

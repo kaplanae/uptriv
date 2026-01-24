@@ -11,17 +11,31 @@
 
     <!-- Your Username Box -->
     <div class="your-username-box">
-        <div class="username-label">Your username:</div>
-        <div class="username-display">
-            <span id="my-username">Loading...</span>
+        <div class="username-left">
+            <span class="username-label">Your username:</span>
+            <span class="username-value" id="my-username">Loading...</span>
+        </div>
+        <div class="username-actions" id="username-actions">
             <button class="copy-btn" onclick="copyMyUsername()" title="Copy username">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
+                Copy
+            </button>
+            <button class="edit-btn" id="edit-username-btn" onclick="showUsernameEdit()" title="Change username" style="display: none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Edit
             </button>
         </div>
-        <div class="username-hint">Share this with friends so they can find you</div>
+        <div class="username-edit-form" id="username-edit-form" style="display: none;">
+            <input type="text" id="new-username-input" placeholder="Enter username" maxlength="30">
+            <button class="btn btn-small btn-primary" onclick="saveUsername()">Save</button>
+            <button class="btn btn-small" onclick="cancelUsernameEdit()">Cancel</button>
+        </div>
     </div>
 
     <div class="friends-content">
@@ -332,17 +346,64 @@ async function copyInviteLink() {
     }
 }
 
+let isGoogleUser = false;
+let currentUsername = '';
+
 async function copyMyUsername() {
     const username = document.getElementById('my-username').textContent;
     try {
         await navigator.clipboard.writeText(username);
         const btn = document.querySelector('.your-username-box .copy-btn');
-        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-        setTimeout(() => {
-            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
-        }, 2000);
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+        setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
     } catch (e) {
         // Fallback
+    }
+}
+
+function showUsernameEdit() {
+    document.getElementById('username-actions').style.display = 'none';
+    document.getElementById('username-edit-form').style.display = 'flex';
+    document.getElementById('new-username-input').value = currentUsername;
+    document.getElementById('new-username-input').focus();
+}
+
+function cancelUsernameEdit() {
+    document.getElementById('username-edit-form').style.display = 'none';
+    document.getElementById('username-actions').style.display = 'flex';
+}
+
+async function saveUsername() {
+    const newUsername = document.getElementById('new-username-input').value.trim();
+    if (!newUsername || newUsername.length < 2) {
+        alert('Username must be at least 2 characters');
+        return;
+    }
+
+    try {
+        const anonymousId = localStorage.getItem('uptriv_anonymous_id');
+        const res = await fetch('/api/update-username', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: newUsername,
+                anonymous_id: anonymousId
+            })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            currentUsername = data.username;
+            document.getElementById('my-username').textContent = data.username;
+            localStorage.setItem('uptriv_username', data.username);
+            cancelUsernameEdit();
+        } else {
+            alert(data.error || 'Failed to update username');
+        }
+    } catch (e) {
+        console.error('Error updating username:', e);
+        alert('Failed to update username');
     }
 }
 
@@ -352,7 +413,21 @@ async function loadMyUsername() {
         const res = await fetch('/api/me');
         const data = await res.json();
         if (data.authenticated && data.user) {
+            currentUsername = data.user.username;
             document.getElementById('my-username').textContent = data.user.username;
+            isGoogleUser = !!data.user.google_id;
+            // Only show edit button for non-Google users
+            if (!isGoogleUser) {
+                document.getElementById('edit-username-btn').style.display = 'flex';
+            }
+        } else {
+            // Check for anonymous user
+            const anonUsername = localStorage.getItem('uptriv_username');
+            if (anonUsername) {
+                currentUsername = anonUsername;
+                document.getElementById('my-username').textContent = anonUsername;
+                document.getElementById('edit-username-btn').style.display = 'flex';
+            }
         }
     } catch (e) {
         console.error('Error loading username:', e);

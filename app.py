@@ -1559,10 +1559,65 @@ def get_current_user():
                 'id': current_user.id,
                 'username': current_user.username,
                 'email': current_user.email,
-                'profile_picture': current_user.profile_picture
+                'profile_picture': current_user.profile_picture,
+                'google_id': current_user.google_id
             }
         })
     return jsonify({'authenticated': False})
+
+
+@app.route('/api/update-username', methods=['POST'])
+def update_username():
+    """Update username for anonymous users."""
+    data = request.get_json() or {}
+    new_username = data.get('username', '').strip()
+
+    if not new_username or len(new_username) < 2:
+        return jsonify({'error': 'Username must be at least 2 characters'}), 400
+
+    if len(new_username) > 30:
+        return jsonify({'error': 'Username must be 30 characters or less'}), 400
+
+    # Get user from session or anonymous_id
+    user_id = None
+    if current_user.is_authenticated:
+        # Don't allow Google users to change username here
+        if current_user.google_id:
+            return jsonify({'error': 'Google users cannot change username'}), 400
+        user_id = current_user.id
+    else:
+        anonymous_id = data.get('anonymous_id') or request.cookies.get('uptriv_anonymous_id')
+        if anonymous_id:
+            conn = get_db()
+            cur = conn.cursor()
+            ph = get_placeholder()
+            cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
+            user = cur.fetchone()
+            conn.close()
+            if user:
+                user_id = user['id']
+
+    if not user_id:
+        return jsonify({'error': 'User not found'}), 400
+
+    # Check if username is taken
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    cur.execute(f'SELECT id FROM users WHERE LOWER(username) = {ph} AND id != {ph}', (new_username.lower(), user_id))
+    existing = cur.fetchone()
+
+    if existing:
+        conn.close()
+        return jsonify({'error': 'Username already taken'}), 400
+
+    # Update username
+    cur.execute(f'UPDATE users SET username = {ph} WHERE id = {ph}', (new_username, user_id))
+    conn.commit()
+    conn.close()
+
+    return jsonify({'success': True, 'username': new_username})
 
 
 @app.route('/api/anonymous-session', methods=['POST'])
