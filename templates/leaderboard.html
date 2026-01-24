@@ -95,7 +95,8 @@ function renderLeaderboard() {
     const rows = rankings.map((entry, index) => {
         const rank = index + 1;
         const rankClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
-        const isCurrentUser = entry.username === currentUsername;
+        const user = entry.user || {};
+        const isCurrentUser = user.username === currentUsername;
         const pct = entry.percentage || 0;
         const pctClass = pct >= 70 ? 'high' : pct >= 50 ? 'medium' : 'low';
 
@@ -103,9 +104,9 @@ function renderLeaderboard() {
             <div class="leaderboard-row ${isCurrentUser ? 'current-user' : ''}" style="animation-delay: ${index * 0.05}s">
                 <div class="rank ${rankClass}">#${rank}</div>
                 <div class="user-info">
-                    <img src="${entry.profile_picture || '/static/default-avatar.png'}"
-                         alt="${entry.username}" class="leaderboard-avatar">
-                    <span class="leaderboard-username">${entry.username}${isCurrentUser ? ' (You)' : ''}</span>
+                    <img src="${user.profile_picture || '/static/default-avatar.png'}"
+                         alt="${user.username || 'User'}" class="leaderboard-avatar">
+                    <span class="leaderboard-username">${user.username || 'Unknown'}${isCurrentUser ? ' (You)' : ''}</span>
                 </div>
                 <div class="games-count">${entry.games_played || 0} games</div>
                 <div class="score-pct ${pctClass}">${pct.toFixed(0)}%</div>

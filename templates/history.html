@@ -52,6 +52,16 @@
                 <!-- Category bars will be inserted here -->
             </div>
         </div>
+
+        <!-- Subcategory Breakdown -->
+        <div class="subcategory-card" id="subcategory-section" style="display: none;">
+            <div class="stats-header">
+                <h2>Topic Breakdown</h2>
+            </div>
+            <div id="subcategory-stats">
+                <!-- Subcategory bars will be inserted here -->
+            </div>
+        </div>
     </div>
 
     <!-- History content -->
@@ -300,6 +310,46 @@ function renderOverallStats(data) {
             </div>
         `;
         container.appendChild(bar);
+    }
+
+    // Render subcategory breakdown
+    renderSubcategoryStats(data);
+}
+
+function renderSubcategoryStats(data) {
+    const subcats = data.subcategories || {};
+    const subEntries = Object.entries(subcats).filter(([_, s]) => s.total >= 2);
+
+    if (subEntries.length === 0) {
+        document.getElementById('subcategory-section').style.display = 'none';
+        return;
+    }
+
+    document.getElementById('subcategory-section').style.display = 'block';
+
+    // Sort by percentage descending
+    subEntries.sort((a, b) => b[1].percentage - a[1].percentage);
+
+    const container = document.getElementById('subcategory-stats');
+    container.innerHTML = '';
+
+    for (const [subName, stats] of subEntries) {
+        const catMeta = CATEGORIES[stats.category] || {};
+        const pctClass = stats.percentage >= 70 ? 'high' : stats.percentage >= 50 ? 'medium' : 'low';
+
+        const row = document.createElement('div');
+        row.className = 'subcat-stat-row';
+        row.innerHTML = `
+            <div class="subcat-label-row">
+                <span class="subcat-name">${subName.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>
+                <span class="subcat-detail">${stats.correct}/${stats.total}</span>
+                <span class="subcat-pct ${pctClass}">${stats.percentage}%</span>
+            </div>
+            <div class="stat-bar-track">
+                <div class="stat-bar-fill" style="width: ${stats.percentage}%; background: ${catMeta.color || '#667eea'}"></div>
+            </div>
+        `;
+        container.appendChild(row);
     }
 }
 
