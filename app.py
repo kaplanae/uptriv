@@ -1038,6 +1038,31 @@ def init_db():
             except Exception:
                 pass  # Column already exists
 
+    # Create visits table for analytics
+    if USE_POSTGRES:
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS visits (
+                id SERIAL PRIMARY KEY,
+                path TEXT NOT NULL,
+                ip_address TEXT,
+                user_agent TEXT,
+                user_id INTEGER REFERENCES users(id),
+                visited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+    else:
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS visits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                path TEXT NOT NULL,
+                ip_address TEXT,
+                user_agent TEXT,
+                user_id INTEGER,
+                visited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        ''')
+
     # Create indexes for better query performance
     # These speed up the most common queries significantly
     index_statements = [
@@ -1048,6 +1073,8 @@ def init_db():
         'CREATE INDEX IF NOT EXISTS idx_daily_questions_date_user ON daily_questions(game_date, user_id)',
         'CREATE INDEX IF NOT EXISTS idx_friendships_requester ON friendships(requester_id)',
         'CREATE INDEX IF NOT EXISTS idx_friendships_addressee ON friendships(addressee_id)',
+        'CREATE INDEX IF NOT EXISTS idx_visits_path ON visits(path)',
+        'CREATE INDEX IF NOT EXISTS idx_visits_visited_at ON visits(visited_at)',
     ]
 
     for stmt in index_statements:
@@ -1966,6 +1993,44 @@ def check_hard_mode_eligibility():
     })
 
 
+# ============ VISIT TRACKING ============
+
+# Admin email(s) allowed to access admin page
+ADMIN_EMAILS = ['kaplanae@gmail.com']
+
+def track_visit():
+    """Track page visit for analytics."""
+    # Skip API calls and static files
+    if request.path.startswith('/api/') or request.path.startswith('/static/'):
+        return
+
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        ph = get_placeholder()
+
+        user_id = current_user.id if current_user.is_authenticated else None
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        if ip and ',' in ip:
+            ip = ip.split(',')[0].strip()
+
+        cur.execute(f'''
+            INSERT INTO visits (path, ip_address, user_agent, user_id)
+            VALUES ({ph}, {ph}, {ph}, {ph})
+        ''', (request.path, ip, request.user_agent.string[:500], user_id))
+
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Visit tracking error: {e}")
+
+
+@app.before_request
+def before_request():
+    """Run before each request."""
+    track_visit()
+
+
 # ============ PAGE ROUTES ============
 
 @app.route('/')
@@ -2008,6 +2073,95 @@ def friends_page():
 @login_required
 def leaderboard_page():
     return render_template('leaderboard.html', categories=CATEGORIES)
+
+
+@app.route('/admin')
+@login_required
+def admin_page():
+    """Admin dashboard with site analytics."""
+    # Check if user is admin
+    if not current_user.email or current_user.email not in ADMIN_EMAILS:
+        return redirect(url_for('index'))
+
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    # Get visit stats
+    today = get_user_today().isoformat()
+
+    # Today's visits
+    cur.execute(f"SELECT COUNT(*) as count FROM visits WHERE DATE(visited_at) = {ph}", (today,))
+    today_visits = cur.fetchone()['count']
+
+    # Today's unique IPs
+    cur.execute(f"SELECT COUNT(DISTINCT ip_address) as count FROM visits WHERE DATE(visited_at) = {ph}", (today,))
+    today_unique = cur.fetchone()['count']
+
+    # Total visits all time
+    cur.execute("SELECT COUNT(*) as count FROM visits")
+    total_visits = cur.fetchone()['count']
+
+    # Total unique IPs all time
+    cur.execute("SELECT COUNT(DISTINCT ip_address) as count FROM visits")
+    total_unique = cur.fetchone()['count']
+
+    # Total registered users
+    cur.execute("SELECT COUNT(*) as count FROM users")
+    total_users = cur.fetchone()['count']
+
+    # Users with Google auth
+    cur.execute("SELECT COUNT(*) as count FROM users WHERE google_id IS NOT NULL")
+    google_users = cur.fetchone()['count']
+
+    # Total games played
+    cur.execute("SELECT COUNT(DISTINCT user_id || game_date || COALESCE(difficulty, 'easy')) as count FROM game_results")
+    total_games = cur.fetchone()['count']
+
+    # Visits by page (top 10)
+    cur.execute('''
+        SELECT path, COUNT(*) as count
+        FROM visits
+        GROUP BY path
+        ORDER BY count DESC
+        LIMIT 10
+    ''')
+    page_visits = [dict(row) for row in cur.fetchall()]
+
+    # Daily visits for last 7 days
+    cur.execute('''
+        SELECT DATE(visited_at) as date, COUNT(*) as visits, COUNT(DISTINCT ip_address) as unique_visitors
+        FROM visits
+        GROUP BY DATE(visited_at)
+        ORDER BY date DESC
+        LIMIT 7
+    ''')
+    daily_stats = [dict(row) for row in cur.fetchall()]
+
+    # Recent logins (users who visited today)
+    cur.execute(f'''
+        SELECT DISTINCT u.username, u.email, u.profile_picture
+        FROM visits v
+        JOIN users u ON v.user_id = u.id
+        WHERE DATE(v.visited_at) = {ph}
+        ORDER BY u.username
+    ''', (today,))
+    today_logins = [dict(row) for row in cur.fetchall()]
+
+    conn.close()
+
+    return render_template('admin.html',
+        today_visits=today_visits,
+        today_unique=today_unique,
+        total_visits=total_visits,
+        total_unique=total_unique,
+        total_users=total_users,
+        google_users=google_users,
+        total_games=total_games,
+        page_visits=page_visits,
+        daily_stats=daily_stats,
+        today_logins=today_logins
+    )
 
 
 # ============ GAME API ROUTES ============
