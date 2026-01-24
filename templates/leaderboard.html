@@ -97,6 +97,7 @@ function renderLeaderboard() {
         const rankClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
         const user = entry.user || {};
         const isCurrentUser = user.username === currentUsername;
+        const isFake = user.is_fake || false;
         const pct = entry.percentage || 0;
         const pctClass = pct >= 70 ? 'high' : pct >= 50 ? 'medium' : 'low';
 
@@ -104,12 +105,14 @@ function renderLeaderboard() {
         const fullName = user.username || 'Unknown';
         const firstName = fullName.split(' ')[0];
 
+        // Only show avatar for real users
+        const avatarHtml = isFake ? '' : `<img src="${user.profile_picture || '/static/default-avatar.png'}" alt="${firstName}" class="leaderboard-avatar">`;
+
         return `
-            <div class="leaderboard-row ${isCurrentUser ? 'current-user' : ''}" style="animation-delay: ${index * 0.05}s">
+            <div class="leaderboard-row ${isCurrentUser ? 'current-user' : ''} ${isFake ? 'fake-user' : ''}" style="animation-delay: ${index * 0.05}s">
                 <div class="rank ${rankClass}">#${rank}</div>
                 <div class="user-info">
-                    <img src="${user.profile_picture || '/static/default-avatar.png'}"
-                         alt="${firstName}" class="leaderboard-avatar">
+                    ${avatarHtml}
                     <span class="leaderboard-username">${firstName}${isCurrentUser ? ' (You)' : ''}</span>
                 </div>
                 <div class="games-count">${entry.games_played || 0} games</div>

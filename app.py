@@ -2974,16 +2974,16 @@ def api_leaderboard():
 
     # Add fake users to fill leaderboard if less than 10 real users
     fake_users = [
-        {'name': 'Alex', 'pct': 92, 'games': 45},
-        {'name': 'Jordan', 'pct': 88, 'games': 38},
-        {'name': 'Taylor', 'pct': 85, 'games': 52},
-        {'name': 'Morgan', 'pct': 82, 'games': 41},
-        {'name': 'Casey', 'pct': 79, 'games': 33},
-        {'name': 'Riley', 'pct': 76, 'games': 29},
-        {'name': 'Quinn', 'pct': 73, 'games': 24},
-        {'name': 'Avery', 'pct': 70, 'games': 19},
-        {'name': 'Jamie', 'pct': 67, 'games': 15},
-        {'name': 'Drew', 'pct': 64, 'games': 12},
+        {'name': 'Alex', 'pct': 92, 'games': 9},
+        {'name': 'Jordan', 'pct': 88, 'games': 8},
+        {'name': 'Taylor', 'pct': 85, 'games': 9},
+        {'name': 'Morgan', 'pct': 82, 'games': 7},
+        {'name': 'Casey', 'pct': 79, 'games': 6},
+        {'name': 'Riley', 'pct': 76, 'games': 8},
+        {'name': 'Quinn', 'pct': 73, 'games': 5},
+        {'name': 'Avery', 'pct': 70, 'games': 7},
+        {'name': 'Jamie', 'pct': 67, 'games': 4},
+        {'name': 'Drew', 'pct': 64, 'games': 3},
     ]
 
     if len(leaderboard) < 10:
