@@ -9,6 +9,21 @@
         <p class="friends-subtitle">Connect with friends and compete on the leaderboard</p>
     </div>
 
+    <!-- Your Username Box -->
+    <div class="your-username-box">
+        <div class="username-label">Your username:</div>
+        <div class="username-display">
+            <span id="my-username">Loading...</span>
+            <button class="copy-btn" onclick="copyMyUsername()" title="Copy username">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="username-hint">Share this with friends so they can find you</div>
+    </div>
+
     <div class="friends-content">
         <!-- Invite by Email Section -->
         <div class="friends-section invite-section">
@@ -317,6 +332,33 @@ async function copyInviteLink() {
     }
 }
 
+async function copyMyUsername() {
+    const username = document.getElementById('my-username').textContent;
+    try {
+        await navigator.clipboard.writeText(username);
+        const btn = document.querySelector('.your-username-box .copy-btn');
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        setTimeout(() => {
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+        }, 2000);
+    } catch (e) {
+        // Fallback
+    }
+}
+
+// Load current user's username
+async function loadMyUsername() {
+    try {
+        const res = await fetch('/api/me');
+        const data = await res.json();
+        if (data.authenticated && data.user) {
+            document.getElementById('my-username').textContent = data.user.username;
+        }
+    } catch (e) {
+        console.error('Error loading username:', e);
+    }
+}
+
 // Event listeners
 document.getElementById('search-btn').addEventListener('click', searchUsers);
 document.getElementById('user-search').addEventListener('keypress', (e) => {
@@ -328,6 +370,7 @@ document.getElementById('invite-email').addEventListener('keypress', (e) => {
 });
 
 // Load data on page load
+loadMyUsername();
 loadFriendsData();
 </script>
 {% endblock %}
