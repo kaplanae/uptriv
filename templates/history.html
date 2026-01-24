@@ -30,17 +30,27 @@
 
     <!-- Overall Stats Section -->
     <div id="stats-section" class="stats-section" style="display: none;">
-        <div class="overall-stats-card">
-            <div class="overall-score-circle" id="overall-circle">
-                <span class="overall-pct" id="overall-pct">0%</span>
+        <div class="stats-card">
+            <div class="stats-header">
+                <h2>Your Performance</h2>
+                <span class="games-count" id="games-played">0 games</span>
             </div>
-            <div class="overall-stats-info">
-                <div class="overall-label">Overall Score</div>
-                <div class="games-played" id="games-played">0 games played</div>
+
+            <!-- Overall Score Bar -->
+            <div class="overall-stat-row">
+                <div class="stat-label-row">
+                    <span class="stat-label">Overall</span>
+                    <span class="stat-pct" id="overall-pct">0%</span>
+                </div>
+                <div class="stat-bar-track">
+                    <div class="stat-bar-fill overall-fill" id="overall-bar"></div>
+                </div>
             </div>
-        </div>
-        <div class="category-stats" id="category-stats">
-            <!-- Category bars will be inserted here -->
+
+            <!-- Category Bars -->
+            <div class="category-stats" id="category-stats">
+                <!-- Category bars will be inserted here -->
+            </div>
         </div>
     </div>
 
@@ -318,20 +328,22 @@ function renderHistory(games) {
 }
 
 function renderOverallStats(data) {
-    // Update overall score circle
-    document.getElementById('overall-pct').textContent = `${data.overall_percentage}%`;
-    document.getElementById('games-played').textContent = `${data.total_games} games played`;
-
-    // Color the overall circle
-    const overallCircle = document.getElementById('overall-circle');
+    // Update overall score
     const pct = data.overall_percentage;
+    document.getElementById('overall-pct').textContent = `${pct}%`;
+    document.getElementById('games-played').textContent = `${data.total_games} game${data.total_games !== 1 ? 's' : ''}`;
+
+    // Update overall bar
+    const overallBar = document.getElementById('overall-bar');
+    overallBar.style.width = `${pct}%`;
+
+    // Color based on percentage
     let color;
     if (pct >= 80) color = '#22c55e';
     else if (pct >= 60) color = '#84cc16';
     else if (pct >= 40) color = '#eab308';
     else color = '#ef4444';
-
-    overallCircle.style.background = `conic-gradient(${color} ${pct * 3.6}deg, #2a2a2a ${pct * 3.6}deg)`;
+    overallBar.style.background = color;
 
     // Render category bars
     const container = document.getElementById('category-stats');
@@ -340,15 +352,17 @@ function renderOverallStats(data) {
     for (const [cat, catMeta] of Object.entries(CATEGORIES)) {
         const stats = data.categories[cat] || { percentage: 0, correct: 0, total: 0 };
         const bar = document.createElement('div');
-        bar.className = 'category-stat-bar';
+        bar.className = 'cat-stat-row';
         bar.innerHTML = `
-            <div class="cat-bar-header">
-                <span class="cat-bar-emoji">${CAT_EMOJIS[cat] || '❓'}</span>
-                <span class="cat-bar-name" style="color: ${catMeta.color}">${catMeta.name}</span>
-                <span class="cat-bar-pct">${stats.percentage}%</span>
+            <div class="stat-label-row">
+                <span class="cat-stat-label">
+                    <span class="cat-emoji">${CAT_EMOJIS[cat] || '❓'}</span>
+                    <span style="color: ${catMeta.color}">${catMeta.name}</span>
+                </span>
+                <span class="stat-pct">${stats.percentage}%</span>
             </div>
-            <div class="cat-bar-track">
-                <div class="cat-bar-fill" style="width: ${stats.percentage}%; background: ${catMeta.color}"></div>
+            <div class="stat-bar-track">
+                <div class="stat-bar-fill" style="width: ${stats.percentage}%; background: ${catMeta.color}"></div>
             </div>
         `;
         container.appendChild(bar);

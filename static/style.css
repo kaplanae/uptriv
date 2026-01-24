@@ -1601,109 +1601,109 @@ footer {
     margin-bottom: 2rem;
 }
 
-.overall-stats-card {
+.stats-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.5rem;
+}
+
+.stats-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
-.overall-score-circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #2a2a2a;
-    flex-shrink: 0;
-}
-
-.overall-score-circle .overall-pct {
+.stats-header h2 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
-}
-
-.overall-stats-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.overall-stats-info .overall-label {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    margin: 0;
 }
 
-.overall-stats-info .games-played {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+.games-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
-.category-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+/* Stat rows */
+.overall-stat-row {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
 }
 
-.category-stat-bar {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.75rem;
+.cat-stat-row {
+    margin-bottom: 0.75rem;
 }
 
-.cat-bar-header {
+.cat-stat-row:last-child {
+    margin-bottom: 0;
+}
+
+.stat-label-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
     margin-bottom: 0.5rem;
 }
 
-.cat-bar-emoji {
+.stat-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.cat-stat-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.cat-emoji {
     font-size: 1rem;
 }
 
-.cat-bar-name {
-    font-size: 0.8rem;
-    font-weight: 500;
-    flex: 1;
-}
-
-.cat-bar-pct {
+.stat-pct {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
     font-size: 0.9rem;
+    color: var(--text-secondary);
 }
 
-.cat-bar-track {
-    height: 6px;
+.stat-bar-track {
+    height: 8px;
     background: var(--bg-secondary);
-    border-radius: 3px;
+    border-radius: 4px;
     overflow: hidden;
 }
 
-.cat-bar-fill {
+.stat-bar-fill {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 4px;
     transition: width 0.5s ease;
 }
 
+.stat-bar-fill.overall-fill {
+    background: var(--accent-primary);
+}
+
+.category-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
 @media (max-width: 600px) {
-    .category-stats {
-        grid-template-columns: 1fr;
+    .stats-card {
+        padding: 1.25rem;
     }
 
-    .overall-stats-card {
-        flex-direction: column;
-        text-align: center;
+    .stats-header h2 {
+        font-size: 1rem;
     }
 }
 
