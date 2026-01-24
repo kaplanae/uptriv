@@ -7,7 +7,6 @@
     <!-- Login Screen (for unauthenticated users) -->
     <div id="login-screen" class="game-screen">
         <div class="login-card">
-            <img src="{{ url_for('static', filename='logo.svg') }}" alt="UpTriv" class="play-logo">
             <h2>Sign In to Play</h2>
             <p>Sign in with Google to track your progress and compete with friends</p>
             <a href="{{ url_for('google_login') }}" class="auth-btn login-btn" style="margin-top: 1rem; justify-content: center;">
@@ -25,7 +24,6 @@
     <!-- Ready Screen (for authenticated users) -->
     <div id="ready-screen" class="game-screen">
         <div class="login-card">
-            <img src="{{ url_for('static', filename='logo.svg') }}" alt="UpTriv" class="play-logo">
             <h2>Ready to Play<span id="player-name-wrapper">, <span id="player-name"></span></span>?</h2>
             <p>6 questions, 10 seconds each. Good luck!</p>
 

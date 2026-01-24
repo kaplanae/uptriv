@@ -72,15 +72,8 @@ nav {
 }
 
 .logo-img {
-    height: 48px;
+    height: 40px;
     width: auto;
-}
-
-/* Play screen logo */
-.play-logo {
-    width: 180px;
-    height: auto;
-    margin-bottom: 1rem;
 }
 
 .nav-links {
@@ -205,17 +198,6 @@ footer {
     margin: 0 auto;
 }
 
-.hero-logo {
-    width: 280px;
-    height: auto;
-    margin-bottom: 1.5rem;
-    animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-}
 
 .hero h1 {
     font-family: 'Space Grotesk', sans-serif;
