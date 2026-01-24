@@ -28,46 +28,55 @@
         <a href="{{ url_for('play') }}" class="btn btn-primary">Play Now</a>
     </div>
 
-    <!-- Overall Stats Section -->
-    <div id="stats-section" class="stats-section" style="display: none;">
-        <div class="stats-card">
-            <div class="stats-header">
-                <h2>Your Performance</h2>
-                <span class="games-count" id="games-played">0 games</span>
+    <!-- Main Content Grid -->
+    <div id="main-content" class="history-grid" style="display: none;">
+        <!-- Left Column: Performance Stats -->
+        <div class="stats-column">
+            <!-- Overall Stats Section -->
+            <div id="stats-section" class="stats-card">
+                <div class="stats-header">
+                    <h2>Your Performance</h2>
+                    <span class="games-count" id="games-played">0 games</span>
+                </div>
+
+                <!-- Overall Score Bar -->
+                <div class="overall-stat-row">
+                    <div class="stat-label-row">
+                        <span class="stat-label">Overall</span>
+                        <span class="stat-pct" id="overall-pct">0%</span>
+                    </div>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" id="overall-bar"></div>
+                    </div>
+                </div>
+
+                <!-- Category Bars -->
+                <div class="category-stats" id="category-stats">
+                    <!-- Category bars will be inserted here -->
+                </div>
             </div>
 
-            <!-- Overall Score Bar -->
-            <div class="overall-stat-row">
-                <div class="stat-label-row">
-                    <span class="stat-label">Overall</span>
-                    <span class="stat-pct" id="overall-pct">0%</span>
+            <!-- Subcategory Breakdown -->
+            <div class="stats-card" id="subcategory-section" style="display: none;">
+                <div class="stats-header">
+                    <h2>Topic Breakdown</h2>
                 </div>
-                <div class="stat-bar-track">
-                    <div class="stat-bar-fill overall-fill" id="overall-bar"></div>
+                <div id="subcategory-stats">
+                    <!-- Subcategory bars will be inserted here -->
                 </div>
-            </div>
-
-            <!-- Category Bars -->
-            <div class="category-stats" id="category-stats">
-                <!-- Category bars will be inserted here -->
             </div>
         </div>
 
-        <!-- Subcategory Breakdown -->
-        <div class="subcategory-card" id="subcategory-section" style="display: none;">
-            <div class="stats-header">
-                <h2>Topic Breakdown</h2>
+        <!-- Right Column: Game History -->
+        <div class="history-column">
+            <div class="stats-card">
+                <div class="stats-header">
+                    <h2>Daily Games</h2>
+                </div>
+                <div class="history-list" id="history-list">
+                    <!-- Games will be inserted here -->
+                </div>
             </div>
-            <div id="subcategory-stats">
-                <!-- Subcategory bars will be inserted here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- History content -->
-    <div id="history-content" style="display: none;">
-        <div class="history-list" id="history-list">
-            <!-- Games will be inserted here -->
         </div>
     </div>
 </div>
@@ -97,8 +106,7 @@ const CAT_EMOJIS = {
 async function loadHistory() {
     document.getElementById('loading-state').style.display = 'flex';
     document.getElementById('no-data-state').style.display = 'none';
-    document.getElementById('history-content').style.display = 'none';
-    document.getElementById('stats-section').style.display = 'none';
+    document.getElementById('main-content').style.display = 'none';
 
     const username = localStorage.getItem('uptriv_username');
     const anonymousId = localStorage.getItem('uptriv_anonymous_id');
@@ -130,23 +138,20 @@ async function loadHistory() {
 
         document.getElementById('loading-state').style.display = 'none';
 
-        let hasContent = false;
+        let hasStats = statsData.total_games > 0;
+        let hasHistory = historyData.games && historyData.games.length > 0;
 
-        // Show overall stats if user has played games
-        if (statsData.total_games > 0) {
-            document.getElementById('stats-section').style.display = 'block';
-            renderOverallStats(statsData);
-            hasContent = true;
-        }
+        if (hasStats || hasHistory) {
+            document.getElementById('main-content').style.display = 'grid';
 
-        // Show regular game history
-        if (historyData.games && historyData.games.length > 0) {
-            document.getElementById('history-content').style.display = 'block';
-            renderHistory(historyData.games);
-            hasContent = true;
-        }
+            if (hasStats) {
+                renderOverallStats(statsData);
+            }
 
-        if (!hasContent) {
+            if (hasHistory) {
+                renderHistory(historyData.games);
+            }
+        } else {
             document.getElementById('no-data-state').style.display = 'flex';
         }
     } catch (err) {
@@ -287,7 +292,7 @@ function renderOverallStats(data) {
     else if (pct >= 60) color = '#84cc16';
     else if (pct >= 40) color = '#eab308';
     else color = '#ef4444';
-    overallBar.style.background = color;
+    overallBar.style.backgroundColor = color;
 
     // Render category bars
     const container = document.getElementById('category-stats');
@@ -305,8 +310,8 @@ function renderOverallStats(data) {
                 </span>
                 <span class="stat-pct">${stats.percentage}%</span>
             </div>
-            <div class="stat-bar-track">
-                <div class="stat-bar-fill" style="width: ${stats.percentage}%; background: ${catMeta.color}"></div>
+            <div class="bar-chart-track">
+                <div class="bar-chart-fill" style="width: ${stats.percentage}%; background-color: ${catMeta.color};"></div>
             </div>
         `;
         container.appendChild(bar);
@@ -345,8 +350,8 @@ function renderSubcategoryStats(data) {
                 <span class="subcat-detail">${stats.correct}/${stats.total}</span>
                 <span class="subcat-pct ${pctClass}">${stats.percentage}%</span>
             </div>
-            <div class="stat-bar-track">
-                <div class="stat-bar-fill" style="width: ${stats.percentage}%; background: ${catMeta.color || '#667eea'}"></div>
+            <div class="bar-chart-track">
+                <div class="bar-chart-fill" style="width: ${stats.percentage}%; background-color: ${catMeta.color || '#667eea'};"></div>
             </div>
         `;
         container.appendChild(row);
