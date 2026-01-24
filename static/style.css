@@ -69,10 +69,11 @@ nav {
     display: flex;
     align-items: center;
     text-decoration: none;
+    margin-right: auto;
 }
 
 .logo-img {
-    height: 150px;
+    height: 100px;
     width: auto;
     object-fit: contain;
 }
