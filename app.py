@@ -2612,33 +2612,25 @@ def api_get_pending():
 @app.route('/api/friends/search', methods=['GET'])
 @login_required
 def api_search_users():
-    query = request.args.get('q', '').strip().lower()
-    if len(query) < 2:
+    query = request.args.get('q', '').strip()
+    if len(query) < 1:
         return jsonify({'users': []})
 
     conn = get_db()
     cur = conn.cursor()
     placeholder = '%s' if USE_POSTGRES else '?'
 
-    # Search by username or email (case-insensitive)
+    # Exact match only (case-insensitive) - for privacy
     cur.execute(f'''
-        SELECT id, username, profile_picture, email
+        SELECT id, username, profile_picture
         FROM users
-        WHERE (LOWER(username) LIKE {placeholder} OR LOWER(email) LIKE {placeholder})
+        WHERE LOWER(username) = {placeholder}
         AND id != {placeholder}
         AND google_id IS NOT NULL
-        LIMIT 10
-    ''', (f'%{query}%', f'%{query}%', current_user.id))
+        LIMIT 1
+    ''', (query.lower(), current_user.id))
 
-    users = []
-    for row in cur.fetchall():
-        user = dict(row)
-        # Don't expose full email, just show it exists
-        if user.get('email'):
-            user['has_email'] = True
-            del user['email']
-        users.append(user)
-
+    users = [dict(row) for row in cur.fetchall()]
     conn.close()
 
     return jsonify({'users': users})
