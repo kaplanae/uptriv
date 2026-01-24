@@ -28,6 +28,22 @@
         <a href="{{ url_for('play') }}" class="btn btn-primary">Play Now</a>
     </div>
 
+    <!-- Overall Stats Section -->
+    <div id="stats-section" class="stats-section" style="display: none;">
+        <div class="overall-stats-card">
+            <div class="overall-score-circle" id="overall-circle">
+                <span class="overall-pct" id="overall-pct">0%</span>
+            </div>
+            <div class="overall-stats-info">
+                <div class="overall-label">Overall Score</div>
+                <div class="games-played" id="games-played">0 games played</div>
+            </div>
+        </div>
+        <div class="category-stats" id="category-stats">
+            <!-- Category bars will be inserted here -->
+        </div>
+    </div>
+
     <!-- Profile Quiz Section -->
     <div id="profile-quiz-section" class="profile-quiz-section" style="display: none;">
         <div class="date-group">
@@ -96,6 +112,7 @@ async function loadHistory() {
     document.getElementById('no-data-state').style.display = 'none';
     document.getElementById('history-content').style.display = 'none';
     document.getElementById('profile-quiz-section').style.display = 'none';
+    document.getElementById('stats-section').style.display = 'none';
 
     const username = localStorage.getItem('uptriv_username');
     const anonymousId = localStorage.getItem('uptriv_anonymous_id');
@@ -107,25 +124,37 @@ async function loadHistory() {
     }
 
     try {
-        // Fetch both regular history and profile quiz status
+        // Fetch history, quiz status, and overall stats
         const historyParams = new URLSearchParams();
         if (username) historyParams.set('username', username);
         if (anonymousId) historyParams.set('anonymous_id', anonymousId);
 
-        const [historyRes, quizRes] = await Promise.all([
+        const statsUrl = username ? `/api/get-stats?username=${encodeURIComponent(username)}` : '/api/get-stats';
+
+        const [historyRes, quizRes, statsRes] = await Promise.all([
             fetch(`/api/get-history?${historyParams.toString()}`),
-            fetch(`/api/onboarding-results?anonymous_id=${encodeURIComponent(anonymousId || '')}`)
+            fetch(`/api/onboarding-results?anonymous_id=${encodeURIComponent(anonymousId || '')}`),
+            fetch(statsUrl)
         ]);
 
         const historyData = await historyRes.json();
         const quizData = await quizRes.json();
+        const statsData = await statsRes.json();
 
         console.log('History API response:', historyData);
         console.log('Quiz API response:', quizData);
+        console.log('Stats API response:', statsData);
 
         document.getElementById('loading-state').style.display = 'none';
 
         let hasContent = false;
+
+        // Show overall stats if user has played games
+        if (statsData.total_games > 0) {
+            document.getElementById('stats-section').style.display = 'block';
+            renderOverallStats(statsData);
+            hasContent = true;
+        }
 
         // Show profile quiz section if user has completed any questions
         if (quizData.success && quizData.overall) {
@@ -286,6 +315,44 @@ function renderHistory(games) {
 
         historyList.appendChild(dateGroup);
     });
+}
+
+function renderOverallStats(data) {
+    // Update overall score circle
+    document.getElementById('overall-pct').textContent = `${data.overall_percentage}%`;
+    document.getElementById('games-played').textContent = `${data.total_games} games played`;
+
+    // Color the overall circle
+    const overallCircle = document.getElementById('overall-circle');
+    const pct = data.overall_percentage;
+    let color;
+    if (pct >= 80) color = '#22c55e';
+    else if (pct >= 60) color = '#84cc16';
+    else if (pct >= 40) color = '#eab308';
+    else color = '#ef4444';
+
+    overallCircle.style.background = `conic-gradient(${color} ${pct * 3.6}deg, #2a2a2a ${pct * 3.6}deg)`;
+
+    // Render category bars
+    const container = document.getElementById('category-stats');
+    container.innerHTML = '';
+
+    for (const [cat, catMeta] of Object.entries(CATEGORIES)) {
+        const stats = data.categories[cat] || { percentage: 0, correct: 0, total: 0 };
+        const bar = document.createElement('div');
+        bar.className = 'category-stat-bar';
+        bar.innerHTML = `
+            <div class="cat-bar-header">
+                <span class="cat-bar-emoji">${CAT_EMOJIS[cat] || '❓'}</span>
+                <span class="cat-bar-name" style="color: ${catMeta.color}">${catMeta.name}</span>
+                <span class="cat-bar-pct">${stats.percentage}%</span>
+            </div>
+            <div class="cat-bar-track">
+                <div class="cat-bar-fill" style="width: ${stats.percentage}%; background: ${catMeta.color}"></div>
+            </div>
+        `;
+        container.appendChild(bar);
+    }
 }
 
 function toggleGameRow(header) {
