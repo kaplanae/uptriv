@@ -2986,30 +2986,82 @@ def api_leaderboard():
         {'name': 'Drew', 'pct': 64, 'games': 3},
     ]
 
-    if len(leaderboard) < 10:
-        # Add fake users to fill to 10
-        existing_count = len(leaderboard)
-        for i, fake in enumerate(fake_users):
-            if len(leaderboard) >= 10:
-                break
-            # Only add if this fake user would fit in the rankings
-            leaderboard.append({
-                'user': {
-                    'id': -1 - i,
-                    'username': fake['name'],
-                    'profile_picture': None,
-                    'is_self': False,
-                    'is_fake': True
-                },
-                'percentage': fake['pct'],
-                'games_played': fake['games'],
-                'rank': existing_count + i + 1
-            })
+    # Category-specific fake data with varied percentages
+    fake_category_data = {
+        'news': [
+            {'name': 'Alex', 'pct': 95, 'games': 8},
+            {'name': 'Morgan', 'pct': 89, 'games': 7},
+            {'name': 'Taylor', 'pct': 84, 'games': 9},
+            {'name': 'Casey', 'pct': 78, 'games': 6},
+            {'name': 'Riley', 'pct': 72, 'games': 5},
+        ],
+        'history': [
+            {'name': 'Jordan', 'pct': 91, 'games': 9},
+            {'name': 'Quinn', 'pct': 86, 'games': 7},
+            {'name': 'Alex', 'pct': 80, 'games': 8},
+            {'name': 'Avery', 'pct': 75, 'games': 6},
+            {'name': 'Drew', 'pct': 68, 'games': 4},
+        ],
+        'science': [
+            {'name': 'Taylor', 'pct': 94, 'games': 9},
+            {'name': 'Casey', 'pct': 87, 'games': 8},
+            {'name': 'Jordan', 'pct': 81, 'games': 7},
+            {'name': 'Jamie', 'pct': 74, 'games': 5},
+            {'name': 'Morgan', 'pct': 69, 'games': 6},
+        ],
+        'entertainment': [
+            {'name': 'Riley', 'pct': 96, 'games': 8},
+            {'name': 'Avery', 'pct': 90, 'games': 9},
+            {'name': 'Quinn', 'pct': 83, 'games': 7},
+            {'name': 'Alex', 'pct': 77, 'games': 6},
+            {'name': 'Taylor', 'pct': 71, 'games': 5},
+        ],
+        'sports': [
+            {'name': 'Morgan', 'pct': 93, 'games': 9},
+            {'name': 'Drew', 'pct': 88, 'games': 7},
+            {'name': 'Riley', 'pct': 82, 'games': 8},
+            {'name': 'Jordan', 'pct': 76, 'games': 6},
+            {'name': 'Casey', 'pct': 70, 'games': 5},
+        ],
+        'geography': [
+            {'name': 'Quinn', 'pct': 92, 'games': 8},
+            {'name': 'Jamie', 'pct': 85, 'games': 7},
+            {'name': 'Avery', 'pct': 79, 'games': 9},
+            {'name': 'Drew', 'pct': 73, 'games': 5},
+            {'name': 'Alex', 'pct': 67, 'games': 6},
+        ],
+    }
 
-        # Re-sort and re-rank
-        leaderboard.sort(key=lambda x: (-x['percentage'], -x['games_played']))
-        for i, entry in enumerate(leaderboard):
-            entry['rank'] = i + 1
+    def add_fake_users_to_leaderboard(lb, fakes):
+        if len(lb) < 10:
+            existing_count = len(lb)
+            for i, fake in enumerate(fakes):
+                if len(lb) >= 10:
+                    break
+                lb.append({
+                    'user': {
+                        'id': -1 - i,
+                        'username': fake['name'],
+                        'profile_picture': None,
+                        'is_self': False,
+                        'is_fake': True
+                    },
+                    'percentage': fake['pct'],
+                    'games_played': fake['games'],
+                    'rank': existing_count + i + 1
+                })
+            # Re-sort and re-rank
+            lb.sort(key=lambda x: (-x['percentage'], -x['games_played']))
+            for i, entry in enumerate(lb):
+                entry['rank'] = i + 1
+
+    # Add fake users to overall leaderboard
+    add_fake_users_to_leaderboard(leaderboard, fake_users)
+
+    # Add fake users to each category leaderboard
+    for cat in category_leaderboards:
+        if cat in fake_category_data:
+            add_fake_users_to_leaderboard(category_leaderboards[cat], fake_category_data[cat])
 
     return jsonify({
         'overall': leaderboard,
