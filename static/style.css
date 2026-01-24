@@ -2408,21 +2408,31 @@ footer {
     font-weight: 500;
 }
 
-.invite-result .invite-link {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
+.invite-result .loading-text {
     color: var(--text-secondary);
 }
 
-.invite-result .invite-link input {
-    width: 100%;
-    margin-top: 0.5rem;
-    padding: 0.5rem;
+.invite-link-box {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    align-items: center;
+}
+
+.invite-link-box input {
+    flex: 1;
+    padding: 0.6rem 0.75rem;
     background: var(--bg-secondary);
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     color: var(--text-primary);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+}
+
+.invite-link-box .btn-small {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
 }
 
 /* ============================================

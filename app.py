@@ -2774,40 +2774,47 @@ def api_invite_friend():
     conn.commit()
     conn.close()
 
-    # Send invite email
+    # Generate invite link
     invite_url = url_for('accept_invite', token=token, _external=True)
 
-    try:
-        msg = Message(
-            subject=f'{current_user.username} invited you to UpTriv!',
-            recipients=[email],
-            html=f'''
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h1 style="color: #667eea;">You're Invited to UpTriv!</h1>
-                <p><strong>{current_user.username}</strong> wants you to join them on UpTriv - a daily brain training trivia game.</p>
-                <p>Challenge yourself with 6 questions across different categories:</p>
-                <ul>
-                    <li>World & U.S. News</li>
-                    <li>History</li>
-                    <li>Science & Nature</li>
-                    <li>Entertainment</li>
-                    <li>Sports</li>
-                    <li>Geography</li>
-                </ul>
-                <p>
-                    <a href="{invite_url}" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
-                        Join UpTriv
-                    </a>
-                </p>
-                <p style="color: #666; font-size: 14px;">This invite expires in 7 days.</p>
-            </div>
-            '''
-        )
-        mail.send(msg)
-        return jsonify({'success': True, 'message': f'Invite sent to {email}'})
-    except Exception as e:
-        print(f"Email error: {e}")
-        return jsonify({'success': True, 'message': f'Invite created. Share this link: {invite_url}', 'invite_url': invite_url})
+    # Try to send email, but always return the link as fallback
+    email_sent = False
+    if app.config.get('MAIL_USERNAME') and app.config.get('MAIL_PASSWORD'):
+        try:
+            msg = Message(
+                subject=f'{current_user.username} invited you to UpTriv!',
+                recipients=[email],
+                html=f'''
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h1 style="color: #667eea;">You're Invited to UpTriv!</h1>
+                    <p><strong>{current_user.username}</strong> wants you to join them on UpTriv - a daily brain training trivia game.</p>
+                    <p>Challenge yourself with 6 questions across different categories:</p>
+                    <ul>
+                        <li>World & U.S. News</li>
+                        <li>History</li>
+                        <li>Science & Nature</li>
+                        <li>Entertainment</li>
+                        <li>Sports</li>
+                        <li>Geography</li>
+                    </ul>
+                    <p>
+                        <a href="{invite_url}" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                            Join UpTriv
+                        </a>
+                    </p>
+                    <p style="color: #666; font-size: 14px;">This invite expires in 7 days.</p>
+                </div>
+                '''
+            )
+            mail.send(msg)
+            email_sent = True
+        except Exception as e:
+            print(f"Email error: {e}")
+
+    if email_sent:
+        return jsonify({'success': True, 'message': f'Invite sent to {email}', 'invite_url': invite_url})
+    else:
+        return jsonify({'success': True, 'message': 'Invite created! Share this link with your friend:', 'invite_url': invite_url})
 
 
 @app.route('/invite/<token>')

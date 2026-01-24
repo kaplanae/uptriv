@@ -270,6 +270,8 @@ async function sendInvite() {
         return;
     }
 
+    resultDiv.innerHTML = '<p class="loading-text">Creating invite...</p>';
+
     try {
         const res = await fetch('/api/friends/invite', {
             method: 'POST',
@@ -279,17 +281,36 @@ async function sendInvite() {
         const data = await res.json();
 
         if (data.success) {
-            resultDiv.innerHTML = `<p class="success-text">${data.message}</p>`;
+            let html = `<p class="success-text">${data.message}</p>`;
             if (data.invite_url) {
-                resultDiv.innerHTML += `<p class="invite-link">Or share this link: <input type="text" value="${data.invite_url}" readonly onclick="this.select()"></p>`;
+                html += `
+                    <div class="invite-link-box">
+                        <input type="text" id="invite-link-input" value="${data.invite_url}" readonly>
+                        <button class="btn btn-small" onclick="copyInviteLink()">Copy</button>
+                    </div>
+                `;
             }
+            resultDiv.innerHTML = html;
             document.getElementById('invite-email').value = '';
         } else {
             resultDiv.innerHTML = `<p class="error-text">${data.error}</p>`;
         }
     } catch (e) {
         console.error('Error sending invite:', e);
-        resultDiv.innerHTML = '<p class="error-text">Failed to send invite</p>';
+        resultDiv.innerHTML = '<p class="error-text">Failed to send invite. Please try again.</p>';
+    }
+}
+
+async function copyInviteLink() {
+    const input = document.getElementById('invite-link-input');
+    input.select();
+    try {
+        await navigator.clipboard.writeText(input.value);
+        const btn = input.nextElementSibling;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+    } catch (e) {
+        document.execCommand('copy');
     }
 }
 
