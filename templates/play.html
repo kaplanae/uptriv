@@ -7,36 +7,7 @@
     <!-- Login Screen (for unauthenticated users) -->
     <div id="login-screen" class="game-screen">
         <div class="login-card">
-            <div class="login-brain">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <filter id="login-shadow" x="-10%" y="-10%" width="120%" height="130%">
-                            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
-                        </filter>
-                    </defs>
-                    <g transform="translate(5, 3)" filter="url(#login-shadow)">
-                        <!-- FRONTAL LOBE - News (coral red) -->
-                        <path d="M15 45C12.5 35 15 22.5 25 14C35 6.5 50 4 57.5 5.5L50 19C42.5 21.5 36 28 33 36.5C29 44 25 48 19 49C16 48 14 46 15 45Z" fill="#FF6B6B" stroke="#FF6B6B" stroke-width="0.5"/>
-                        <!-- PARIETAL LOBE - History (teal) -->
-                        <path d="M57.5 5.5C70 7.5 80 12.5 86 22.5C90 30 91 39 90 46.5L77.5 44C72.5 39 65 35 57.5 34C50 33 47.5 28 50 19L57.5 5.5Z" fill="#4ECDC4" stroke="#4ECDC4" stroke-width="0.5"/>
-                        <!-- TEMPORAL LOBE - Science (blue) -->
-                        <path d="M19 49C25 48 29 44 33 36.5C36 29 41 25 49 25L49 40C44 44 40 50 39 58C38 65 36 69 36 74C27.5 70 20 64 16 55C14 49 15 47 19 49Z" fill="#45B7D1" stroke="#45B7D1" stroke-width="0.5"/>
-                        <!-- OCCIPITAL LOBE - Entertainment (green) -->
-                        <path d="M90 46.5C91 54 87.5 63 80 69C75 74 67.5 75 65 74L64 61.5C68 56.5 72.5 50 77.5 44L90 46.5Z" fill="#96CEB4" stroke="#96CEB4" stroke-width="0.5"/>
-                        <!-- CEREBELLUM - Sports (yellow) -->
-                        <path d="M36 74C36 69 38 64 39 58C40 50 44 44 49 40L49 25C56.5 25 62.5 29 57.5 34C65 35 72.5 39 77.5 44C72.5 50 68 56.5 64 61.5L65 74C60 70 50 69 44 70C39 71 36 73 36 74Z" fill="#FFEAA7" stroke="#FFEAA7" stroke-width="0.5"/>
-                        <!-- BRAIN STEM - Geography (plum) -->
-                        <path d="M39 74C44 71.5 50 70 55 70C60 70 64 71.5 65 74C60 78 59 83 60 88L44 88C45 83 44 78 39 74Z" fill="#DDA0DD" stroke="#DDA0DD" stroke-width="0.5"/>
-                        <!-- Brain folds -->
-                        <g stroke="rgba(255,255,255,0.5)" stroke-linecap="round" fill="none" stroke-width="1">
-                            <path d="M23 18 Q30 14, 40 13"/>
-                            <path d="M20 25 Q28 21, 38 20"/>
-                            <path d="M60 10 Q70 11, 80 18"/>
-                            <path d="M63 18 Q71 20, 82 28"/>
-                        </g>
-                    </g>
-                </svg>
-            </div>
+            <img src="{{ url_for('static', filename='uptrivlogo.png') }}" alt="UpTriv" class="play-logo">
             <h2>Sign In to Play</h2>
             <p>Sign in with Google to track your progress and compete with friends</p>
             <a href="{{ url_for('google_login') }}" class="auth-btn login-btn" style="margin-top: 1rem; justify-content: center;">
@@ -54,29 +25,7 @@
     <!-- Ready Screen (for authenticated users) -->
     <div id="ready-screen" class="game-screen">
         <div class="login-card">
-            <div class="login-brain">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <filter id="ready-shadow" x="-10%" y="-10%" width="120%" height="130%">
-                            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
-                        </filter>
-                    </defs>
-                    <g transform="translate(5, 3)" filter="url(#ready-shadow)">
-                        <path d="M15 45C12.5 35 15 22.5 25 14C35 6.5 50 4 57.5 5.5L50 19C42.5 21.5 36 28 33 36.5C29 44 25 48 19 49C16 48 14 46 15 45Z" fill="#FF6B6B" stroke="#FF6B6B" stroke-width="0.5"/>
-                        <path d="M57.5 5.5C70 7.5 80 12.5 86 22.5C90 30 91 39 90 46.5L77.5 44C72.5 39 65 35 57.5 34C50 33 47.5 28 50 19L57.5 5.5Z" fill="#4ECDC4" stroke="#4ECDC4" stroke-width="0.5"/>
-                        <path d="M19 49C25 48 29 44 33 36.5C36 29 41 25 49 25L49 40C44 44 40 50 39 58C38 65 36 69 36 74C27.5 70 20 64 16 55C14 49 15 47 19 49Z" fill="#45B7D1" stroke="#45B7D1" stroke-width="0.5"/>
-                        <path d="M90 46.5C91 54 87.5 63 80 69C75 74 67.5 75 65 74L64 61.5C68 56.5 72.5 50 77.5 44L90 46.5Z" fill="#96CEB4" stroke="#96CEB4" stroke-width="0.5"/>
-                        <path d="M36 74C36 69 38 64 39 58C40 50 44 44 49 40L49 25C56.5 25 62.5 29 57.5 34C65 35 72.5 39 77.5 44C72.5 50 68 56.5 64 61.5L65 74C60 70 50 69 44 70C39 71 36 73 36 74Z" fill="#FFEAA7" stroke="#FFEAA7" stroke-width="0.5"/>
-                        <path d="M39 74C44 71.5 50 70 55 70C60 70 64 71.5 65 74C60 78 59 83 60 88L44 88C45 83 44 78 39 74Z" fill="#DDA0DD" stroke="#DDA0DD" stroke-width="0.5"/>
-                        <g stroke="rgba(255,255,255,0.5)" stroke-linecap="round" fill="none" stroke-width="1">
-                            <path d="M23 18 Q30 14, 40 13"/>
-                            <path d="M20 25 Q28 21, 38 20"/>
-                            <path d="M60 10 Q70 11, 80 18"/>
-                            <path d="M63 18 Q71 20, 82 28"/>
-                        </g>
-                    </g>
-                </svg>
-            </div>
+            <img src="{{ url_for('static', filename='uptrivlogo.png') }}" alt="UpTriv" class="play-logo">
             <h2>Ready to Play<span id="player-name-wrapper">, <span id="player-name"></span></span>?</h2>
             <p>6 questions, 10 seconds each. Good luck!</p>
 
