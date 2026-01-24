@@ -536,6 +536,22 @@ footer {
     color: var(--error);
 }
 
+/* Profile Quiz button in difficulty toggle */
+.profile-quiz-btn {
+    text-decoration: none;
+    border-color: var(--accent-secondary);
+    background: rgba(118, 75, 162, 0.1);
+}
+
+.profile-quiz-btn:hover {
+    border-color: var(--accent-secondary);
+    background: rgba(118, 75, 162, 0.2);
+}
+
+.profile-quiz-btn .diff-label {
+    color: var(--accent-secondary);
+}
+
 .play-button {
     display: flex;
     align-items: center;
