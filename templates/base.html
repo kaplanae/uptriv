@@ -50,6 +50,7 @@
                 </div>
                 <div class="auth-section">
                     <div id="auth-loading" class="auth-loading">...</div>
+                    <span id="anon-username" class="anon-username" style="display:none;"></span>
                     <a href="{{ url_for('google_login') }}" id="login-btn" class="auth-btn login-btn" style="display:none;">
                         <svg width="18" height="18" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -90,6 +91,7 @@
 
             if (data.authenticated) {
                 document.getElementById('login-btn').style.display = 'none';
+                document.getElementById('anon-username').style.display = 'none';
                 document.getElementById('user-menu').style.display = 'flex';
                 document.getElementById('user-name').textContent = data.user.username;
                 if (data.user.profile_picture) {
@@ -102,10 +104,22 @@
             } else {
                 document.getElementById('login-btn').style.display = 'flex';
                 document.getElementById('user-menu').style.display = 'none';
+                // Show anonymous username if exists
+                const anonUsername = localStorage.getItem('uptriv_username');
+                if (anonUsername) {
+                    document.getElementById('anon-username').textContent = anonUsername;
+                    document.getElementById('anon-username').style.display = 'inline';
+                }
             }
         } catch (e) {
             document.getElementById('auth-loading').style.display = 'none';
             document.getElementById('login-btn').style.display = 'flex';
+            // Show anonymous username if exists
+            const anonUsername = localStorage.getItem('uptriv_username');
+            if (anonUsername) {
+                document.getElementById('anon-username').textContent = anonUsername;
+                document.getElementById('anon-username').style.display = 'inline';
+            }
         }
     }
     checkAuth();

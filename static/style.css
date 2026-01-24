@@ -165,6 +165,12 @@ nav {
     color: var(--text-primary);
 }
 
+.anon-username {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
 .logout-btn {
     padding: 0.4rem 0.75rem;
     background: transparent;
