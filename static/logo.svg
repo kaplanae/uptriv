@@ -1,87 +1,57 @@
-<svg viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.3"/>
-    </filter>
-    <clipPath id="wheelClip">
-      <circle cx="100" cy="115" r="75"/>
-    </clipPath>
-  </defs>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    UpTriv Logo - Clean Modern Stopwatch
+    Circle circumference = 2 * π * 70 = 439.82
+    6 segments: each ~65 units with ~8 unit gaps
+    stroke-dasharray: 65 375 (one segment visible per circle)
+  -->
 
-  <!-- Stopwatch body -->
-  <g filter="url(#shadow)">
-    <!-- Outer ring -->
-    <circle cx="100" cy="115" r="85" fill="#1a2744" stroke="#2d4a7c" stroke-width="4"/>
+  <!-- Background circle (subtle) -->
+  <circle cx="100" cy="100" r="78" fill="#0d1117"/>
 
-    <!-- Inner colored wheel -->
-    <g clip-path="url(#wheelClip)">
-      <!-- News - Coral Red (top right) -->
-      <path d="M100 115 L100 40 A75 75 0 0 1 165 77.5 Z" fill="#FF6B6B"/>
-      <!-- History - Teal (right) -->
-      <path d="M100 115 L165 77.5 A75 75 0 0 1 165 152.5 Z" fill="#4ECDC4"/>
-      <!-- Science - Blue (bottom right) -->
-      <path d="M100 115 L165 152.5 A75 75 0 0 1 100 190 Z" fill="#45B7D1"/>
-      <!-- Entertainment - Green (bottom left) -->
-      <path d="M100 115 L100 190 A75 75 0 0 1 35 152.5 Z" fill="#96CEB4"/>
-      <!-- Sports - Yellow (left) -->
-      <path d="M100 115 L35 152.5 A75 75 0 0 1 35 77.5 Z" fill="#FFEAA7"/>
-      <!-- Geography - Plum (top left) -->
-      <path d="M100 115 L35 77.5 A75 75 0 0 1 100 40 Z" fill="#DDA0DD"/>
-    </g>
+  <!-- Segment ring - 6 colored arcs -->
+  <!-- News - Coral Red -->
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#FF6B6B" stroke-width="14"
+          stroke-dasharray="65 375" stroke-linecap="round"
+          transform="rotate(-87 100 100)"/>
 
-    <!-- Category icons -->
-    <!-- News - Globe icon (top right) -->
-    <g transform="translate(130, 58)">
-      <circle cx="0" cy="0" r="14" fill="rgba(0,0,0,0.2)"/>
-      <text x="0" y="6" text-anchor="middle" font-size="18">🌍</text>
-    </g>
+  <!-- History - Teal -->
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#4ECDC4" stroke-width="14"
+          stroke-dasharray="65 375" stroke-linecap="round"
+          transform="rotate(-27 100 100)"/>
 
-    <!-- History - Scroll icon (right) -->
-    <g transform="translate(152, 115)">
-      <circle cx="0" cy="0" r="14" fill="rgba(0,0,0,0.2)"/>
-      <text x="0" y="6" text-anchor="middle" font-size="18">📜</text>
-    </g>
+  <!-- Science & Nature - Blue -->
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#45B7D1" stroke-width="14"
+          stroke-dasharray="65 375" stroke-linecap="round"
+          transform="rotate(33 100 100)"/>
 
-    <!-- Science - Microscope icon (bottom right) -->
-    <g transform="translate(130, 172)">
-      <circle cx="0" cy="0" r="14" fill="rgba(0,0,0,0.2)"/>
-      <text x="0" y="6" text-anchor="middle" font-size="18">🔬</text>
-    </g>
+  <!-- Entertainment - Green -->
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#96CEB4" stroke-width="14"
+          stroke-dasharray="65 375" stroke-linecap="round"
+          transform="rotate(93 100 100)"/>
 
-    <!-- Entertainment - Movie icon (bottom left) -->
-    <g transform="translate(70, 172)">
-      <circle cx="0" cy="0" r="14" fill="rgba(0,0,0,0.2)"/>
-      <text x="0" y="6" text-anchor="middle" font-size="18">🎬</text>
-    </g>
+  <!-- Sports - Yellow -->
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#FFEAA7" stroke-width="14"
+          stroke-dasharray="65 375" stroke-linecap="round"
+          transform="rotate(153 100 100)"/>
 
-    <!-- Sports - Trophy icon (left) -->
-    <g transform="translate(48, 115)">
-      <circle cx="0" cy="0" r="14" fill="rgba(0,0,0,0.2)"/>
-      <text x="0" y="6" text-anchor="middle" font-size="18">🏆</text>
-    </g>
+  <!-- Geography - Plum -->
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#DDA0DD" stroke-width="14"
+          stroke-dasharray="65 375" stroke-linecap="round"
+          transform="rotate(213 100 100)"/>
 
-    <!-- Geography - Map icon (top left) -->
-    <g transform="translate(70, 58)">
-      <circle cx="0" cy="0" r="14" fill="rgba(0,0,0,0.2)"/>
-      <text x="0" y="6" text-anchor="middle" font-size="18">🗺️</text>
-    </g>
+  <!-- Center badge -->
+  <rect x="32" y="82" width="136" height="36" rx="18" fill="#161b22"/>
+  <rect x="34" y="84" width="132" height="32" rx="16" fill="#0d1117"/>
 
-    <!-- Center circle with text -->
-    <circle cx="100" cy="115" r="45" fill="#0f1729"/>
-    <circle cx="100" cy="115" r="42" fill="#1a2744" stroke="#2d4a7c" stroke-width="2"/>
+  <!-- UpTriv text -->
+  <text x="100" y="107" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+        font-size="24" font-weight="700" fill="#ffffff" letter-spacing="-0.5">
+    UpTriv
+  </text>
 
-    <!-- UpTriv text -->
-    <text x="100" y="110" text-anchor="middle" font-family="'Space Grotesk', sans-serif" font-size="22" font-weight="700" fill="#667eea">Up</text>
-    <text x="100" y="132" text-anchor="middle" font-family="'Space Grotesk', sans-serif" font-size="22" font-weight="700" fill="#764ba2">Triv</text>
-
-    <!-- Stopwatch top button -->
-    <rect x="90" y="18" width="20" height="15" rx="3" fill="#2d4a7c"/>
-    <rect x="93" y="10" width="14" height="12" rx="2" fill="#1a2744" stroke="#2d4a7c" stroke-width="2"/>
-
-    <!-- Stopwatch side button -->
-    <rect x="170" y="70" width="12" height="20" rx="2" fill="#2d4a7c" transform="rotate(30, 176, 80)"/>
-  </g>
-
-  <!-- Tagline -->
-  <text x="100" y="212" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" font-weight="500" fill="#a0a0b0">6 Questions • 60 Seconds</text>
+  <!-- Stopwatch button (top) -->
+  <rect x="92" y="12" width="16" height="10" rx="2" fill="#21262d"/>
+  <rect x="95" y="4" width="10" height="12" rx="2" fill="#161b22" stroke="#30363d" stroke-width="1"/>
 </svg>
