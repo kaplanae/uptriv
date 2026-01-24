@@ -100,13 +100,17 @@ function renderLeaderboard() {
         const pct = entry.percentage || 0;
         const pctClass = pct >= 70 ? 'high' : pct >= 50 ? 'medium' : 'low';
 
+        // Get first name only
+        const fullName = user.username || 'Unknown';
+        const firstName = fullName.split(' ')[0];
+
         return `
             <div class="leaderboard-row ${isCurrentUser ? 'current-user' : ''}" style="animation-delay: ${index * 0.05}s">
                 <div class="rank ${rankClass}">#${rank}</div>
                 <div class="user-info">
                     <img src="${user.profile_picture || '/static/default-avatar.png'}"
-                         alt="${user.username || 'User'}" class="leaderboard-avatar">
-                    <span class="leaderboard-username">${user.username || 'Unknown'}${isCurrentUser ? ' (You)' : ''}</span>
+                         alt="${firstName}" class="leaderboard-avatar">
+                    <span class="leaderboard-username">${firstName}${isCurrentUser ? ' (You)' : ''}</span>
                 </div>
                 <div class="games-count">${entry.games_played || 0} games</div>
                 <div class="score-pct ${pctClass}">${pct.toFixed(0)}%</div>
