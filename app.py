@@ -125,6 +125,170 @@ CATEGORIES = {
     }
 }
 
+# Learning resources for knowledge gaps
+LEARNING_RESOURCES = {
+    'news': {
+        'current_events': [
+            {'type': 'read', 'title': 'AP News Daily', 'url': 'https://apnews.com', 'desc': 'Unbiased daily news coverage'},
+            {'type': 'watch', 'title': 'TLDR News (YouTube)', 'url': 'https://youtube.com/@TLDRNews', 'desc': '10-min explainers on current events'},
+        ],
+        'politics': [
+            {'type': 'read', 'title': 'The Economist', 'url': 'https://economist.com', 'desc': 'In-depth political analysis'},
+            {'type': 'watch', 'title': 'Vox (YouTube)', 'url': 'https://youtube.com/@Vox', 'desc': 'Visual explainers on policy & politics'},
+        ],
+        'world_affairs': [
+            {'type': 'read', 'title': 'Foreign Affairs', 'url': 'https://foreignaffairs.com', 'desc': 'Global politics & international relations'},
+            {'type': 'watch', 'title': 'CaspianReport (YouTube)', 'url': 'https://youtube.com/@CaspianReport', 'desc': 'Geopolitics explained'},
+        ],
+        'famous_people': [
+            {'type': 'read', 'title': 'Biography.com', 'url': 'https://biography.com', 'desc': 'Notable figures past & present'},
+            {'type': 'watch', 'title': 'Biographics (YouTube)', 'url': 'https://youtube.com/@Biographics', 'desc': 'Video biographies of famous people'},
+        ],
+    },
+    'history': {
+        'ancient': [
+            {'type': 'read', 'title': 'SPQR by Mary Beard', 'desc': 'Definitive history of ancient Rome'},
+            {'type': 'watch', 'title': 'Historia Civilis (YouTube)', 'url': 'https://youtube.com/@HistoriaCivilis', 'desc': 'Animated ancient history'},
+        ],
+        'medieval': [
+            {'type': 'read', 'title': 'The Time Traveler\'s Guide to Medieval England', 'desc': 'Immersive medieval history'},
+            {'type': 'watch', 'title': 'Kings and Generals (YouTube)', 'url': 'https://youtube.com/@KingsandGenerals', 'desc': 'Medieval battles & kingdoms'},
+        ],
+        'modern': [
+            {'type': 'read', 'title': 'The Guns of August by Barbara Tuchman', 'desc': 'WWI origins, Pulitzer winner'},
+            {'type': 'watch', 'title': 'The Great War (YouTube)', 'url': 'https://youtube.com/@TheGreatWar', 'desc': 'Week-by-week WWI coverage'},
+        ],
+        'wars': [
+            {'type': 'read', 'title': 'A World at Arms by Gerhard Weinberg', 'desc': 'Comprehensive WWII history'},
+            {'type': 'watch', 'title': 'World War Two (YouTube)', 'url': 'https://youtube.com/@WorldWarTwo', 'desc': 'WWII week by week'},
+        ],
+        'presidents': [
+            {'type': 'read', 'title': 'Team of Rivals by Doris Kearns Goodwin', 'desc': 'Lincoln\'s political genius'},
+            {'type': 'watch', 'title': 'American Experience: The Presidents (PBS)', 'desc': 'Documentary series on US presidents'},
+        ],
+        'world_history': [
+            {'type': 'read', 'title': 'Sapiens by Yuval Noah Harari', 'desc': 'Human history overview'},
+            {'type': 'watch', 'title': 'Crash Course World History (YouTube)', 'url': 'https://youtube.com/@crashcourse', 'desc': 'Fast-paced world history'},
+        ],
+    },
+    'science': {
+        'space': [
+            {'type': 'read', 'title': 'Cosmos by Carl Sagan', 'desc': 'Classic introduction to astronomy'},
+            {'type': 'watch', 'title': 'PBS Space Time (YouTube)', 'url': 'https://youtube.com/@pbsspacetime', 'desc': 'Deep dives into astrophysics'},
+        ],
+        'astronomy': [
+            {'type': 'read', 'title': 'Astrophysics for People in a Hurry', 'desc': 'Neil deGrasse Tyson\'s quick guide'},
+            {'type': 'watch', 'title': 'Scott Manley (YouTube)', 'url': 'https://youtube.com/@scottmanley', 'desc': 'Space exploration & rockets'},
+        ],
+        'biology': [
+            {'type': 'read', 'title': 'The Gene by Siddhartha Mukherjee', 'desc': 'History of genetics'},
+            {'type': 'watch', 'title': 'Kurzgesagt (YouTube)', 'url': 'https://youtube.com/@kurzgesagt', 'desc': 'Animated science explainers'},
+        ],
+        'physics': [
+            {'type': 'read', 'title': 'A Brief History of Time by Stephen Hawking', 'desc': 'Physics for everyone'},
+            {'type': 'watch', 'title': 'Veritasium (YouTube)', 'url': 'https://youtube.com/@veritasium', 'desc': 'Fascinating physics videos'},
+        ],
+        'chemistry': [
+            {'type': 'read', 'title': 'The Disappearing Spoon by Sam Kean', 'desc': 'Stories behind the periodic table'},
+            {'type': 'watch', 'title': 'Periodic Videos (YouTube)', 'url': 'https://youtube.com/@periodicvideos', 'desc': 'Every element explained'},
+        ],
+        'earth_science': [
+            {'type': 'read', 'title': 'A Short History of Nearly Everything', 'desc': 'Bill Bryson\'s science adventure'},
+            {'type': 'watch', 'title': 'MinuteEarth (YouTube)', 'url': 'https://youtube.com/@MinuteEarth', 'desc': 'Quick earth science lessons'},
+        ],
+    },
+    'entertainment': {
+        'movies': [
+            {'type': 'read', 'title': 'IMDb Top 250', 'url': 'https://imdb.com/chart/top', 'desc': 'Must-see films ranked'},
+            {'type': 'watch', 'title': 'Lessons from the Screenplay (YouTube)', 'url': 'https://youtube.com/@LessonsFromTheScreenplay', 'desc': 'Film analysis & storytelling'},
+        ],
+        'tv': [
+            {'type': 'read', 'title': 'TV Guide\'s Greatest Shows', 'desc': 'Classic & modern TV essentials'},
+            {'type': 'watch', 'title': 'Nerdwriter1 (YouTube)', 'url': 'https://youtube.com/@Nerdwriter1', 'desc': 'Video essays on TV & culture'},
+        ],
+        'music': [
+            {'type': 'read', 'title': 'Rolling Stone\'s 500 Greatest Albums', 'desc': 'Essential music history'},
+            {'type': 'watch', 'title': 'Polyphonic (YouTube)', 'url': 'https://youtube.com/@Polyphonic', 'desc': 'Music history & analysis'},
+        ],
+        'literature': [
+            {'type': 'read', 'title': 'Penguin Classics Collection', 'desc': 'Essential world literature'},
+            {'type': 'watch', 'title': 'Crash Course Literature (YouTube)', 'url': 'https://youtube.com/@crashcourse', 'desc': 'Quick lit lessons'},
+        ],
+        'arts': [
+            {'type': 'read', 'title': 'The Story of Art by E.H. Gombrich', 'desc': 'Classic art history intro'},
+            {'type': 'watch', 'title': 'Great Art Explained (YouTube)', 'url': 'https://youtube.com/@GreatArtExplained', 'desc': '15-min masterpiece deep dives'},
+        ],
+        'games': [
+            {'type': 'read', 'title': 'Blood, Sweat, and Pixels', 'desc': 'Behind-the-scenes game development'},
+            {'type': 'watch', 'title': 'NoClip Documentaries (YouTube)', 'url': 'https://youtube.com/@noclip', 'desc': 'Video game documentaries'},
+        ],
+    },
+    'sports': {
+        'football': [
+            {'type': 'read', 'title': 'The Blind Side by Michael Lewis', 'desc': 'Football & human interest'},
+            {'type': 'watch', 'title': 'NFL Films (YouTube)', 'url': 'https://youtube.com/@NFL', 'desc': 'Classic NFL moments'},
+        ],
+        'basketball': [
+            {'type': 'read', 'title': 'The Book of Basketball by Bill Simmons', 'desc': 'NBA history & legends'},
+            {'type': 'watch', 'title': 'The Last Dance (Netflix)', 'desc': 'Michael Jordan documentary'},
+        ],
+        'baseball': [
+            {'type': 'read', 'title': 'Moneyball by Michael Lewis', 'desc': 'Baseball analytics revolution'},
+            {'type': 'watch', 'title': 'Ken Burns: Baseball (PBS)', 'desc': 'Epic baseball documentary'},
+        ],
+        'soccer': [
+            {'type': 'read', 'title': 'Inverting the Pyramid by Jonathan Wilson', 'desc': 'Soccer tactics history'},
+            {'type': 'watch', 'title': 'TIFO Football (YouTube)', 'url': 'https://youtube.com/@TifoFootball', 'desc': 'Tactical analysis & history'},
+        ],
+        'olympics': [
+            {'type': 'read', 'title': 'The Boys in the Boat', 'desc': '1936 Olympic rowing story'},
+            {'type': 'watch', 'title': 'Olympic Channel (YouTube)', 'url': 'https://youtube.com/@olympics', 'desc': 'Historic Olympic moments'},
+        ],
+        'misc': [
+            {'type': 'read', 'title': 'Sports Illustrated Vault', 'url': 'https://vault.si.com', 'desc': 'Classic sports journalism'},
+            {'type': 'watch', 'title': '30 for 30 (ESPN)', 'desc': 'Award-winning sports docs'},
+        ],
+        'hockey': [
+            {'type': 'read', 'title': 'The Game by Ken Dryden', 'desc': 'Hockey memoir classic'},
+            {'type': 'watch', 'title': 'NHL Vault (YouTube)', 'url': 'https://youtube.com/@NHL', 'desc': 'Classic hockey highlights'},
+        ],
+        'tennis': [
+            {'type': 'read', 'title': 'Open by Andre Agassi', 'desc': 'Tennis autobiography'},
+            {'type': 'watch', 'title': 'Break Point (Netflix)', 'desc': 'Behind-the-scenes tennis doc'},
+        ],
+        'golf': [
+            {'type': 'read', 'title': 'The Match by Mark Frost', 'desc': 'Golf history classic'},
+            {'type': 'watch', 'title': 'PGA Tour (YouTube)', 'url': 'https://youtube.com/@PGATOUR', 'desc': 'Golf highlights & history'},
+        ],
+    },
+    'geography': {
+        'countries': [
+            {'type': 'read', 'title': 'Prisoners of Geography by Tim Marshall', 'desc': 'How maps explain the world'},
+            {'type': 'watch', 'title': 'Geography Now (YouTube)', 'url': 'https://youtube.com/@GeographyNow', 'desc': 'Every country explained'},
+        ],
+        'capitals': [
+            {'type': 'read', 'title': 'Sporcle Geography Quizzes', 'url': 'https://sporcle.com/games/category/geography', 'desc': 'Practice world capitals'},
+            {'type': 'watch', 'title': 'Seterra Geography Games', 'url': 'https://seterra.com', 'desc': 'Interactive map quizzes'},
+        ],
+        'landmarks': [
+            {'type': 'read', 'title': '1,000 Places to See Before You Die', 'desc': 'World landmarks guide'},
+            {'type': 'watch', 'title': 'Rick Steves\' Europe (PBS)', 'desc': 'Travel & landmark tours'},
+        ],
+        'maps': [
+            {'type': 'read', 'title': 'The Map Book by Peter Barber', 'desc': 'Beautiful cartography history'},
+            {'type': 'watch', 'title': 'Map Men (YouTube)', 'url': 'https://youtube.com/@JayForeman', 'desc': 'Fun cartography videos'},
+        ],
+        'flags': [
+            {'type': 'read', 'title': 'Flag Stories', 'url': 'https://flagstories.co', 'desc': 'Meaning behind flags'},
+            {'type': 'watch', 'title': 'Geography Now (YouTube)', 'url': 'https://youtube.com/@GeographyNow', 'desc': 'Flag facts in country episodes'},
+        ],
+        'continents': [
+            {'type': 'read', 'title': 'National Geographic Atlas', 'desc': 'Comprehensive world atlas'},
+            {'type': 'watch', 'title': 'Atlas Pro (YouTube)', 'url': 'https://youtube.com/@AtlasPro1', 'desc': 'Geography & earth science'},
+        ],
+    }
+}
+
 # Question bank with subcategories
 QUESTIONS = {
     'news': [
@@ -1361,6 +1525,120 @@ def calculate_user_stats(user_id):
     }
 
 
+def generate_player_summary(stats):
+    """Generate a personalized player summary with analysis and recommendations."""
+    if stats['total_questions'] < 6:
+        return None  # Not enough data
+
+    total_questions = stats['total_questions']
+    overall = stats['overall_percentage']
+    categories = stats['categories']
+    weaknesses = stats['weaknesses']
+    strengths = stats['strengths']
+    subcategories = stats['subcategories']
+
+    # Determine player archetype based on performance
+    sorted_cats = sorted(categories.items(), key=lambda x: x[1]['percentage'], reverse=True)
+    best_cat = sorted_cats[0] if sorted_cats else None
+    worst_cat = sorted_cats[-1] if sorted_cats else None
+
+    # Generate synopsis
+    if overall >= 80:
+        skill_level = "trivia master"
+        skill_desc = "You have exceptional knowledge across the board."
+    elif overall >= 65:
+        skill_level = "trivia enthusiast"
+        skill_desc = "You have solid knowledge with room to grow."
+    elif overall >= 50:
+        skill_level = "curious learner"
+        skill_desc = "You're building a good foundation of knowledge."
+    else:
+        skill_level = "trivia rookie"
+        skill_desc = "You're just getting started on your knowledge journey."
+
+    # Build strength description
+    strength_text = ""
+    if best_cat and best_cat[1]['percentage'] >= 60 and best_cat[1]['total'] >= 3:
+        cat_name = CATEGORIES[best_cat[0]]['name']
+        strength_text = f"Your strongest area is {cat_name} ({best_cat[1]['percentage']}%)."
+        if strengths:
+            top_subs = [s['name'] for s in strengths[:2]]
+            if top_subs:
+                strength_text += f" You particularly excel at {' and '.join(top_subs)}."
+
+    # Build weakness description
+    weakness_text = ""
+    if worst_cat and worst_cat[1]['percentage'] < 60 and worst_cat[1]['total'] >= 3:
+        cat_name = CATEGORIES[worst_cat[0]]['name']
+        weakness_text = f"{cat_name} is your biggest opportunity for growth ({worst_cat[1]['percentage']}%)."
+
+    # Get recommendations based on weak subcategories
+    recommendations = []
+    seen_resources = set()
+
+    # Get weak areas (subcategories below 50% with at least 3 attempts)
+    weak_subs = []
+    for sub_name, sub_stats in subcategories.items():
+        if sub_stats['total'] >= 3 and sub_stats['percentage'] < 50:
+            weak_subs.append((sub_name, sub_stats))
+
+    # Sort by percentage (worst first)
+    weak_subs.sort(key=lambda x: x[1]['percentage'])
+
+    # Get resources for weak areas
+    for sub_name, sub_stats in weak_subs[:4]:  # Top 4 weakest
+        cat = sub_stats['category']
+        if cat in LEARNING_RESOURCES:
+            cat_resources = LEARNING_RESOURCES[cat]
+            # Try exact subcategory match first
+            if sub_name in cat_resources:
+                for resource in cat_resources[sub_name]:
+                    resource_key = resource['title']
+                    if resource_key not in seen_resources:
+                        seen_resources.add(resource_key)
+                        recommendations.append({
+                            'topic': sub_name.replace('_', ' ').title(),
+                            'category': cat,
+                            **resource
+                        })
+                        if len(recommendations) >= 6:
+                            break
+        if len(recommendations) >= 6:
+            break
+
+    # If not enough recommendations, add from weak categories
+    if len(recommendations) < 4:
+        for cat_key, cat_stats in sorted_cats[-3:]:  # 3 worst categories
+            if cat_stats['total'] >= 3 and cat_stats['percentage'] < 60:
+                if cat_key in LEARNING_RESOURCES:
+                    # Get first available subcategory resources
+                    for sub_key, resources in LEARNING_RESOURCES[cat_key].items():
+                        for resource in resources:
+                            resource_key = resource['title']
+                            if resource_key not in seen_resources:
+                                seen_resources.add(resource_key)
+                                recommendations.append({
+                                    'topic': CATEGORIES[cat_key]['name'],
+                                    'category': cat_key,
+                                    **resource
+                                })
+                                break
+                        if len(recommendations) >= 6:
+                            break
+            if len(recommendations) >= 6:
+                break
+
+    return {
+        'skill_level': skill_level,
+        'skill_desc': skill_desc,
+        'strength_text': strength_text,
+        'weakness_text': weakness_text,
+        'total_questions': total_questions,
+        'overall': overall,
+        'recommendations': recommendations[:6]  # Max 6 recommendations
+    }
+
+
 def get_user_today():
     """Get today's date adjusted for US Eastern timezone."""
     from datetime import timezone
@@ -2472,6 +2750,9 @@ def get_stats():
 
     stats = calculate_user_stats(user_id)
     stats['categories_meta'] = CATEGORIES
+
+    # Add player summary with recommendations
+    stats['player_summary'] = generate_player_summary(stats)
 
     return jsonify(stats)
 

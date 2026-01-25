@@ -304,6 +304,50 @@
                 <!-- Will be populated by JS -->
             </div>
         </div>
+
+        <!-- Player Summary Section -->
+        <div class="player-summary-section" id="player-summary-section" style="display: none;">
+            <h2 class="section-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Your Player Profile
+            </h2>
+            <p class="section-subtitle">Personalized analysis and learning recommendations</p>
+
+            <div class="summary-card" id="summary-card">
+                <div class="summary-header">
+                    <div class="skill-badge" id="skill-badge">
+                        <span class="skill-level" id="skill-level">Trivia Rookie</span>
+                    </div>
+                    <div class="summary-stats">
+                        <span id="summary-questions">0 questions answered</span>
+                        <span id="summary-accuracy">0% accuracy</span>
+                    </div>
+                </div>
+
+                <div class="summary-text" id="summary-text">
+                    <p id="summary-desc"></p>
+                    <p id="summary-strength" class="strength-text"></p>
+                    <p id="summary-weakness" class="weakness-text"></p>
+                </div>
+            </div>
+
+            <div class="recommendations-section" id="recommendations-section" style="display: none;">
+                <h3 class="recommendations-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    Fill Your Knowledge Gaps
+                </h3>
+                <p class="recommendations-subtitle">Curated resources based on your performance</p>
+                <div class="recommendations-grid" id="recommendations-grid">
+                    <!-- Will be populated by JS -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -447,6 +491,9 @@ function renderStats(data) {
 
     // Render subcategory breakdown
     renderSubcategoryBreakdown(data);
+
+    // Render player summary
+    renderPlayerSummary(data);
 }
 
 function renderSubcategoryBreakdown(data) {
@@ -516,6 +563,95 @@ function renderSubcategoryBreakdown(data) {
         });
 
         container.appendChild(card);
+    }
+}
+
+function renderPlayerSummary(data) {
+    const section = document.getElementById('player-summary-section');
+    const summary = data.player_summary;
+
+    if (!summary) {
+        section.style.display = 'none';
+        return;
+    }
+
+    section.style.display = 'block';
+
+    // Update skill badge
+    const skillBadge = document.getElementById('skill-badge');
+    const skillLevel = document.getElementById('skill-level');
+    skillLevel.textContent = summary.skill_level.charAt(0).toUpperCase() + summary.skill_level.slice(1);
+
+    // Color based on skill level
+    const badgeColors = {
+        'trivia master': '#22c55e',
+        'trivia enthusiast': '#84cc16',
+        'curious learner': '#eab308',
+        'trivia rookie': '#f97316'
+    };
+    skillBadge.style.background = `linear-gradient(135deg, ${badgeColors[summary.skill_level] || '#6b7280'}22, ${badgeColors[summary.skill_level] || '#6b7280'}44)`;
+    skillBadge.style.borderColor = badgeColors[summary.skill_level] || '#6b7280';
+    skillLevel.style.color = badgeColors[summary.skill_level] || '#6b7280';
+
+    // Update stats
+    document.getElementById('summary-questions').textContent = `${summary.total_questions} questions answered`;
+    document.getElementById('summary-accuracy').textContent = `${summary.overall}% accuracy`;
+
+    // Update text
+    document.getElementById('summary-desc').textContent = summary.skill_desc;
+
+    const strengthEl = document.getElementById('summary-strength');
+    if (summary.strength_text) {
+        strengthEl.textContent = summary.strength_text;
+        strengthEl.style.display = 'block';
+    } else {
+        strengthEl.style.display = 'none';
+    }
+
+    const weaknessEl = document.getElementById('summary-weakness');
+    if (summary.weakness_text) {
+        weaknessEl.textContent = summary.weakness_text;
+        weaknessEl.style.display = 'block';
+    } else {
+        weaknessEl.style.display = 'none';
+    }
+
+    // Render recommendations
+    const recsSection = document.getElementById('recommendations-section');
+    const recsGrid = document.getElementById('recommendations-grid');
+
+    if (summary.recommendations && summary.recommendations.length > 0) {
+        recsSection.style.display = 'block';
+        recsGrid.innerHTML = summary.recommendations.map(rec => {
+            const catColor = CATEGORIES[rec.category]?.color || '#888';
+            const icon = rec.type === 'watch' ? `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+            ` : `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+            `;
+
+            const linkContent = rec.url
+                ? `<a href="${rec.url}" target="_blank" rel="noopener" class="rec-title">${rec.title}</a>`
+                : `<span class="rec-title">${rec.title}</span>`;
+
+            return `
+                <div class="recommendation-card" style="border-left-color: ${catColor}">
+                    <div class="rec-header">
+                        <span class="rec-type ${rec.type}" style="color: ${catColor}">${icon} ${rec.type === 'watch' ? 'Watch' : 'Read'}</span>
+                        <span class="rec-topic" style="background: ${catColor}22; color: ${catColor}">${rec.topic}</span>
+                    </div>
+                    ${linkContent}
+                    <p class="rec-desc">${rec.desc}</p>
+                </div>
+            `;
+        }).join('');
+    } else {
+        recsSection.style.display = 'none';
     }
 }
 

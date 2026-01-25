@@ -1495,6 +1495,165 @@ footer {
 }
 
 /* ============================================
+   PLAYER SUMMARY SECTION
+   ============================================ */
+
+.player-summary-section {
+    margin-top: 2.5rem;
+}
+
+.summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.skill-badge {
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    border: 2px solid;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.skill-level {
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: capitalize;
+}
+
+.summary-stats {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.summary-text p {
+    margin: 0.75rem 0;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.summary-text p:first-child {
+    margin-top: 0;
+}
+
+.summary-text .strength-text {
+    color: var(--success);
+}
+
+.summary-text .weakness-text {
+    color: var(--warning);
+}
+
+.recommendations-section {
+    margin-top: 1.5rem;
+}
+
+.recommendations-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+.recommendations-title svg {
+    color: var(--accent-primary);
+}
+
+.recommendations-subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.recommendation-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent-primary);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.rec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.rec-type {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rec-type svg {
+    width: 14px;
+    height: 14px;
+}
+
+.rec-topic {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    text-transform: capitalize;
+}
+
+.rec-title {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+}
+
+a.rec-title:hover {
+    color: var(--accent-primary);
+    text-decoration: underline;
+}
+
+.rec-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 
@@ -1577,6 +1736,27 @@ footer {
 
     .username-lookup input {
         flex: 1;
+    }
+
+    /* Player Summary Responsive */
+    .summary-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .summary-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .recommendations-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rec-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
 }
 
