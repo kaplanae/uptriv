@@ -1611,9 +1611,9 @@ footer {
     grid-template-columns: 280px 1fr;
     gap: 2rem;
     align-items: start;
-    max-width: 1600px;
+    max-width: 1800px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 2rem;
 }
 
 .stats-column {
@@ -2006,15 +2006,20 @@ footer {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     background: var(--accent-primary);
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     color: white;
     cursor: pointer;
     transition: all 0.2s;
     flex-shrink: 0;
+}
+
+.share-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 .share-btn:hover {
