@@ -1944,7 +1944,7 @@ footer {
     padding: 1rem 1.5rem;
     cursor: pointer;
     transition: background 0.2s;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .game-row-header:hover {
@@ -1952,8 +1952,13 @@ footer {
 }
 
 .game-row-header .emoji-preview {
-    flex: 1;
-    min-width: 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.game-row-header .share-btn {
+    margin-left: auto;
 }
 
 .difficulty-label {
