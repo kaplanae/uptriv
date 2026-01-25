@@ -1625,6 +1625,11 @@ footer {
 .history-column {
     min-width: 0;
     overflow: visible;
+    width: 100%;
+}
+
+.history-column .stats-card {
+    width: 100%;
 }
 
 /* Stats Card */
@@ -1841,6 +1846,7 @@ footer {
 
 .stats-card .history-list .game-row-header {
     padding: 0.75rem 0;
+    width: 100%;
 }
 
 .stats-card .history-list .game-row-details {
@@ -1947,6 +1953,7 @@ footer {
 
 .game-row-header .emoji-preview {
     flex: 1;
+    min-width: 0;
 }
 
 .difficulty-label {
