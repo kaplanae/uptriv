@@ -131,160 +131,197 @@ LEARNING_RESOURCES = {
         'current_events': [
             {'type': 'read', 'title': 'AP News Daily', 'url': 'https://apnews.com', 'desc': 'Unbiased daily news coverage'},
             {'type': 'watch', 'title': 'TLDR News (YouTube)', 'url': 'https://youtube.com/@TLDRNews', 'desc': '10-min explainers on current events'},
+            {'type': 'listen', 'title': 'The Daily (NYT Podcast)', 'desc': '20-min deep dives on top stories'},
         ],
         'politics': [
             {'type': 'read', 'title': 'The Economist', 'url': 'https://economist.com', 'desc': 'In-depth political analysis'},
             {'type': 'watch', 'title': 'Vox (YouTube)', 'url': 'https://youtube.com/@Vox', 'desc': 'Visual explainers on policy & politics'},
+            {'type': 'listen', 'title': 'Pod Save America', 'desc': 'US politics from Obama staffers'},
         ],
         'world_affairs': [
             {'type': 'read', 'title': 'Foreign Affairs', 'url': 'https://foreignaffairs.com', 'desc': 'Global politics & international relations'},
             {'type': 'watch', 'title': 'CaspianReport (YouTube)', 'url': 'https://youtube.com/@CaspianReport', 'desc': 'Geopolitics explained'},
+            {'type': 'listen', 'title': 'Global News Podcast (BBC)', 'desc': 'Twice-daily world news roundup'},
         ],
         'famous_people': [
             {'type': 'read', 'title': 'Biography.com', 'url': 'https://biography.com', 'desc': 'Notable figures past & present'},
             {'type': 'watch', 'title': 'Biographics (YouTube)', 'url': 'https://youtube.com/@Biographics', 'desc': 'Video biographies of famous people'},
+            {'type': 'listen', 'title': 'Revisionist History', 'desc': 'Malcolm Gladwell on overlooked stories'},
         ],
     },
     'history': {
         'ancient': [
             {'type': 'read', 'title': 'SPQR by Mary Beard', 'desc': 'Definitive history of ancient Rome'},
             {'type': 'watch', 'title': 'Historia Civilis (YouTube)', 'url': 'https://youtube.com/@HistoriaCivilis', 'desc': 'Animated ancient history'},
+            {'type': 'listen', 'title': 'The History of Rome Podcast', 'desc': '179 episodes covering Rome\'s history'},
         ],
         'medieval': [
             {'type': 'read', 'title': 'The Time Traveler\'s Guide to Medieval England', 'desc': 'Immersive medieval history'},
             {'type': 'watch', 'title': 'Kings and Generals (YouTube)', 'url': 'https://youtube.com/@KingsandGenerals', 'desc': 'Medieval battles & kingdoms'},
+            {'type': 'stream', 'title': 'The Last Kingdom (Netflix)', 'desc': 'Saxon England drama series'},
         ],
         'modern': [
             {'type': 'read', 'title': 'The Guns of August by Barbara Tuchman', 'desc': 'WWI origins, Pulitzer winner'},
             {'type': 'watch', 'title': 'The Great War (YouTube)', 'url': 'https://youtube.com/@TheGreatWar', 'desc': 'Week-by-week WWI coverage'},
+            {'type': 'listen', 'title': 'Hardcore History', 'desc': 'Dan Carlin\'s epic history deep dives'},
         ],
         'wars': [
             {'type': 'read', 'title': 'A World at Arms by Gerhard Weinberg', 'desc': 'Comprehensive WWII history'},
             {'type': 'watch', 'title': 'World War Two (YouTube)', 'url': 'https://youtube.com/@WorldWarTwo', 'desc': 'WWII week by week'},
+            {'type': 'stream', 'title': 'Band of Brothers (Max)', 'desc': 'WWII miniseries masterpiece'},
         ],
         'presidents': [
             {'type': 'read', 'title': 'Team of Rivals by Doris Kearns Goodwin', 'desc': 'Lincoln\'s political genius'},
             {'type': 'watch', 'title': 'American Experience: The Presidents (PBS)', 'desc': 'Documentary series on US presidents'},
+            {'type': 'listen', 'title': 'Presidential Podcast (Washington Post)', 'desc': 'Story of each president'},
         ],
         'world_history': [
             {'type': 'read', 'title': 'Sapiens by Yuval Noah Harari', 'desc': 'Human history overview'},
             {'type': 'watch', 'title': 'Crash Course World History (YouTube)', 'url': 'https://youtube.com/@crashcourse', 'desc': 'Fast-paced world history'},
+            {'type': 'listen', 'title': 'Stuff You Missed in History Class', 'desc': 'Overlooked historical stories'},
         ],
     },
     'science': {
         'space': [
             {'type': 'read', 'title': 'Cosmos by Carl Sagan', 'desc': 'Classic introduction to astronomy'},
             {'type': 'watch', 'title': 'PBS Space Time (YouTube)', 'url': 'https://youtube.com/@pbsspacetime', 'desc': 'Deep dives into astrophysics'},
+            {'type': 'stream', 'title': 'Cosmos: A Spacetime Odyssey (Disney+)', 'desc': 'Neil deGrasse Tyson\'s visual journey'},
         ],
         'astronomy': [
             {'type': 'read', 'title': 'Astrophysics for People in a Hurry', 'desc': 'Neil deGrasse Tyson\'s quick guide'},
             {'type': 'watch', 'title': 'Scott Manley (YouTube)', 'url': 'https://youtube.com/@scottmanley', 'desc': 'Space exploration & rockets'},
+            {'type': 'listen', 'title': 'StarTalk Radio', 'desc': 'Neil deGrasse Tyson\'s science podcast'},
         ],
         'biology': [
             {'type': 'read', 'title': 'The Gene by Siddhartha Mukherjee', 'desc': 'History of genetics'},
             {'type': 'watch', 'title': 'Kurzgesagt (YouTube)', 'url': 'https://youtube.com/@kurzgesagt', 'desc': 'Animated science explainers'},
+            {'type': 'stream', 'title': 'Planet Earth (Netflix)', 'desc': 'David Attenborough nature series'},
         ],
         'physics': [
             {'type': 'read', 'title': 'A Brief History of Time by Stephen Hawking', 'desc': 'Physics for everyone'},
             {'type': 'watch', 'title': 'Veritasium (YouTube)', 'url': 'https://youtube.com/@veritasium', 'desc': 'Fascinating physics videos'},
+            {'type': 'listen', 'title': 'Radiolab', 'desc': 'Science storytelling at its best'},
         ],
         'chemistry': [
             {'type': 'read', 'title': 'The Disappearing Spoon by Sam Kean', 'desc': 'Stories behind the periodic table'},
             {'type': 'watch', 'title': 'Periodic Videos (YouTube)', 'url': 'https://youtube.com/@periodicvideos', 'desc': 'Every element explained'},
+            {'type': 'stream', 'title': 'Breaking Bad (Netflix)', 'desc': 'Chemistry-themed drama (fiction!)'},
         ],
         'earth_science': [
             {'type': 'read', 'title': 'A Short History of Nearly Everything', 'desc': 'Bill Bryson\'s science adventure'},
             {'type': 'watch', 'title': 'MinuteEarth (YouTube)', 'url': 'https://youtube.com/@MinuteEarth', 'desc': 'Quick earth science lessons'},
+            {'type': 'stream', 'title': 'Our Planet (Netflix)', 'desc': 'Earth\'s ecosystems documentary'},
         ],
     },
     'entertainment': {
         'movies': [
             {'type': 'read', 'title': 'IMDb Top 250', 'url': 'https://imdb.com/chart/top', 'desc': 'Must-see films ranked'},
             {'type': 'watch', 'title': 'Lessons from the Screenplay (YouTube)', 'url': 'https://youtube.com/@LessonsFromTheScreenplay', 'desc': 'Film analysis & storytelling'},
+            {'type': 'listen', 'title': 'The Rewatchables (Ringer)', 'desc': 'Deep dives on classic movies'},
         ],
         'tv': [
             {'type': 'read', 'title': 'TV Guide\'s Greatest Shows', 'desc': 'Classic & modern TV essentials'},
             {'type': 'watch', 'title': 'Nerdwriter1 (YouTube)', 'url': 'https://youtube.com/@Nerdwriter1', 'desc': 'Video essays on TV & culture'},
+            {'type': 'listen', 'title': 'TV Avalanche', 'desc': 'Weekly TV discussion podcast'},
         ],
         'music': [
             {'type': 'read', 'title': 'Rolling Stone\'s 500 Greatest Albums', 'desc': 'Essential music history'},
             {'type': 'watch', 'title': 'Polyphonic (YouTube)', 'url': 'https://youtube.com/@Polyphonic', 'desc': 'Music history & analysis'},
+            {'type': 'listen', 'title': 'Song Exploder', 'desc': 'Artists break down their songs'},
         ],
         'literature': [
             {'type': 'read', 'title': 'Penguin Classics Collection', 'desc': 'Essential world literature'},
             {'type': 'watch', 'title': 'Crash Course Literature (YouTube)', 'url': 'https://youtube.com/@crashcourse', 'desc': 'Quick lit lessons'},
+            {'type': 'listen', 'title': 'LeVar Burton Reads', 'desc': 'Short fiction read aloud'},
         ],
         'arts': [
             {'type': 'read', 'title': 'The Story of Art by E.H. Gombrich', 'desc': 'Classic art history intro'},
             {'type': 'watch', 'title': 'Great Art Explained (YouTube)', 'url': 'https://youtube.com/@GreatArtExplained', 'desc': '15-min masterpiece deep dives'},
+            {'type': 'stream', 'title': 'Abstract: The Art of Design (Netflix)', 'desc': 'Profiles of top designers'},
         ],
         'games': [
             {'type': 'read', 'title': 'Blood, Sweat, and Pixels', 'desc': 'Behind-the-scenes game development'},
             {'type': 'watch', 'title': 'NoClip Documentaries (YouTube)', 'url': 'https://youtube.com/@noclip', 'desc': 'Video game documentaries'},
+            {'type': 'stream', 'title': 'High Score (Netflix)', 'desc': 'History of video games docuseries'},
         ],
     },
     'sports': {
         'football': [
             {'type': 'read', 'title': 'The Blind Side by Michael Lewis', 'desc': 'Football & human interest'},
             {'type': 'watch', 'title': 'NFL Films (YouTube)', 'url': 'https://youtube.com/@NFL', 'desc': 'Classic NFL moments'},
+            {'type': 'stream', 'title': 'Quarterback (Netflix)', 'desc': 'Behind-the-scenes NFL docuseries'},
         ],
         'basketball': [
             {'type': 'read', 'title': 'The Book of Basketball by Bill Simmons', 'desc': 'NBA history & legends'},
-            {'type': 'watch', 'title': 'The Last Dance (Netflix)', 'desc': 'Michael Jordan documentary'},
+            {'type': 'stream', 'title': 'The Last Dance (Netflix)', 'desc': 'Michael Jordan documentary'},
+            {'type': 'listen', 'title': 'The Bill Simmons Podcast', 'desc': 'NBA talk & sports culture'},
         ],
         'baseball': [
             {'type': 'read', 'title': 'Moneyball by Michael Lewis', 'desc': 'Baseball analytics revolution'},
-            {'type': 'watch', 'title': 'Ken Burns: Baseball (PBS)', 'desc': 'Epic baseball documentary'},
+            {'type': 'stream', 'title': 'Ken Burns: Baseball (PBS)', 'desc': 'Epic baseball documentary'},
+            {'type': 'listen', 'title': 'Effectively Wild', 'desc': 'Daily baseball analysis'},
         ],
         'soccer': [
             {'type': 'read', 'title': 'Inverting the Pyramid by Jonathan Wilson', 'desc': 'Soccer tactics history'},
             {'type': 'watch', 'title': 'TIFO Football (YouTube)', 'url': 'https://youtube.com/@TifoFootball', 'desc': 'Tactical analysis & history'},
+            {'type': 'stream', 'title': 'Sunderland \'Til I Die (Netflix)', 'desc': 'English football club docuseries'},
         ],
         'olympics': [
             {'type': 'read', 'title': 'The Boys in the Boat', 'desc': '1936 Olympic rowing story'},
             {'type': 'watch', 'title': 'Olympic Channel (YouTube)', 'url': 'https://youtube.com/@olympics', 'desc': 'Historic Olympic moments'},
+            {'type': 'stream', 'title': 'Icarus (Netflix)', 'desc': 'Olympic doping scandal documentary'},
         ],
         'misc': [
             {'type': 'read', 'title': 'Sports Illustrated Vault', 'url': 'https://vault.si.com', 'desc': 'Classic sports journalism'},
-            {'type': 'watch', 'title': '30 for 30 (ESPN)', 'desc': 'Award-winning sports docs'},
+            {'type': 'stream', 'title': '30 for 30 (ESPN+)', 'desc': 'Award-winning sports docs'},
+            {'type': 'listen', 'title': 'The Athletic Football Show', 'desc': 'Multi-sport analysis'},
         ],
         'hockey': [
             {'type': 'read', 'title': 'The Game by Ken Dryden', 'desc': 'Hockey memoir classic'},
             {'type': 'watch', 'title': 'NHL Vault (YouTube)', 'url': 'https://youtube.com/@NHL', 'desc': 'Classic hockey highlights'},
+            {'type': 'listen', 'title': 'Spittin\' Chiclets', 'desc': 'Hockey culture podcast'},
         ],
         'tennis': [
             {'type': 'read', 'title': 'Open by Andre Agassi', 'desc': 'Tennis autobiography'},
-            {'type': 'watch', 'title': 'Break Point (Netflix)', 'desc': 'Behind-the-scenes tennis doc'},
+            {'type': 'stream', 'title': 'Break Point (Netflix)', 'desc': 'Behind-the-scenes tennis doc'},
+            {'type': 'listen', 'title': 'No Challenges Remaining', 'desc': 'Tennis analysis podcast'},
         ],
         'golf': [
             {'type': 'read', 'title': 'The Match by Mark Frost', 'desc': 'Golf history classic'},
             {'type': 'watch', 'title': 'PGA Tour (YouTube)', 'url': 'https://youtube.com/@PGATOUR', 'desc': 'Golf highlights & history'},
+            {'type': 'stream', 'title': 'Full Swing (Netflix)', 'desc': 'PGA Tour docuseries'},
         ],
     },
     'geography': {
         'countries': [
             {'type': 'read', 'title': 'Prisoners of Geography by Tim Marshall', 'desc': 'How maps explain the world'},
             {'type': 'watch', 'title': 'Geography Now (YouTube)', 'url': 'https://youtube.com/@GeographyNow', 'desc': 'Every country explained'},
+            {'type': 'listen', 'title': 'Throughline (NPR)', 'desc': 'History behind current events'},
         ],
         'capitals': [
             {'type': 'read', 'title': 'Sporcle Geography Quizzes', 'url': 'https://sporcle.com/games/category/geography', 'desc': 'Practice world capitals'},
             {'type': 'watch', 'title': 'Seterra Geography Games', 'url': 'https://seterra.com', 'desc': 'Interactive map quizzes'},
+            {'type': 'listen', 'title': 'Radiolab: Cities', 'desc': 'Stories of urban life'},
         ],
         'landmarks': [
             {'type': 'read', 'title': '1,000 Places to See Before You Die', 'desc': 'World landmarks guide'},
-            {'type': 'watch', 'title': 'Rick Steves\' Europe (PBS)', 'desc': 'Travel & landmark tours'},
+            {'type': 'stream', 'title': 'Rick Steves\' Europe (PBS)', 'desc': 'Travel & landmark tours'},
+            {'type': 'listen', 'title': 'Atlas Obscura Podcast', 'desc': 'Hidden wonders of the world'},
         ],
         'maps': [
             {'type': 'read', 'title': 'The Map Book by Peter Barber', 'desc': 'Beautiful cartography history'},
             {'type': 'watch', 'title': 'Map Men (YouTube)', 'url': 'https://youtube.com/@JayForeman', 'desc': 'Fun cartography videos'},
+            {'type': 'listen', 'title': '99% Invisible', 'desc': 'Design stories including maps'},
         ],
         'flags': [
             {'type': 'read', 'title': 'Flag Stories', 'url': 'https://flagstories.co', 'desc': 'Meaning behind flags'},
             {'type': 'watch', 'title': 'Geography Now (YouTube)', 'url': 'https://youtube.com/@GeographyNow', 'desc': 'Flag facts in country episodes'},
+            {'type': 'listen', 'title': 'Vexillology Podcast', 'desc': 'All about flags'},
         ],
         'continents': [
             {'type': 'read', 'title': 'National Geographic Atlas', 'desc': 'Comprehensive world atlas'},
             {'type': 'watch', 'title': 'Atlas Pro (YouTube)', 'url': 'https://youtube.com/@AtlasPro1', 'desc': 'Geography & earth science'},
+            {'type': 'stream', 'title': 'Seven Worlds, One Planet (BBC)', 'desc': 'Each continent explored'},
         ],
     }
 }
