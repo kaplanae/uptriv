@@ -1596,11 +1596,12 @@ footer {
 /* History Page Two-Column Grid */
 .history-grid {
     display: grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 280px 1fr;
     gap: 2rem;
     align-items: start;
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
+    padding: 0 1rem;
 }
 
 .stats-column {
@@ -1925,11 +1926,15 @@ footer {
     padding: 1rem 1.5rem;
     cursor: pointer;
     transition: background 0.2s;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .game-row-header:hover {
     background: var(--bg-hover);
+}
+
+.game-row-header .emoji-preview {
+    flex: 1;
 }
 
 .difficulty-label {
@@ -2017,18 +2022,18 @@ footer {
 
 .emoji-preview {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
 }
 
 .preview-emoji {
-    font-size: 1rem;
-    width: 30px;
-    height: 30px;
+    font-size: 1.1rem;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 2px solid var(--border);
     background: var(--bg-secondary);
 }
