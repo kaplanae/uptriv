@@ -2623,23 +2623,13 @@ def get_share_text():
     score = sum(1 for r in results if r['correct'])
     total = len(results)
 
-    # Category color squares (NYT Connections style)
-    cat_squares = {
-        'news': '🟥',        # Red
-        'history': '🟩',     # Green
-        'science': '🟦',     # Blue
-        'entertainment': '🟨', # Yellow
-        'sports': '🟧',      # Orange
-        'geography': '🟪'    # Purple
-    }
-
-    # Build share grid - colored squares for correct, ⬛ for incorrect
+    # Build share grid - green for correct, red for incorrect
     squares = []
     for r in results:
         if r['correct']:
-            squares.append(cat_squares.get(r['category'], '🟩'))
+            squares.append('🟩')
         else:
-            squares.append('⬛')
+            squares.append('🟥')
 
     date_obj = datetime.strptime(game_date, '%Y-%m-%d')
     date_str = date_obj.strftime('%b %d, %Y')
