@@ -1638,6 +1638,7 @@ footer {
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.5rem;
+    overflow: visible;
 }
 
 .stats-header {
@@ -1815,6 +1816,7 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 0;
+    overflow: visible;
 }
 
 /* When history-list is inside stats-card, date-groups don't need card styling */
@@ -1824,6 +1826,7 @@ footer {
     border-radius: 0;
     margin-bottom: 0;
     border-bottom: 1px solid var(--border);
+    overflow: visible;
 }
 
 .stats-card .history-list .date-group:last-child {
@@ -1847,6 +1850,7 @@ footer {
 .stats-card .history-list .game-row-header {
     padding: 0.75rem 0;
     width: 100%;
+    overflow: visible;
 }
 
 .stats-card .history-list .game-row-details {
