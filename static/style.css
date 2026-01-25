@@ -57,30 +57,33 @@ header {
 }
 
 nav {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 0.75rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1.5rem;
 }
 
 .logo {
     display: flex;
     align-items: center;
     text-decoration: none;
-    margin-right: auto;
+    flex-shrink: 0;
 }
 
 .logo-img {
-    height: 100px;
+    height: 80px;
     width: auto;
     object-fit: contain;
 }
 
 .nav-links {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
+    justify-content: center;
+    flex: 1;
 }
 
 .nav-links a {
@@ -88,6 +91,7 @@ nav {
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s;
+    white-space: nowrap;
 }
 
 .nav-links a:hover {
@@ -99,6 +103,7 @@ nav {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-shrink: 0;
 }
 
 .auth-loading {
@@ -1862,11 +1867,6 @@ footer {
     font-size: 1rem;
 }
 
-.game-score {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
 .difficulty-badge {
     display: inline-block;
     font-size: 0.75rem;
@@ -1956,6 +1956,14 @@ footer {
     align-items: center;
     gap: 1rem;
     flex: 1;
+    min-width: 0;
+}
+
+.game-score {
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .game-row-actions {
@@ -1963,11 +1971,12 @@ footer {
     align-items: center;
     gap: 0.75rem;
     flex-shrink: 0;
+    margin-left: auto;
 }
 
 .game-row-details {
     display: none;
-    padding: 1rem 1.5rem 1.5rem;
+    padding: 1.5rem;
     background: var(--bg-secondary);
     border-top: 1px solid var(--border);
 }
@@ -1980,15 +1989,20 @@ footer {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
+    width: 40px;
+    height: 40px;
+    background: var(--accent-primary);
+    border: none;
     border-radius: 8px;
-    color: var(--text-secondary);
+    color: white;
     cursor: pointer;
     transition: all 0.2s;
     flex-shrink: 0;
+}
+
+.share-btn:hover {
+    background: var(--accent-secondary);
+    transform: scale(1.05);
 }
 
 .game-row.expanded .expand-icon {
@@ -2058,9 +2072,9 @@ footer {
 
 .result-row {
     display: grid;
-    grid-template-columns: 160px 1fr;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
+    grid-template-columns: 140px 1fr;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
     border-bottom: 1px solid var(--border);
     align-items: start;
 }
