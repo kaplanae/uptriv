@@ -115,7 +115,7 @@ function renderLeaderboard() {
                     ${avatarHtml}
                     <span class="leaderboard-username">${firstName}${isCurrentUser ? ' (You)' : ''}</span>
                 </div>
-                <div class="games-count">${entry.games_played || 0} games</div>
+                <div class="games-count">${entry.total || 0} answered</div>
                 <div class="score-pct ${pctClass}">${pct.toFixed(0)}%</div>
             </div>
         `;

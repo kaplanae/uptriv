@@ -2940,9 +2940,8 @@ def api_leaderboard():
                     'is_self': user.get('is_self', False)
                 },
                 'percentage': stats['overall_percentage'],
-                'games_played': stats['total_games'],
-                'total_correct': sum(stats['categories'][c]['correct'] for c in stats['categories']),
-                'total_questions': stats['total_questions']
+                'total': stats['total_questions'],
+                'correct': sum(stats['categories'][c]['correct'] for c in stats['categories'])
             })
 
             # Category-specific leaderboards
@@ -2962,7 +2961,7 @@ def api_leaderboard():
                     })
 
     # Sort leaderboards
-    leaderboard.sort(key=lambda x: (-x['percentage'], -x['games_played']))
+    leaderboard.sort(key=lambda x: (-x['percentage'], -x['total']))
 
     for cat in category_leaderboards:
         category_leaderboards[cat].sort(key=lambda x: (-x['percentage'], -x['total']))
@@ -3041,6 +3040,8 @@ def api_leaderboard():
             for i, fake in enumerate(fakes):
                 if len(lb) >= 10:
                     break
+                total = fake['games'] * 6  # Convert games to questions (6 per game)
+                correct = int(total * fake['pct'] / 100)
                 lb.append({
                     'user': {
                         'id': -1 - i,
@@ -3050,11 +3051,12 @@ def api_leaderboard():
                         'is_fake': True
                     },
                     'percentage': fake['pct'],
-                    'games_played': fake['games'],
+                    'total': total,
+                    'correct': correct,
                     'rank': existing_count + i + 1
                 })
             # Re-sort and re-rank
-            lb.sort(key=lambda x: (-x['percentage'], -x.get('games_played', 0)))
+            lb.sort(key=lambda x: (-x['percentage'], -x.get('total', 0)))
             for i, entry in enumerate(lb):
                 entry['rank'] = i + 1
 
