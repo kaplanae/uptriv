@@ -2590,6 +2590,7 @@ def get_history():
 def get_share_text():
     username = request.args.get('username')
     game_date = request.args.get('date')
+    difficulty = request.args.get('difficulty', 'easy')
 
     if not username or not game_date:
         return jsonify({'error': 'Username and date required'}), 400
@@ -2606,17 +2607,18 @@ def get_share_text():
 
     user_id = user['id']
 
+    # Filter by difficulty
     cur.execute(f'''
         SELECT category, correct
         FROM game_results
-        WHERE user_id = {placeholder} AND game_date = {placeholder}
+        WHERE user_id = {placeholder} AND game_date = {placeholder} AND difficulty = {placeholder}
         ORDER BY created_at ASC
-    ''', (user_id, game_date))
+    ''', (user_id, game_date, difficulty))
     results = cur.fetchall()
     conn.close()
 
     if not results:
-        return jsonify({'error': 'No results found for that date'})
+        return jsonify({'error': 'No results found for that date and difficulty'})
 
     score = sum(1 for r in results if r['correct'])
     total = len(results)
@@ -2642,7 +2644,10 @@ def get_share_text():
     date_obj = datetime.strptime(game_date, '%Y-%m-%d')
     date_str = date_obj.strftime('%b %d, %Y')
 
-    share_text = f"UpTriv {date_str}\n{score}/{total} " + "".join(squares) + "\nwww.uptriv.com"
+    # Include difficulty in share text
+    difficulty_label = "🔥 Hard" if difficulty == 'hard' else "🎯 Easy"
+
+    share_text = f"UpTriv {difficulty_label}\n{date_str}\n{score}/{total} " + "".join(squares) + "\nwww.uptriv.com"
 
     return jsonify({'share_text': share_text, 'score': score, 'total': total})
 

@@ -453,14 +453,14 @@ function toggleGame(header) {
     card.classList.toggle('expanded');
 }
 
-async function shareGame(event, date) {
+async function shareGame(event, date, difficulty) {
     event.stopPropagation();
 
     const username = localStorage.getItem('uptriv_username');
     if (!username) return;
 
     try {
-        const response = await fetch(`/api/get-share-text?username=${encodeURIComponent(username)}&date=${date}`);
+        const response = await fetch(`/api/get-share-text?username=${encodeURIComponent(username)}&date=${date}&difficulty=${difficulty}`);
         const data = await response.json();
 
         if (data.share_text) {
