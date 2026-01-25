@@ -183,11 +183,12 @@ nav {
    ============================================ */
 
 footer {
-    padding: 2rem;
+    padding: 1rem 2rem;
     text-align: center;
     color: var(--text-muted);
     border-top: 1px solid var(--border);
     margin-top: auto;
+    font-size: 0.85rem;
 }
 
 /* ============================================
@@ -195,7 +196,7 @@ footer {
    ============================================ */
 
 .hero {
-    padding: 6rem 2rem;
+    padding: 2.5rem 2rem;
     text-align: center;
     background: radial-gradient(ellipse at top, rgba(102, 126, 234, 0.15) 0%, transparent 60%);
 }
@@ -205,12 +206,11 @@ footer {
     margin: 0 auto;
 }
 
-
 .hero h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -218,22 +218,22 @@ footer {
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--text-secondary);
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .cta-button {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 1rem 2rem;
+    gap: 8px;
+    padding: 0.75rem 1.5rem;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: white;
     text-decoration: none;
     border-radius: 50px;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1rem;
     transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
 }
@@ -248,16 +248,16 @@ footer {
    ============================================ */
 
 .categories-preview {
-    padding: 4rem 2rem;
+    padding: 1.5rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .categories-preview h2 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 2rem;
+    font-size: 1.25rem;
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
 }
 
 .categories-grid {
@@ -328,51 +328,54 @@ footer {
    ============================================ */
 
 .how-it-works {
-    padding: 4rem 2rem;
+    padding: 1.5rem 2rem;
     background: var(--bg-secondary);
 }
 
 .how-it-works h2 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 2rem;
+    font-size: 1.25rem;
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
 }
 
 .steps {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    max-width: 1000px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 900px;
     margin: 0 auto;
 }
 
 .step {
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .step-number {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 700;
-    margin: 0 auto 1rem;
+    margin: 0 auto 0.5rem;
 }
 
 .step h3 {
     font-family: 'Space Grotesk', sans-serif;
-    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
 }
 
 .step p {
     color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 /* ============================================
@@ -1529,11 +1532,11 @@ footer {
     }
 
     .hero {
-        padding: 3rem 1rem;
+        padding: 2rem 1rem;
     }
 
     .hero h1 {
-        font-size: 2.25rem;
+        font-size: 2rem;
     }
 
     .hero-brain-svg {
@@ -1543,7 +1546,16 @@ footer {
 
     .categories-preview,
     .how-it-works {
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .step {
+        padding: 0.75rem;
     }
 
     .options-grid {
