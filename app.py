@@ -2698,7 +2698,7 @@ def api_search_users():
 @login_required
 def api_send_friend_request():
     data = request.get_json()
-    friend_id = data.get('user_id')
+    friend_id = data.get('addressee_id') or data.get('user_id')
 
     if not friend_id or friend_id == current_user.id:
         return jsonify({'error': 'Invalid user'}), 400
