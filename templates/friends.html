@@ -96,8 +96,8 @@ async function loadFriends() {
                         </div>
                     </div>
                     <div class="friend-actions">
-                        <a href="{{ url_for('profile') }}?username=${encodeURIComponent(friend.username)}"
-                           class="btn btn-secondary btn-sm">View Stats</a>
+                        <a href="/history/${encodeURIComponent(friend.username)}"
+                           class="btn btn-secondary btn-sm">View Profile</a>
                         <button onclick="removeFriend(${friend.id})" class="btn btn-danger btn-sm">Remove</button>
                     </div>
                 </div>

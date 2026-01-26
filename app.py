@@ -2420,17 +2420,24 @@ def onboarding():
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html', categories=CATEGORIES)
+    # Redirect to the new Profile page (formerly History)
+    return redirect(url_for('history'))
 
 
 @app.route('/profile/<username>')
 def user_profile(username):
-    return render_template('profile.html', categories=CATEGORIES, view_username=username)
+    # Redirect to the new Profile page with username
+    return redirect(url_for('history_user', username=username))
 
 
 @app.route('/history')
 def history():
-    return render_template('history.html', categories=CATEGORIES)
+    return render_template('history.html', categories=CATEGORIES, view_username=None)
+
+
+@app.route('/history/<username>')
+def history_user(username):
+    return render_template('history.html', categories=CATEGORIES, view_username=username)
 
 
 @app.route('/friends')

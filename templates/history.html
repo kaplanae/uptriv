@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile - UpTriv{% endblock %}
+{% block title %}{% if view_username %}{{ view_username }}'s Profile{% else %}Profile{% endif %} - UpTriv{% endblock %}
 
 {% block content %}
 <div class="history-container">
     <div class="history-header">
+        {% if view_username %}
+        <h1>{{ view_username }}'s Profile</h1>
+        <p class="history-subtitle">Viewing another player's performance and history</p>
+        {% else %}
         <h1>Your Profile</h1>
         <p class="history-subtitle">Performance, game history, and personalized recommendations</p>
+        {% endif %}
     </div>
 
     <!-- Loading state -->
@@ -152,13 +157,18 @@ const CAT_EMOJIS = {
     'geography': '🗺️'
 };
 
+// Check if viewing another user's profile
+const VIEW_USERNAME = {{ view_username | tojson if view_username else 'null' }};
+const IS_VIEWING_OTHER = VIEW_USERNAME !== null;
+
 async function loadHistory() {
     document.getElementById('loading-state').style.display = 'flex';
     document.getElementById('no-data-state').style.display = 'none';
     document.getElementById('main-content').style.display = 'none';
 
-    const username = localStorage.getItem('uptriv_username');
-    const anonymousId = localStorage.getItem('uptriv_anonymous_id');
+    // Use view_username if viewing another user, otherwise use logged-in user
+    const username = IS_VIEWING_OTHER ? VIEW_USERNAME : localStorage.getItem('uptriv_username');
+    const anonymousId = IS_VIEWING_OTHER ? null : localStorage.getItem('uptriv_anonymous_id');
 
     if (!username && !anonymousId) {
         document.getElementById('loading-state').style.display = 'none';
@@ -174,14 +184,14 @@ async function loadHistory() {
 
         const statsUrl = username ? `/api/get-stats?username=${encodeURIComponent(username)}` : '/api/get-stats';
 
-        // Build onboarding URL with anonymous_id if needed
+        // Build onboarding URL with anonymous_id if needed (only for own profile)
         const onboardingParams = new URLSearchParams();
-        if (anonymousId) onboardingParams.set('anonymous_id', anonymousId);
+        if (anonymousId && !IS_VIEWING_OTHER) onboardingParams.set('anonymous_id', anonymousId);
 
         const [historyRes, statsRes, onboardingRes] = await Promise.all([
             fetch(`/api/get-history?${historyParams.toString()}`),
             fetch(statsUrl),
-            fetch(`/api/onboarding-results?${onboardingParams.toString()}`)
+            IS_VIEWING_OTHER ? Promise.resolve({ json: () => ({ success: false }) }) : fetch(`/api/onboarding-results?${onboardingParams.toString()}`)
         ]);
 
         const historyData = await historyRes.json();
