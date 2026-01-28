@@ -1681,7 +1681,18 @@ a.rec-title:hover {
 
 @media (max-width: 768px) {
     nav {
-        padding: 1rem;
+        padding: 0.5rem 0.75rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
+    .logo-img {
+        height: 50px;
     }
 
     .logo-text {
@@ -1689,8 +1700,34 @@ a.rec-title:hover {
     }
 
     .nav-links {
-        gap: 1rem;
-        font-size: 0.9rem;
+        gap: 0.6rem;
+        font-size: 0.8rem;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .auth-section {
+        flex-shrink: 0;
+    }
+
+    .auth-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+        gap: 0.35rem;
+    }
+
+    .auth-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .user-name {
+        font-size: 0.8rem;
+    }
+
+    .logout-btn {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem;
     }
 
     .hero {
@@ -3422,12 +3459,21 @@ a.rec-title:hover {
         font-size: 0.9rem;
     }
 
+    .logo-img {
+        height: 40px;
+    }
+
     .nav-links {
-        gap: 0.5rem;
-        font-size: 0.8rem;
+        gap: 0.4rem;
+        font-size: 0.75rem;
     }
 
     .logo-text {
         font-size: 1.25rem;
+    }
+
+    .auth-btn {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.75rem;
     }
 }
