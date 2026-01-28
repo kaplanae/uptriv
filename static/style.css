@@ -732,6 +732,9 @@ footer {
     pointer-events: none;
     transition: all 0.3s ease;
     z-index: 200;
+    width: calc(100% - 2rem);
+    max-width: 400px;
+    box-sizing: border-box;
 }
 
 .answer-feedback.show {
@@ -1723,6 +1726,15 @@ a.rec-title:hover {
 
     .question-text {
         font-size: 1.15rem;
+    }
+
+    .answer-feedback {
+        padding: 1.5rem 1.25rem;
+        border-radius: 16px;
+    }
+
+    .feedback-text {
+        font-size: 1.25rem;
     }
 
     .profile-header {
