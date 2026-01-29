@@ -2960,7 +2960,7 @@ def get_share_text():
     date_str = date_obj.strftime('%b %d, %Y')
 
     # Include difficulty in share text
-    difficulty_label = "🔥 Hard" if difficulty == 'hard' else "🎯 Easy"
+    difficulty_label = "🔥 Expert" if difficulty == 'hard' else "🎯 Normal"
 
     share_text = f"UpTriv {difficulty_label}\n{date_str}\n{score}/{total} " + "".join(squares) + "\nwww.uptriv.com"
 

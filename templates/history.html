@@ -278,7 +278,7 @@ function renderHistory(games) {
         // Render each difficulty as a sub-row
         dayGames.forEach((game, gameIndex) => {
             const difficulty = game.difficulty || 'easy';
-            const difficultyLabel = difficulty === 'hard' ? '🔥 Hard' : '🎯 Easy';
+            const difficultyLabel = difficulty === 'hard' ? '🔥 Expert' : '🎯 Normal';
             const difficultyClass = difficulty === 'hard' ? 'hard' : 'easy';
 
             // Build emoji row for preview
