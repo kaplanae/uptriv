@@ -1963,12 +1963,14 @@ def get_or_create_anonymous_session():
             user = cur.fetchone()
             if user:
                 conn.close()
-                return jsonify({
+                resp = jsonify({
                     'success': True,
                     'anonymous_id': anonymous_id,
                     'user_id': user['id'],
                     'username': user['username']
                 })
+                resp.set_cookie('uptriv_anonymous_id', anonymous_id, max_age=365*24*60*60, samesite='Lax')
+                return resp
 
         # Create new anonymous user
         new_anonymous_id = str(uuid.uuid4())
@@ -1989,12 +1991,14 @@ def get_or_create_anonymous_session():
         new_user = cur.fetchone()
         conn.close()
 
-        return jsonify({
+        resp = jsonify({
             'success': True,
             'anonymous_id': new_anonymous_id,
             'user_id': new_user['id'],
             'username': username
         })
+        resp.set_cookie('uptriv_anonymous_id', new_anonymous_id, max_age=365*24*60*60, samesite='Lax')
+        return resp
     except Exception as e:
         print(f"Error creating anonymous session: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
