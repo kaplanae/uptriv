@@ -72,10 +72,14 @@ nav {
     text-decoration: none;
     flex-shrink: 0;
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #ffffff !important;
     letter-spacing: -0.02em;
+}
+
+.logo-accent {
+    color: #4ECDC4;
 }
 
 .nav-links {
