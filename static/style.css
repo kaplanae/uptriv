@@ -71,12 +71,11 @@ nav {
     align-items: center;
     text-decoration: none;
     flex-shrink: 0;
-}
-
-.logo-img {
-    height: 100px;
-    width: auto;
-    object-fit: contain;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
 }
 
 .nav-links {
@@ -1689,14 +1688,7 @@ a.rec-title:hover {
     .logo {
         flex-shrink: 1;
         min-width: 0;
-    }
-
-    .logo-img {
-        height: 50px;
-    }
-
-    .logo-text {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
 
     .nav-links {
@@ -3459,17 +3451,13 @@ a.rec-title:hover {
         font-size: 0.9rem;
     }
 
-    .logo-img {
-        height: 40px;
+    .logo {
+        font-size: 1.1rem;
     }
 
     .nav-links {
         gap: 0.4rem;
         font-size: 0.75rem;
-    }
-
-    .logo-text {
-        font-size: 1.25rem;
     }
 
     .auth-btn {
