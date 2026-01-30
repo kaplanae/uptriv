@@ -2515,7 +2515,8 @@ def admin_page():
 
     # Recent logins (users who visited today)
     cur.execute(f'''
-        SELECT DISTINCT u.username, u.email, u.profile_picture
+        SELECT DISTINCT u.username, u.email, u.profile_picture,
+            u.google_id, u.anonymous_id, u.created_at
         FROM visits v
         JOIN users u ON v.user_id = u.id
         WHERE DATE(v.visited_at) = {ph}

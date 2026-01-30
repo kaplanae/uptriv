@@ -88,16 +88,32 @@
 
         <!-- Today's Logins -->
         <div class="admin-card">
-            <h2>Active Users Today</h2>
+            <h2>Active Users Today ({{ today_logins|length }})</h2>
             {% if today_logins %}
             <div class="user-list">
                 {% for user in today_logins %}
                 <div class="user-item">
                     {% if user.profile_picture %}
                     <img src="{{ user.profile_picture }}" alt="{{ user.username }}" class="user-avatar-small">
+                    {% else %}
+                    <div class="user-avatar-placeholder">{{ user.username[0]|upper }}</div>
                     {% endif %}
-                    <span class="user-name">{{ user.username }}</span>
-                    <span class="user-email">{{ user.email or '' }}</span>
+                    <div class="user-info">
+                        <div class="user-name-row">
+                            <span class="user-name">{{ user.username }}</span>
+                            {% if user.google_id %}
+                            <span class="user-badge badge-google">Google</span>
+                            {% else %}
+                            <span class="user-badge badge-anon">Anonymous</span>
+                            {% endif %}
+                        </div>
+                        {% if user.email %}
+                        <span class="user-email">{{ user.email }}</span>
+                        {% endif %}
+                        {% if user.created_at %}
+                        <span class="user-joined">Joined {{ user.created_at[:10] }}</span>
+                        {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -222,14 +238,67 @@
     border-radius: 50%;
 }
 
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .user-name {
     font-weight: 500;
+}
+
+.user-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.badge-google {
+    background: rgba(66, 133, 244, 0.15);
+    color: #4285f4;
+}
+
+.badge-anon {
+    background: rgba(255, 167, 38, 0.15);
+    color: #ffa726;
+}
+
+.user-avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
 }
 
 .user-email {
     font-size: 0.8rem;
     color: var(--text-muted);
-    margin-left: auto;
+}
+
+.user-joined {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.7;
 }
 
 .no-data {
