@@ -1008,7 +1008,7 @@ ONBOARDING_QUESTIONS = [
 
     # Geography (8 questions)
     {'q': 'What is the official language of Brazil?', 'a': 'Portuguese', 'options': ['Portuguese', 'Spanish', 'English', 'French'], 'category': 'geography', 'sub': 'countries'},
-    {'q': 'Which ocean is the largest by surface area?', 'a': 'Pacific', 'options': ['Pacific', 'Atlantic', 'Indian', 'Arctic'], 'category': 'geography', 'sub': 'maps'},
+    {'q': 'What is the longest river in the world?', 'a': 'Nile', 'options': ['Nile', 'Amazon', 'Mississippi', 'Yangtze'], 'category': 'geography', 'sub': 'landmarks'},
     {'q': 'In which country would you find the city of Mumbai?', 'a': 'India', 'options': ['India', 'Pakistan', 'Bangladesh', 'Nepal'], 'category': 'geography', 'sub': 'countries'},
     {'q': 'Which mountain is the tallest in North America?', 'a': 'Denali', 'options': ['Denali', 'Mount Whitney', 'Mount Rainier', 'Mount Logan'], 'category': 'geography', 'sub': 'landmarks'},
     {'q': 'What is the most populous country in Africa?', 'a': 'Nigeria', 'options': ['Nigeria', 'Ethiopia', 'Egypt', 'South Africa'], 'category': 'geography', 'sub': 'countries'},
