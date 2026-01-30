@@ -1299,9 +1299,18 @@ def get_or_create_user_by_google(google_id, email, name, picture):
     user = cur.fetchone()
 
     if user:
-        # Update profile picture if changed
-        cur.execute(f'UPDATE users SET profile_picture = {ph} WHERE google_id = {ph}', (picture, google_id))
+        # Update profile picture if changed, and fix full name to first name only
+        current_username = dict(user).get('username', '')
+        # If username contains a space, it's likely a full name - update to first name only
+        if ' ' in current_username:
+            cur.execute(f'UPDATE users SET profile_picture = {ph}, username = {ph} WHERE google_id = {ph}',
+                       (picture, name, google_id))
+        else:
+            cur.execute(f'UPDATE users SET profile_picture = {ph} WHERE google_id = {ph}', (picture, google_id))
         conn.commit()
+        # Re-fetch to get updated data
+        cur.execute(f'SELECT * FROM users WHERE google_id = {ph}', (google_id,))
+        user = cur.fetchone()
     else:
         # Check if email already exists (user previously created without OAuth)
         cur.execute(f'SELECT * FROM users WHERE email = {ph}', (email,))
@@ -1789,10 +1798,12 @@ def google_callback():
         user_info = token.get('userinfo')
 
         if user_info:
+            full_name = user_info.get('name', user_info['email'].split('@')[0])
+            first_name = user_info.get('given_name', full_name.split()[0] if full_name else 'User')
             user_data = get_or_create_user_by_google(
                 google_id=user_info['sub'],
                 email=user_info['email'],
-                name=user_info.get('name', user_info['email'].split('@')[0]),
+                name=first_name,
                 picture=user_info.get('picture', '')
             )
 

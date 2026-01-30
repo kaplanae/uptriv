@@ -111,7 +111,7 @@
                         <span class="user-email">{{ user.email }}</span>
                         {% endif %}
                         {% if user.created_at %}
-                        <span class="user-joined">Joined {{ user.created_at[:10] }}</span>
+                        <span class="user-joined">Joined {{ user.created_at|string|truncate(10, True, '') }}</span>
                         {% endif %}
                     </div>
                 </div>
