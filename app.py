@@ -480,7 +480,7 @@ QUESTIONS = {
         {'q': 'What is the largest land animal?', 'a': 'African elephant', 'options': ['African elephant', 'Rhinoceros', 'Hippopotamus', 'Giraffe'], 'sub': 'animals'},
         {'q': 'What is absolute zero in Celsius?', 'a': '-273.15°C', 'options': ['-273.15°C', '-100°C', '0°C', '-459.67°C'], 'sub': 'physics'},
         {'q': 'What organelle contains genetic material?', 'a': 'Nucleus', 'options': ['Nucleus', 'Mitochondria', 'Ribosome', 'Cytoplasm'], 'sub': 'biology'},
-        {'q': 'What is the most common gas in Earth\'s atmosphere?', 'a': 'Nitrogen', 'options': ['Nitrogen', 'Oxygen', 'Argon', 'Carbon dioxide'], 'sub': 'earth_science'},
+        {'q': 'What scale is commonly used to measure the magnitude of earthquakes?', 'a': 'Richter scale', 'options': ['Richter scale', 'Mercalli scale', 'Beaufort scale', 'Mohs scale'], 'sub': 'earth_science'},
         {'q': 'What planet rotates on its side?', 'a': 'Uranus', 'options': ['Uranus', 'Neptune', 'Venus', 'Pluto'], 'sub': 'space'},
         {'q': 'What is the human body\'s largest muscle?', 'a': 'Gluteus maximus', 'options': ['Gluteus maximus', 'Quadriceps', 'Latissimus dorsi', 'Biceps'], 'sub': 'human_body'},
     ],
@@ -505,11 +505,11 @@ QUESTIONS = {
         {'q': 'Who wrote "1984"?', 'a': 'George Orwell', 'options': ['George Orwell', 'Aldous Huxley', 'Ray Bradbury', 'H.G. Wells'], 'sub': 'literature'},
         {'q': 'Which film won the first Academy Award for Best Picture?', 'a': 'Wings', 'options': ['Wings', 'The Jazz Singer', 'Sunrise', 'The Broadway Melody'], 'sub': 'movies'},
         {'q': 'What band sang "Hotel California"?', 'a': 'Eagles', 'options': ['Eagles', 'Fleetwood Mac', 'The Doors', 'Creedence Clearwater Revival'], 'sub': 'music'},
-        {'q': 'What TV show features a high school teacher with cancer?', 'a': 'Breaking Bad', 'options': ['Breaking Bad', 'Weeds', 'Dexter', 'The Sopranos'], 'sub': 'tv'},
+        {'q': 'What animated show features a family named Griffin in Quahog, Rhode Island?', 'a': 'Family Guy', 'options': ['Family Guy', 'The Simpsons', 'American Dad', 'South Park'], 'sub': 'tv'},
         {'q': 'Who wrote "Pride and Prejudice"?', 'a': 'Jane Austen', 'options': ['Jane Austen', 'Charlotte Brontë', 'Emily Brontë', 'Virginia Woolf'], 'sub': 'literature'},
         {'q': 'What animated film features a lion cub named Simba?', 'a': 'The Lion King', 'options': ['The Lion King', 'Madagascar', 'The Jungle Book', 'Tarzan'], 'sub': 'movies'},
         {'q': 'Who sang "Like a Virgin"?', 'a': 'Madonna', 'options': ['Madonna', 'Cyndi Lauper', 'Whitney Houston', 'Janet Jackson'], 'sub': 'music'},
-        {'q': 'What TV show is about a chemistry teacher making meth?', 'a': 'Breaking Bad', 'options': ['Breaking Bad', 'Better Call Saul', 'Ozark', 'Narcos'], 'sub': 'tv'},
+        {'q': 'What TV series is set in the 1960s at a fictional advertising agency on Madison Avenue?', 'a': 'Mad Men', 'options': ['Mad Men', 'Boardwalk Empire', 'The Crown', 'Downton Abbey'], 'sub': 'tv'},
         {'q': 'Who wrote "The Great Gatsby"?', 'a': 'F. Scott Fitzgerald', 'options': ['F. Scott Fitzgerald', 'Ernest Hemingway', 'John Steinbeck', 'William Faulkner'], 'sub': 'literature'},
         {'q': 'What superhero is also known as the "Dark Knight"?', 'a': 'Batman', 'options': ['Batman', 'Superman', 'Spider-Man', 'Iron Man'], 'sub': 'movies'},
         {'q': 'Who is the lead singer of U2?', 'a': 'Bono', 'options': ['Bono', 'The Edge', 'Sting', 'Chris Martin'], 'sub': 'music'},
@@ -517,7 +517,7 @@ QUESTIONS = {
         {'q': 'Who wrote "To Kill a Mockingbird"?', 'a': 'Harper Lee', 'options': ['Harper Lee', 'John Steinbeck', 'Mark Twain', 'Ernest Hemingway'], 'sub': 'literature'},
         {'q': 'What movie trilogy features Frodo and the One Ring?', 'a': 'Lord of the Rings', 'options': ['Lord of the Rings', 'The Hobbit', 'Harry Potter', 'Narnia'], 'sub': 'movies'},
         {'q': 'Who sang "Thriller"?', 'a': 'Michael Jackson', 'options': ['Michael Jackson', 'Prince', 'Stevie Wonder', 'James Brown'], 'sub': 'music'},
-        {'q': 'What TV show features the phrase "Winter is Coming"?', 'a': 'Game of Thrones', 'options': ['Game of Thrones', 'Vikings', 'The Last Kingdom', 'The Witcher'], 'sub': 'tv'},
+        {'q': 'What TV series follows the Shelby crime family in post-WWI Birmingham, England?', 'a': 'Peaky Blinders', 'options': ['Peaky Blinders', 'Boardwalk Empire', 'Vikings', 'Downton Abbey'], 'sub': 'tv'},
         {'q': 'Who wrote "The Catcher in the Rye"?', 'a': 'J.D. Salinger', 'options': ['J.D. Salinger', 'Jack Kerouac', 'F. Scott Fitzgerald', 'Ernest Hemingway'], 'sub': 'literature'},
         {'q': 'What movie features a DeLorean time machine?', 'a': 'Back to the Future', 'options': ['Back to the Future', 'The Terminator', 'Bill & Ted', 'Hot Tub Time Machine'], 'sub': 'movies'},
         {'q': 'Who is the lead singer of Coldplay?', 'a': 'Chris Martin', 'options': ['Chris Martin', 'Thom Yorke', 'Brandon Flowers', 'Matt Bellamy'], 'sub': 'music'},
@@ -529,7 +529,7 @@ QUESTIONS = {
         {'q': 'Who wrote "The Hunger Games"?', 'a': 'Suzanne Collins', 'options': ['Suzanne Collins', 'Veronica Roth', 'James Dashner', 'Stephenie Meyer'], 'sub': 'literature'},
         {'q': 'What movie features the quote "Here\'s looking at you, kid"?', 'a': 'Casablanca', 'options': ['Casablanca', 'Gone with the Wind', 'Citizen Kane', 'The Maltese Falcon'], 'sub': 'movies'},
         {'q': 'Who is the lead singer of The Rolling Stones?', 'a': 'Mick Jagger', 'options': ['Mick Jagger', 'Keith Richards', 'Roger Daltrey', 'Robert Plant'], 'sub': 'music'},
-        {'q': 'What TV show follows the Stark family?', 'a': 'Game of Thrones', 'options': ['Game of Thrones', 'Outlander', 'The Crown', 'Downton Abbey'], 'sub': 'tv'},
+        {'q': 'What comedy series features the Parks Department employees of Pawnee, Indiana?', 'a': 'Parks and Recreation', 'options': ['Parks and Recreation', 'The Office', 'Brooklyn Nine-Nine', 'Superstore'], 'sub': 'tv'},
         {'q': 'Who wrote "Lord of the Flies"?', 'a': 'William Golding', 'options': ['William Golding', 'George Orwell', 'Aldous Huxley', 'Ray Bradbury'], 'sub': 'literature'},
         {'q': 'What Disney movie features a wooden puppet who wants to be a real boy?', 'a': 'Pinocchio', 'options': ['Pinocchio', 'Dumbo', 'Bambi', 'Fantasia'], 'sub': 'movies'},
         {'q': 'Who sang "Purple Rain"?', 'a': 'Prince', 'options': ['Prince', 'Michael Jackson', 'Stevie Wonder', 'James Brown'], 'sub': 'music'},
@@ -626,7 +626,7 @@ QUESTIONS = {
         {'q': 'Which European country has the most UNESCO World Heritage Sites?', 'a': 'Italy', 'options': ['Italy', 'Spain', 'France', 'Germany'], 'sub': 'countries'},
         {'q': 'What is the longest mountain range in the world?', 'a': 'Andes', 'options': ['Andes', 'Rocky Mountains', 'Himalayas', 'Alps'], 'sub': 'landmarks'},
         {'q': 'What is the capital of Turkey?', 'a': 'Ankara', 'options': ['Ankara', 'Istanbul', 'Izmir', 'Antalya'], 'sub': 'capitals'},
-        {'q': 'What body of water separates Europe from Africa at its narrowest point?', 'a': 'Strait of Gibraltar', 'options': ['Strait of Gibraltar', 'Mediterranean Sea', 'Suez Canal', 'Red Sea'], 'sub': 'maps'},
+        {'q': 'What sea is bordered by Europe to the north and Africa to the south?', 'a': 'Mediterranean Sea', 'options': ['Mediterranean Sea', 'Red Sea', 'Black Sea', 'Caspian Sea'], 'sub': 'maps'},
         {'q': 'What country has the most islands?', 'a': 'Sweden', 'options': ['Sweden', 'Finland', 'Indonesia', 'Philippines'], 'sub': 'countries'},
         {'q': 'What is the capital of India?', 'a': 'New Delhi', 'options': ['New Delhi', 'Mumbai', 'Kolkata', 'Chennai'], 'sub': 'capitals'},
         {'q': 'What is the deepest ocean trench?', 'a': 'Mariana Trench', 'options': ['Mariana Trench', 'Puerto Rico Trench', 'Java Trench', 'Philippine Trench'], 'sub': 'landmarks'},
@@ -664,7 +664,7 @@ HARD_QUESTIONS = {
         {'q': 'What percentage of the world\'s population uses the internet?', 'a': '~65%', 'options': ['~65%', '~45%', '~80%', '~90%'], 'sub': 'current_events'},
         {'q': 'Which country has the world\'s largest sovereign wealth fund?', 'a': 'Norway', 'options': ['Norway', 'UAE', 'Saudi Arabia', 'China'], 'sub': 'world_affairs'},
         {'q': 'What is the name of China\'s Belt and Road Initiative\'s main financing bank?', 'a': 'AIIB', 'options': ['AIIB', 'World Bank', 'IMF', 'ADB'], 'sub': 'world_affairs'},
-        {'q': 'Which company became the first to reach a $3 trillion market cap?', 'a': 'Apple', 'options': ['Apple', 'Microsoft', 'Saudi Aramco', 'Amazon'], 'sub': 'current_events'},
+        {'q': 'What was the largest corporate bankruptcy in US history by assets?', 'a': 'Lehman Brothers', 'options': ['Lehman Brothers', 'Enron', 'WorldCom', 'Washington Mutual'], 'sub': 'current_events'},
         {'q': 'What is the unemployment rate threshold the Fed considers "full employment"?', 'a': '4-5%', 'options': ['4-5%', '2-3%', '6-7%', '0-1%'], 'sub': 'current_events'},
         {'q': 'Which former Soviet state experienced a military coup attempt in 2023?', 'a': 'Russia', 'options': ['Russia', 'Belarus', 'Kazakhstan', 'Armenia'], 'sub': 'world_affairs'},
         {'q': 'What is the name of the leader of Wagner Group who led that coup attempt?', 'a': 'Yevgeny Prigozhin', 'options': ['Yevgeny Prigozhin', 'Sergei Shoigu', 'Ramzan Kadyrov', 'Alexander Lukashenko'], 'sub': 'world_affairs'},
@@ -791,8 +791,8 @@ HARD_QUESTIONS = {
         {'q': 'Which noble gas is used in neon signs?', 'a': 'Neon', 'options': ['Neon', 'Argon', 'Helium', 'Krypton'], 'sub': 'chemistry'},
         {'q': 'What is the name of the Mars rover that landed in 2021?', 'a': 'Perseverance', 'options': ['Perseverance', 'Curiosity', 'Opportunity', 'Spirit'], 'sub': 'space'},
         {'q': 'What is the name of the enzyme that unzips DNA?', 'a': 'Helicase', 'options': ['Helicase', 'Polymerase', 'Ligase', 'Primase'], 'sub': 'biology'},
-        {'q': 'What is the speed of sound at sea level?', 'a': '343 m/s', 'options': ['343 m/s', '300 m/s', '400 m/s', '500 m/s'], 'sub': 'physics'},
-        {'q': 'What is the most abundant gas in Earth\'s atmosphere?', 'a': 'Nitrogen', 'options': ['Nitrogen', 'Oxygen', 'Argon', 'Carbon dioxide'], 'sub': 'earth_science'},
+        {'q': 'What is the term for a material that does not conduct electricity?', 'a': 'Insulator', 'options': ['Insulator', 'Conductor', 'Semiconductor', 'Superconductor'], 'sub': 'physics'},
+        {'q': 'What is the name of the boundary where tectonic plates move apart?', 'a': 'Divergent boundary', 'options': ['Divergent boundary', 'Convergent boundary', 'Transform boundary', 'Subduction zone'], 'sub': 'earth_science'},
         {'q': 'Which planet rotates backwards compared to most others?', 'a': 'Venus', 'options': ['Venus', 'Mercury', 'Uranus', 'Neptune'], 'sub': 'space'},
         {'q': 'What is the name of the smallest unit of an element?', 'a': 'Atom', 'options': ['Atom', 'Molecule', 'Ion', 'Electron'], 'sub': 'chemistry'},
         {'q': 'What percentage of the human brain is water?', 'a': '~75%', 'options': ['~75%', '~50%', '~90%', '~60%'], 'sub': 'biology'},
@@ -850,7 +850,7 @@ HARD_QUESTIONS = {
     ],
     'sports': [
         {'q': 'Which country has won the most FIFA World Cup titles in women\'s football?', 'a': 'United States', 'options': ['United States', 'Germany', 'Brazil', 'Japan'], 'sub': 'soccer'},
-        {'q': 'Who holds the record for most career passing yards in NFL history?', 'a': 'Tom Brady', 'options': ['Tom Brady', 'Drew Brees', 'Peyton Manning', 'Aaron Rodgers'], 'sub': 'football'},
+        {'q': 'Who was the first African American head coach to win a Super Bowl?', 'a': 'Tony Dungy', 'options': ['Tony Dungy', 'Mike Tomlin', 'Lovie Smith', 'Herm Edwards'], 'sub': 'football'},
         {'q': 'Which boxer retired undefeated with a 50-0 record?', 'a': 'Floyd Mayweather Jr.', 'options': ['Floyd Mayweather Jr.', 'Rocky Marciano', 'Muhammad Ali', 'Mike Tyson'], 'sub': 'misc'},
         {'q': 'What year did the "Miracle on Ice" occur at the Winter Olympics?', 'a': '1980', 'options': ['1980', '1984', '1976', '1972'], 'sub': 'olympics'},
         {'q': 'Who holds the record for most goals in a single Premier League season?', 'a': 'Erling Haaland', 'options': ['Erling Haaland', 'Mohamed Salah', 'Alan Shearer', 'Cristiano Ronaldo'], 'sub': 'soccer'},
@@ -877,7 +877,7 @@ HARD_QUESTIONS = {
         {'q': 'Which swimmer has the most individual Olympic gold medals?', 'a': 'Michael Phelps', 'options': ['Michael Phelps', 'Mark Spitz', 'Ryan Lochte', 'Ian Thorpe'], 'sub': 'olympics'},
         {'q': 'What is the weight of an official NBA basketball?', 'a': '22 ounces', 'options': ['22 ounces', '20 ounces', '24 ounces', '18 ounces'], 'sub': 'basketball'},
         {'q': 'Who has the most career assists in NHL history?', 'a': 'Wayne Gretzky', 'options': ['Wayne Gretzky', 'Ron Francis', 'Mark Messier', 'Ray Bourque'], 'sub': 'hockey'},
-        {'q': 'Which country won the first ever FIFA World Cup in 1930?', 'a': 'Uruguay', 'options': ['Uruguay', 'Argentina', 'Brazil', 'Italy'], 'sub': 'soccer'},
+        {'q': 'What is the name of the annual soccer match between Real Madrid and Barcelona?', 'a': 'El Clásico', 'options': ['El Clásico', 'The Derby', 'La Final', 'El Grande'], 'sub': 'soccer'},
         {'q': 'What is the oldest tennis tournament in the world?', 'a': 'Wimbledon', 'options': ['Wimbledon', 'US Open', 'French Open', 'Australian Open'], 'sub': 'tennis'},
         {'q': 'Who holds the record for most home runs in a single MLB season?', 'a': 'Barry Bonds', 'options': ['Barry Bonds', 'Mark McGwire', 'Sammy Sosa', 'Roger Maris'], 'sub': 'baseball'},
         {'q': 'Which Formula 1 driver has the most World Championships?', 'a': 'Michael Schumacher/Lewis Hamilton', 'options': ['Michael Schumacher/Lewis Hamilton', 'Juan Manuel Fangio', 'Alain Prost', 'Sebastian Vettel'], 'sub': 'misc'},
@@ -904,7 +904,7 @@ HARD_QUESTIONS = {
         {'q': 'What is the only country that borders both France and Portugal?', 'a': 'Spain', 'options': ['Spain', 'Andorra', 'Morocco', 'Belgium'], 'sub': 'countries'},
         {'q': 'Lake Baikal, the world\'s deepest lake, is located in which country?', 'a': 'Russia', 'options': ['Russia', 'Kazakhstan', 'Mongolia', 'China'], 'sub': 'landmarks'},
         {'q': 'What is the capital of Myanmar?', 'a': 'Naypyidaw', 'options': ['Naypyidaw', 'Yangon', 'Mandalay', 'Bagan'], 'sub': 'capitals'},
-        {'q': 'Which strait separates Europe from Africa?', 'a': 'Strait of Gibraltar', 'options': ['Strait of Gibraltar', 'Bosphorus', 'Strait of Hormuz', 'Strait of Malacca'], 'sub': 'maps'},
+        {'q': 'What channel separates England from France?', 'a': 'English Channel', 'options': ['English Channel', 'Strait of Dover', 'Irish Sea', 'North Sea'], 'sub': 'maps'},
         {'q': 'How many time zones does Russia span?', 'a': '11', 'options': ['11', '9', '7', '13'], 'sub': 'countries'},
         {'q': 'What is the smallest country in mainland Africa by area?', 'a': 'Gambia', 'options': ['Gambia', 'Eswatini', 'Lesotho', 'Djibouti'], 'sub': 'countries'},
         {'q': 'Which desert is the largest hot desert in the world?', 'a': 'Sahara', 'options': ['Sahara', 'Arabian', 'Gobi', 'Kalahari'], 'sub': 'landmarks'},
@@ -913,15 +913,15 @@ HARD_QUESTIONS = {
         {'q': 'What is the largest landlocked country by area?', 'a': 'Kazakhstan', 'options': ['Kazakhstan', 'Mongolia', 'Chad', 'Niger'], 'sub': 'countries'},
         {'q': 'Which river forms part of the border between the US and Mexico?', 'a': 'Rio Grande', 'options': ['Rio Grande', 'Colorado River', 'Pecos River', 'Gila River'], 'sub': 'maps'},
         {'q': 'What is the capital of Kazakhstan?', 'a': 'Astana', 'options': ['Astana', 'Almaty', 'Shymkent', 'Karaganda'], 'sub': 'capitals'},
-        {'q': 'Which country has the most UNESCO World Heritage Sites?', 'a': 'Italy', 'options': ['Italy', 'China', 'Spain', 'France'], 'sub': 'countries'},
+        {'q': 'Which country has the most languages spoken within its borders?', 'a': 'Papua New Guinea', 'options': ['Papua New Guinea', 'Indonesia', 'Nigeria', 'India'], 'sub': 'countries'},
         {'q': 'What is the driest desert in the world?', 'a': 'Atacama Desert', 'options': ['Atacama Desert', 'Sahara Desert', 'Gobi Desert', 'Namib Desert'], 'sub': 'landmarks'},
         {'q': 'Which sea is the saltiest in the world?', 'a': 'Dead Sea', 'options': ['Dead Sea', 'Red Sea', 'Mediterranean Sea', 'Black Sea'], 'sub': 'maps'},
         {'q': 'What is the capital of Sri Lanka?', 'a': 'Sri Jayawardenepura Kotte', 'options': ['Sri Jayawardenepura Kotte', 'Colombo', 'Kandy', 'Galle'], 'sub': 'capitals'},
-        {'q': 'Which country has the most islands?', 'a': 'Sweden', 'options': ['Sweden', 'Finland', 'Indonesia', 'Philippines'], 'sub': 'countries'},
+        {'q': 'Which European country is divided into 26 cantons?', 'a': 'Switzerland', 'options': ['Switzerland', 'Austria', 'Belgium', 'Netherlands'], 'sub': 'countries'},
         {'q': 'What percentage of the Netherlands is below sea level?', 'a': '26%', 'options': ['26%', '50%', '10%', '75%'], 'sub': 'countries'},
         {'q': 'Which African country was never colonized?', 'a': 'Ethiopia', 'options': ['Ethiopia', 'Liberia', 'Egypt', 'Morocco'], 'sub': 'countries'},
         {'q': 'What is the largest lake in Africa?', 'a': 'Lake Victoria', 'options': ['Lake Victoria', 'Lake Tanganyika', 'Lake Malawi', 'Lake Chad'], 'sub': 'landmarks'},
-        {'q': 'Which country has the most volcanoes?', 'a': 'Indonesia', 'options': ['Indonesia', 'Japan', 'United States', 'Philippines'], 'sub': 'countries'},
+        {'q': 'What is the only continent without an active volcano?', 'a': 'Australia', 'options': ['Australia', 'Antarctica', 'Europe', 'Africa'], 'sub': 'countries'},
         {'q': 'What is the capital of Bhutan?', 'a': 'Thimphu', 'options': ['Thimphu', 'Paro', 'Punakha', 'Phuntsholing'], 'sub': 'capitals'},
         {'q': 'Which is the only country through which both the Equator and Tropic of Capricorn pass?', 'a': 'Brazil', 'options': ['Brazil', 'Indonesia', 'Kenya', 'Ecuador'], 'sub': 'maps'},
         {'q': 'What is the smallest country in Asia by area?', 'a': 'Maldives', 'options': ['Maldives', 'Singapore', 'Bahrain', 'Brunei'], 'sub': 'countries'},
@@ -931,7 +931,7 @@ HARD_QUESTIONS = {
         {'q': 'What is the deepest lake in the United States?', 'a': 'Crater Lake', 'options': ['Crater Lake', 'Lake Tahoe', 'Lake Superior', 'Lake Chelan'], 'sub': 'landmarks'},
         {'q': 'Which European country has the lowest population density?', 'a': 'Iceland', 'options': ['Iceland', 'Norway', 'Finland', 'Sweden'], 'sub': 'countries'},
         {'q': 'What is the capital of Malta?', 'a': 'Valletta', 'options': ['Valletta', 'Mdina', 'Sliema', 'St. Julian\'s'], 'sub': 'capitals'},
-        {'q': 'Which country spans the most time zones?', 'a': 'France', 'options': ['France', 'Russia', 'United States', 'United Kingdom'], 'sub': 'countries'},
+        {'q': 'Which country is the world\'s largest producer of coffee?', 'a': 'Brazil', 'options': ['Brazil', 'Colombia', 'Vietnam', 'Ethiopia'], 'sub': 'countries'},
         {'q': 'What is the highest peak in Africa?', 'a': 'Mount Kilimanjaro', 'options': ['Mount Kilimanjaro', 'Mount Kenya', 'Mount Stanley', 'Ras Dashen'], 'sub': 'landmarks'},
         {'q': 'Which country has the most neighbor countries?', 'a': 'China/Russia', 'options': ['China/Russia', 'Brazil', 'Germany', 'France'], 'sub': 'countries'},
         {'q': 'What is the capital of Liechtenstein?', 'a': 'Vaduz', 'options': ['Vaduz', 'Schaan', 'Balzers', 'Triesen'], 'sub': 'capitals'},
@@ -947,7 +947,7 @@ HARD_QUESTIONS = {
         {'q': 'What is the largest country in South America by area?', 'a': 'Brazil', 'options': ['Brazil', 'Argentina', 'Peru', 'Colombia'], 'sub': 'countries'},
         {'q': 'Which river flows through the most countries?', 'a': 'Danube', 'options': ['Danube', 'Nile', 'Rhine', 'Mekong'], 'sub': 'maps'},
         {'q': 'What is the capital of Papua New Guinea?', 'a': 'Port Moresby', 'options': ['Port Moresby', 'Lae', 'Mount Hagen', 'Madang'], 'sub': 'capitals'},
-        {'q': 'Which country has the longest coastline in the world?', 'a': 'Canada', 'options': ['Canada', 'Indonesia', 'Russia', 'Australia'], 'sub': 'countries'},
+        {'q': 'What sea lies between Japan and the Korean Peninsula?', 'a': 'Sea of Japan', 'options': ['Sea of Japan', 'Yellow Sea', 'South China Sea', 'Philippine Sea'], 'sub': 'maps'},
     ]
 }
 
@@ -955,34 +955,34 @@ HARD_QUESTIONS = {
 # Medium difficulty - not too easy, not too hard
 ONBOARDING_QUESTIONS = [
     # News/Current Events (8 questions)
-    {'q': 'Which tech company acquired Twitter in 2022?', 'a': 'X Corp (Elon Musk)', 'options': ['X Corp (Elon Musk)', 'Microsoft', 'Meta', 'Google'], 'category': 'news', 'sub': 'current_events'},
-    {'q': 'What is the name of the COVID-19 vaccines using mRNA technology?', 'a': 'Pfizer and Moderna', 'options': ['Pfizer and Moderna', 'Johnson & Johnson and AstraZeneca', 'Novavax and Sinovac', 'Sputnik and Sinopharm'], 'category': 'news', 'sub': 'current_events'},
+    {'q': 'What country most recently joined the European Union?', 'a': 'Croatia', 'options': ['Croatia', 'Romania', 'Bulgaria', 'Montenegro'], 'category': 'news', 'sub': 'world_affairs'},
+    {'q': 'What ride-sharing company went public in 2019 in one of the largest tech IPOs?', 'a': 'Uber', 'options': ['Uber', 'Lyft', 'DoorDash', 'Airbnb'], 'category': 'news', 'sub': 'current_events'},
     {'q': 'What social media platform did Mark Zuckerberg rename to "Meta" in 2021?', 'a': 'Facebook', 'options': ['Facebook', 'Instagram', 'WhatsApp', 'Twitter'], 'category': 'news', 'sub': 'current_events'},
-    {'q': 'What AI chatbot was released by OpenAI in November 2022?', 'a': 'ChatGPT', 'options': ['ChatGPT', 'Bard', 'Claude', 'Copilot'], 'category': 'news', 'sub': 'current_events'},
+    {'q': 'Which country hosted the G20 summit in 2023?', 'a': 'India', 'options': ['India', 'Indonesia', 'Brazil', 'Japan'], 'category': 'news', 'sub': 'world_affairs'},
     {'q': 'Which streaming service released the show "Squid Game"?', 'a': 'Netflix', 'options': ['Netflix', 'Amazon Prime', 'Disney+', 'HBO Max'], 'category': 'news', 'sub': 'current_events'},
     {'q': 'Who became the UK Prime Minister after Boris Johnson?', 'a': 'Liz Truss', 'options': ['Liz Truss', 'Rishi Sunak', 'Keir Starmer', 'Jeremy Hunt'], 'category': 'news', 'sub': 'politics'},
     {'q': 'What electric vehicle company became the most valuable car company in 2020?', 'a': 'Tesla', 'options': ['Tesla', 'Rivian', 'NIO', 'BYD'], 'category': 'news', 'sub': 'current_events'},
     {'q': 'Which company launched the James Webb Space Telescope?', 'a': 'NASA', 'options': ['NASA', 'SpaceX', 'ESA', 'Blue Origin'], 'category': 'news', 'sub': 'current_events'},
 
     # History (9 questions)
-    {'q': 'The Berlin Wall fell in which year?', 'a': '1989', 'options': ['1989', '1991', '1985', '1987'], 'category': 'history', 'sub': 'modern'},
+    {'q': 'Who was the first person to reach the South Pole?', 'a': 'Roald Amundsen', 'options': ['Roald Amundsen', 'Robert Scott', 'Ernest Shackleton', 'Richard Byrd'], 'category': 'history', 'sub': 'modern'},
     {'q': 'Who was the first woman to win a Nobel Prize?', 'a': 'Marie Curie', 'options': ['Marie Curie', 'Mother Teresa', 'Jane Addams', 'Irene Joliot-Curie'], 'category': 'history', 'sub': 'modern'},
-    {'q': 'Which war was fought between the North and South in the United States?', 'a': 'Civil War', 'options': ['Civil War', 'Revolutionary War', 'War of 1812', 'Mexican-American War'], 'category': 'history', 'sub': 'wars'},
+    {'q': 'What was the longest war in United States history?', 'a': 'War in Afghanistan', 'options': ['War in Afghanistan', 'Vietnam War', 'Civil War', 'War of 1812'], 'category': 'history', 'sub': 'wars'},
     {'q': 'Who was the first president of South Africa after apartheid?', 'a': 'Nelson Mandela', 'options': ['Nelson Mandela', 'Desmond Tutu', 'F.W. de Klerk', 'Thabo Mbeki'], 'category': 'history', 'sub': 'modern'},
-    {'q': 'The Titanic sank in which year?', 'a': '1912', 'options': ['1912', '1905', '1920', '1898'], 'category': 'history', 'sub': 'modern'},
-    {'q': 'Which empire was ruled by Genghis Khan?', 'a': 'Mongol Empire', 'options': ['Mongol Empire', 'Persian Empire', 'Ottoman Empire', 'Roman Empire'], 'category': 'history', 'sub': 'medieval'},
+    {'q': 'What was the name of the first satellite launched into space?', 'a': 'Sputnik', 'options': ['Sputnik', 'Explorer 1', 'Vostok', 'Gemini'], 'category': 'history', 'sub': 'modern'},
+    {'q': 'What medieval code of conduct governed the behavior of knights?', 'a': 'Chivalry', 'options': ['Chivalry', 'Feudalism', 'Vassalage', 'Heraldry'], 'category': 'history', 'sub': 'medieval'},
     {'q': 'What was the codename for the Allied invasion of Normandy in 1944?', 'a': 'D-Day', 'options': ['D-Day', 'Operation Torch', 'Operation Overlord', 'Battle of the Bulge'], 'category': 'history', 'sub': 'wars'},
     {'q': 'Which president delivered the Gettysburg Address?', 'a': 'Abraham Lincoln', 'options': ['Abraham Lincoln', 'George Washington', 'Thomas Jefferson', 'Ulysses S. Grant'], 'category': 'history', 'sub': 'presidents'},
     {'q': 'The Great Fire of London occurred in which century?', 'a': '17th century', 'options': ['17th century', '18th century', '16th century', '19th century'], 'category': 'history', 'sub': 'world_history'},
 
     # Science (9 questions)
     {'q': 'What is the chemical symbol for sodium?', 'a': 'Na', 'options': ['Na', 'So', 'Sd', 'N'], 'category': 'science', 'sub': 'chemistry'},
-    {'q': 'What organ pumps blood through the human body?', 'a': 'Heart', 'options': ['Heart', 'Lungs', 'Liver', 'Brain'], 'category': 'science', 'sub': 'biology'},
+    {'q': 'How many chambers does the human heart have?', 'a': '4', 'options': ['4', '2', '3', '6'], 'category': 'science', 'sub': 'biology'},
     {'q': 'Light travels fastest through which medium?', 'a': 'Vacuum', 'options': ['Vacuum', 'Air', 'Water', 'Glass'], 'category': 'science', 'sub': 'physics'},
     {'q': 'What gas do humans exhale that plants need for photosynthesis?', 'a': 'Carbon dioxide', 'options': ['Carbon dioxide', 'Oxygen', 'Nitrogen', 'Hydrogen'], 'category': 'science', 'sub': 'biology'},
-    {'q': 'What part of the cell contains genetic information?', 'a': 'Nucleus', 'options': ['Nucleus', 'Mitochondria', 'Ribosome', 'Cell membrane'], 'category': 'science', 'sub': 'biology'},
-    {'q': 'Which planet is known as the Red Planet?', 'a': 'Mars', 'options': ['Mars', 'Venus', 'Jupiter', 'Saturn'], 'category': 'science', 'sub': 'astronomy'},
-    {'q': 'At what temperature does water freeze in Fahrenheit?', 'a': '32 degrees', 'options': ['32 degrees', '0 degrees', '100 degrees', '212 degrees'], 'category': 'science', 'sub': 'physics'},
+    {'q': 'What process do plants use to convert sunlight into energy?', 'a': 'Photosynthesis', 'options': ['Photosynthesis', 'Respiration', 'Fermentation', 'Osmosis'], 'category': 'science', 'sub': 'biology'},
+    {'q': 'What is the hottest planet in our solar system?', 'a': 'Venus', 'options': ['Venus', 'Mercury', 'Mars', 'Jupiter'], 'category': 'science', 'sub': 'astronomy'},
+    {'q': 'What unit is used to measure electrical current?', 'a': 'Ampere', 'options': ['Ampere', 'Volt', 'Watt', 'Ohm'], 'category': 'science', 'sub': 'physics'},
     {'q': 'DNA stands for what?', 'a': 'Deoxyribonucleic acid', 'options': ['Deoxyribonucleic acid', 'Dinitrogen acid', 'Dual nucleic acid', 'Dynamic nucleic acid'], 'category': 'science', 'sub': 'biology'},
     {'q': 'What type of animal is a whale?', 'a': 'Mammal', 'options': ['Mammal', 'Fish', 'Reptile', 'Amphibian'], 'category': 'science', 'sub': 'biology'},
 
@@ -991,30 +991,30 @@ ONBOARDING_QUESTIONS = [
     {'q': 'Which band released the album "Abbey Road"?', 'a': 'The Beatles', 'options': ['The Beatles', 'The Rolling Stones', 'Led Zeppelin', 'Pink Floyd'], 'category': 'entertainment', 'sub': 'music'},
     {'q': 'What fictional country is Black Panther from?', 'a': 'Wakanda', 'options': ['Wakanda', 'Zamunda', 'Latveria', 'Genosha'], 'category': 'entertainment', 'sub': 'movies'},
     {'q': 'Who played the Joker in "The Dark Knight"?', 'a': 'Heath Ledger', 'options': ['Heath Ledger', 'Joaquin Phoenix', 'Jared Leto', 'Jack Nicholson'], 'category': 'entertainment', 'sub': 'movies'},
-    {'q': 'What TV show features a character named Walter White?', 'a': 'Breaking Bad', 'options': ['Breaking Bad', 'The Wire', 'Better Call Saul', 'Ozark'], 'category': 'entertainment', 'sub': 'tv'},
+    {'q': 'What animated TV show has been on air since 1989 featuring a yellow-skinned family?', 'a': 'The Simpsons', 'options': ['The Simpsons', 'Family Guy', 'South Park', 'Bob\'s Burgers'], 'category': 'entertainment', 'sub': 'tv'},
     {'q': 'Who wrote "The Lord of the Rings" trilogy?', 'a': 'J.R.R. Tolkien', 'options': ['J.R.R. Tolkien', 'C.S. Lewis', 'George R.R. Martin', 'Terry Pratchett'], 'category': 'entertainment', 'sub': 'literature'},
-    {'q': 'Which artist painted the ceiling of the Sistine Chapel?', 'a': 'Michelangelo', 'options': ['Michelangelo', 'Leonardo da Vinci', 'Raphael', 'Botticelli'], 'category': 'entertainment', 'sub': 'arts'},
+    {'q': 'Who painted the Mona Lisa?', 'a': 'Leonardo da Vinci', 'options': ['Leonardo da Vinci', 'Michelangelo', 'Raphael', 'Pablo Picasso'], 'category': 'entertainment', 'sub': 'arts'},
     {'q': 'What video game franchise features a character named Master Chief?', 'a': 'Halo', 'options': ['Halo', 'Call of Duty', 'Gears of War', 'Destiny'], 'category': 'entertainment', 'sub': 'games'},
 
     # Sports (8 questions)
-    {'q': 'How many players are on a basketball team on the court?', 'a': '5', 'options': ['5', '6', '7', '4'], 'category': 'sports', 'sub': 'basketball'},
-    {'q': 'Which country has won the most FIFA World Cups?', 'a': 'Brazil', 'options': ['Brazil', 'Germany', 'Italy', 'Argentina'], 'category': 'sports', 'sub': 'soccer'},
+    {'q': 'What is the standard height of a basketball hoop?', 'a': '10 feet', 'options': ['10 feet', '8 feet', '12 feet', '9 feet'], 'category': 'sports', 'sub': 'basketball'},
+    {'q': 'What color card results in a player being ejected from a soccer match?', 'a': 'Red', 'options': ['Red', 'Yellow', 'Blue', 'Black'], 'category': 'sports', 'sub': 'soccer'},
     {'q': 'In tennis, what is a score of zero called?', 'a': 'Love', 'options': ['Love', 'Nil', 'Zero', 'Duck'], 'category': 'sports', 'sub': 'tennis'},
     {'q': 'What sport is played at Wimbledon?', 'a': 'Tennis', 'options': ['Tennis', 'Golf', 'Cricket', 'Rugby'], 'category': 'sports', 'sub': 'tennis'},
     {'q': 'In which sport did Michael Jordan become famous?', 'a': 'Basketball', 'options': ['Basketball', 'Baseball', 'Football', 'Golf'], 'category': 'sports', 'sub': 'basketball'},
     {'q': 'What is the national sport of Japan?', 'a': 'Sumo wrestling', 'options': ['Sumo wrestling', 'Judo', 'Karate', 'Baseball'], 'category': 'sports', 'sub': 'misc'},
-    {'q': 'What is the term for completing a golf hole in one stroke under par?', 'a': 'Birdie', 'options': ['Birdie', 'Eagle', 'Bogey', 'Par'], 'category': 'sports', 'sub': 'misc'},
+    {'q': 'How many innings are in a standard baseball game?', 'a': '9', 'options': ['9', '7', '6', '12'], 'category': 'sports', 'sub': 'baseball'},
     {'q': 'How many quarters are in an American football game?', 'a': '4', 'options': ['4', '2', '3', '6'], 'category': 'sports', 'sub': 'football'},
 
     # Geography (8 questions)
     {'q': 'What is the official language of Brazil?', 'a': 'Portuguese', 'options': ['Portuguese', 'Spanish', 'English', 'French'], 'category': 'geography', 'sub': 'countries'},
-    {'q': 'What is the longest river in the world?', 'a': 'Nile', 'options': ['Nile', 'Amazon', 'Mississippi', 'Yangtze'], 'category': 'geography', 'sub': 'landmarks'},
+    {'q': 'What is the tallest building in the world as of 2024?', 'a': 'Burj Khalifa', 'options': ['Burj Khalifa', 'Shanghai Tower', 'One World Trade Center', 'Taipei 101'], 'category': 'geography', 'sub': 'landmarks'},
     {'q': 'In which country would you find the city of Mumbai?', 'a': 'India', 'options': ['India', 'Pakistan', 'Bangladesh', 'Nepal'], 'category': 'geography', 'sub': 'countries'},
     {'q': 'Which mountain is the tallest in North America?', 'a': 'Denali', 'options': ['Denali', 'Mount Whitney', 'Mount Rainier', 'Mount Logan'], 'category': 'geography', 'sub': 'landmarks'},
     {'q': 'What is the most populous country in Africa?', 'a': 'Nigeria', 'options': ['Nigeria', 'Ethiopia', 'Egypt', 'South Africa'], 'category': 'geography', 'sub': 'countries'},
-    {'q': 'The Great Barrier Reef is located off the coast of which country?', 'a': 'Australia', 'options': ['Australia', 'Indonesia', 'Philippines', 'New Zealand'], 'category': 'geography', 'sub': 'landmarks'},
+    {'q': 'What waterfall on the border of Zambia and Zimbabwe is one of the largest in the world?', 'a': 'Victoria Falls', 'options': ['Victoria Falls', 'Niagara Falls', 'Iguazu Falls', 'Angel Falls'], 'category': 'geography', 'sub': 'landmarks'},
     {'q': 'What currency is used in Japan?', 'a': 'Yen', 'options': ['Yen', 'Yuan', 'Won', 'Ringgit'], 'category': 'geography', 'sub': 'countries'},
-    {'q': 'What is the smallest country in the world by area?', 'a': 'Vatican City', 'options': ['Vatican City', 'Monaco', 'San Marino', 'Liechtenstein'], 'category': 'geography', 'sub': 'countries'},
+    {'q': 'What European country is shaped like a boot?', 'a': 'Italy', 'options': ['Italy', 'Greece', 'Spain', 'Portugal'], 'category': 'geography', 'sub': 'countries'},
 ]
 
 
@@ -1340,7 +1340,7 @@ def get_user_difficulty(user_id):
 
 
 def get_recently_used_questions(difficulty, days=7):
-    """Get questions used in the last N days to avoid repeats."""
+    """Get questions used in the last N days to avoid repeats across ALL modes."""
     conn = get_db()
     cur = conn.cursor()
     ph = get_placeholder()
@@ -1364,15 +1364,13 @@ def get_recently_used_questions(difficulty, days=7):
     results = cur.fetchall()
     conn.close()
 
-    # Extract question texts from the JSON
+    # Extract question texts from the JSON - track ALL difficulties to prevent cross-mode duplicates
     used_questions = set()
     for row in results:
         try:
             questions = json.loads(row['questions_json'])
             for q in questions:
-                # Only track questions from same difficulty
-                if q.get('difficulty') == difficulty:
-                    used_questions.add(q.get('q'))
+                used_questions.add(q.get('q'))
         except:
             pass
 
