@@ -544,7 +544,7 @@ QUESTIONS = {
         {'q': 'In which city were the 2020 Summer Olympics held (delayed to 2021)?', 'a': 'Tokyo', 'options': ['Tokyo', 'Paris', 'London', 'Rio de Janeiro'], 'sub': 'olympics'},
         {'q': 'Who is the all-time leading scorer in NBA history?', 'a': 'LeBron James', 'options': ['LeBron James', 'Kareem Abdul-Jabbar', 'Michael Jordan', 'Kobe Bryant'], 'sub': 'basketball'},
         {'q': 'What is the only Grand Slam tennis tournament played on grass?', 'a': 'Wimbledon', 'options': ['Wimbledon', 'US Open', 'French Open', 'Australian Open'], 'sub': 'tennis'},
-        {'q': 'Which athlete has won the most Olympic gold medals?', 'a': 'Michael Phelps', 'options': ['Michael Phelps', 'Usain Bolt', 'Carl Lewis', 'Mark Spitz'], 'sub': 'olympics'},
+        {'q': 'In which city were the first modern Olympic Games held in 1896?', 'a': 'Athens', 'options': ['Athens', 'Paris', 'London', 'Rome'], 'sub': 'olympics'},
         {'q': 'What sport is played at Augusta National?', 'a': 'Golf', 'options': ['Golf', 'Tennis', 'Polo', 'Cricket'], 'sub': 'golf'},
         {'q': 'Who won Super Bowl LVIII in 2024?', 'a': 'Kansas City Chiefs', 'options': ['Kansas City Chiefs', 'San Francisco 49ers', 'Philadelphia Eagles', 'Baltimore Ravens'], 'sub': 'football'},
         {'q': 'What is the national sport of Canada?', 'a': 'Lacrosse', 'options': ['Lacrosse', 'Ice Hockey', 'Curling', 'Baseball'], 'sub': 'misc'},
