@@ -927,7 +927,7 @@ HARD_QUESTIONS = {
         {'q': 'What is the smallest country in Asia by area?', 'a': 'Maldives', 'options': ['Maldives', 'Singapore', 'Bahrain', 'Brunei'], 'sub': 'countries'},
         {'q': 'Which mountain range separates France from Spain?', 'a': 'Pyrenees', 'options': ['Pyrenees', 'Alps', 'Carpathians', 'Apennines'], 'sub': 'landmarks'},
         {'q': 'What is the capital of Mongolia?', 'a': 'Ulaanbaatar', 'options': ['Ulaanbaatar', 'Darkhan', 'Erdenet', 'Choibalsan'], 'sub': 'capitals'},
-        {'q': 'Which country has the longest undefended border?', 'a': 'Canada/USA', 'options': ['Canada/USA', 'Russia/Kazakhstan', 'Chile/Argentina', 'India/Bangladesh'], 'sub': 'countries'},
+        {'q': 'Which country spans the most time zones?', 'a': 'France', 'options': ['France', 'Russia', 'United States', 'China'], 'sub': 'countries'},
         {'q': 'What is the deepest lake in the United States?', 'a': 'Crater Lake', 'options': ['Crater Lake', 'Lake Tahoe', 'Lake Superior', 'Lake Chelan'], 'sub': 'landmarks'},
         {'q': 'Which European country has the lowest population density?', 'a': 'Iceland', 'options': ['Iceland', 'Norway', 'Finland', 'Sweden'], 'sub': 'countries'},
         {'q': 'What is the capital of Malta?', 'a': 'Valletta', 'options': ['Valletta', 'Mdina', 'Sliema', 'St. Julian\'s'], 'sub': 'capitals'},
@@ -1014,7 +1014,7 @@ ONBOARDING_QUESTIONS = [
     {'q': 'What is the most populous country in Africa?', 'a': 'Nigeria', 'options': ['Nigeria', 'Ethiopia', 'Egypt', 'South Africa'], 'category': 'geography', 'sub': 'countries'},
     {'q': 'The Great Barrier Reef is located off the coast of which country?', 'a': 'Australia', 'options': ['Australia', 'Indonesia', 'Philippines', 'New Zealand'], 'category': 'geography', 'sub': 'landmarks'},
     {'q': 'What currency is used in Japan?', 'a': 'Yen', 'options': ['Yen', 'Yuan', 'Won', 'Ringgit'], 'category': 'geography', 'sub': 'countries'},
-    {'q': 'Which two countries share the longest international border?', 'a': 'USA and Canada', 'options': ['USA and Canada', 'Russia and China', 'Argentina and Chile', 'India and Bangladesh'], 'category': 'geography', 'sub': 'countries'},
+    {'q': 'What is the smallest country in the world by area?', 'a': 'Vatican City', 'options': ['Vatican City', 'Monaco', 'San Marino', 'Liechtenstein'], 'category': 'geography', 'sub': 'countries'},
 ]
 
 
