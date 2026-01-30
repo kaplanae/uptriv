@@ -2389,6 +2389,16 @@ def track_visit():
         ph = get_placeholder()
 
         user_id = current_user.id if current_user.is_authenticated else None
+
+        # Also try to resolve anonymous users to their user_id
+        if not user_id:
+            anonymous_id = request.cookies.get('uptriv_anonymous_id')
+            if anonymous_id:
+                cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
+                row = cur.fetchone()
+                if row:
+                    user_id = row['id'] if isinstance(row, dict) else row[0]
+
         ip = request.headers.get('X-Forwarded-For', request.remote_addr)
         if ip and ',' in ip:
             ip = ip.split(',')[0].strip()
