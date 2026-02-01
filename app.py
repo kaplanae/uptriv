@@ -2619,7 +2619,7 @@ def admin_page():
 @app.route('/admin/flush-questions', methods=['POST'])
 @login_required
 def flush_daily_questions():
-    """Admin-only: clear today's cached questions to force regeneration."""
+    """Admin-only: clear today's cached questions AND game results to allow replay."""
     if not current_user.email or current_user.email not in ADMIN_EMAILS:
         return redirect(url_for('index'))
 
@@ -2631,11 +2631,18 @@ def flush_daily_questions():
     cur = conn.cursor()
     ph = get_placeholder()
 
+    questions_deleted = 0
+    results_deleted = 0
+
     if difficulty == 'all':
+        # Clear all cached question sets for today
         cur.execute(f'DELETE FROM daily_questions WHERE game_date = {ph}', (today,))
+        questions_deleted = cur.rowcount
+        # Clear all game results for today (so everyone can replay)
+        cur.execute(f'DELETE FROM game_results WHERE game_date = {ph}', (today,))
+        results_deleted = cur.rowcount
     else:
         # Delete cached questions matching the specified difficulty
-        # questions_json contains the difficulty field inside the JSON
         cur.execute(f'SELECT id, questions_json FROM daily_questions WHERE game_date = {ph}', (today,))
         rows = cur.fetchall()
         ids_to_delete = []
@@ -2648,11 +2655,21 @@ def flush_daily_questions():
                 pass
         for row_id in ids_to_delete:
             cur.execute(f'DELETE FROM daily_questions WHERE id = {ph}', (row_id,))
+        questions_deleted = len(ids_to_delete)
 
-    deleted = cur.rowcount if difficulty == 'all' else len(ids_to_delete)
+        # Clear game results for today at this difficulty (so everyone can replay it)
+        cur.execute(f'DELETE FROM game_results WHERE game_date = {ph} AND COALESCE(difficulty, \'easy\') = {ph}', (today, difficulty))
+        results_deleted = cur.rowcount
+
     conn.commit()
     conn.close()
-    return jsonify({'success': True, 'deleted': deleted, 'date': today, 'difficulty': difficulty})
+    return jsonify({
+        'success': True,
+        'questions_flushed': questions_deleted,
+        'results_cleared': results_deleted,
+        'date': today,
+        'difficulty': difficulty
+    })
 
 
 # ============ GAME API ROUTES ============

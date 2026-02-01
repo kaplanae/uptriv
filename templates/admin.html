@@ -382,7 +382,7 @@ async function flushQuestions(difficulty) {
         const data = await res.json();
         if (data.success) {
             resultEl.style.color = '#22c55e';
-            resultEl.textContent = `Flushed ${data.deleted} cached question set(s) for ${difficulty} on ${data.date}. New questions will generate on next game start.`;
+            resultEl.textContent = `Flushed ${data.questions_flushed} question set(s) and ${data.results_cleared} game result(s) for ${difficulty} on ${data.date}. All users can replay and will get fresh questions.`;
         } else {
             resultEl.style.color = '#ef4444';
             resultEl.textContent = 'Error: ' + (data.error || 'Unknown error');
