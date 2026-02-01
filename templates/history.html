@@ -343,6 +343,16 @@ function renderHistory(games) {
     });
 }
 
+function diffBreakdownHtml(easyTotal, easyPct, hardTotal, hardPct) {
+    const parts = [];
+    if (easyTotal > 0) parts.push(`${easyPct}% Normal`);
+    if (hardTotal > 0) parts.push(`${hardPct}% Expert`);
+    if (parts.length > 1) {
+        return `<span class="diff-breakdown">(${parts.join(', ')})</span>`;
+    }
+    return '';
+}
+
 function renderOverallStats(data) {
     // Update overall score
     const pct = data.overall_percentage;
@@ -361,12 +371,28 @@ function renderOverallStats(data) {
     else color = '#ef4444';
     overallBar.style.backgroundColor = color;
 
+    // Show overall difficulty breakdown
+    const overallBreakdown = diffBreakdownHtml(
+        data.overall_easy_total || 0, data.overall_easy_percentage || 0,
+        data.overall_hard_total || 0, data.overall_hard_percentage || 0
+    );
+    if (overallBreakdown) {
+        const overallRow = document.querySelector('.overall-stat-row');
+        const existing = overallRow.querySelector('.diff-breakdown');
+        if (existing) existing.remove();
+        overallRow.insertAdjacentHTML('beforeend', overallBreakdown);
+    }
+
     // Render category bars
     const container = document.getElementById('category-stats');
     container.innerHTML = '';
 
     for (const [cat, catMeta] of Object.entries(CATEGORIES)) {
         const stats = data.categories[cat] || { percentage: 0, correct: 0, total: 0 };
+        const breakdown = diffBreakdownHtml(
+            stats.easy_total || 0, stats.easy_percentage || 0,
+            stats.hard_total || 0, stats.hard_percentage || 0
+        );
         const bar = document.createElement('div');
         bar.className = 'cat-stat-row';
         bar.innerHTML = `
@@ -375,7 +401,7 @@ function renderOverallStats(data) {
                     <span class="cat-emoji">${CAT_EMOJIS[cat] || '❓'}</span>
                     <span style="color: ${catMeta.color}">${catMeta.name}</span>
                 </span>
-                <span class="stat-pct">${stats.percentage}%</span>
+                <span class="stat-pct">${stats.percentage}% ${breakdown}</span>
             </div>
             <div class="bar-chart-track">
                 <div class="bar-chart-fill" style="width: ${stats.percentage}%; background-color: ${catMeta.color};"></div>

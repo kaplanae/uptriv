@@ -86,6 +86,20 @@
             </table>
         </div>
 
+        <!-- Admin Actions -->
+        <div class="admin-card">
+            <h2>Admin Actions</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                Flush cached questions to force regeneration. Use this if today's questions have issues.
+            </p>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button onclick="flushQuestions('easy')" class="flush-btn flush-easy">Flush Normal Questions</button>
+                <button onclick="flushQuestions('hard')" class="flush-btn flush-hard">Flush Expert Questions</button>
+                <button onclick="flushQuestions('all')" class="flush-btn flush-all">Flush All Questions</button>
+            </div>
+            <div id="flush-result" style="margin-top: 1rem; font-size: 0.85rem; display: none;"></div>
+        </div>
+
         <!-- Today's Logins -->
         <div class="admin-card">
             <h2>Active Users Today ({{ today_logins|length }})</h2>
@@ -306,6 +320,35 @@
     font-style: italic;
 }
 
+.flush-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.flush-btn:hover {
+    opacity: 0.85;
+}
+
+.flush-easy {
+    background: #3b82f6;
+    color: white;
+}
+
+.flush-hard {
+    background: #ef4444;
+    color: white;
+}
+
+.flush-all {
+    background: #8b5cf6;
+    color: white;
+}
+
 @media (max-width: 600px) {
     .admin-container {
         padding: 1rem;
@@ -320,4 +363,34 @@
     }
 }
 </style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function flushQuestions(difficulty) {
+    const resultEl = document.getElementById('flush-result');
+    resultEl.style.display = 'block';
+    resultEl.textContent = 'Flushing...';
+    resultEl.style.color = 'var(--text-secondary)';
+
+    try {
+        const res = await fetch('/admin/flush-questions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ difficulty })
+        });
+        const data = await res.json();
+        if (data.success) {
+            resultEl.style.color = '#22c55e';
+            resultEl.textContent = `Flushed ${data.deleted} cached question set(s) for ${difficulty} on ${data.date}. New questions will generate on next game start.`;
+        } else {
+            resultEl.style.color = '#ef4444';
+            resultEl.textContent = 'Error: ' + (data.error || 'Unknown error');
+        }
+    } catch (e) {
+        resultEl.style.color = '#ef4444';
+        resultEl.textContent = 'Request failed: ' + e.message;
+    }
+}
+</script>
 {% endblock %}

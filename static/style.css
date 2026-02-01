@@ -158,12 +158,6 @@ nav {
     color: var(--text-primary);
 }
 
-.anon-username {
-    font-weight: 500;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-
 .logout-btn {
     padding: 0.4rem 0.75rem;
     background: transparent;
@@ -1686,7 +1680,7 @@ a.rec-title:hover {
     nav {
         padding: 0.5rem 0.75rem;
         gap: 0.5rem;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
     }
 
     .logo {
@@ -1718,7 +1712,7 @@ a.rec-title:hover {
     }
 
     .user-name {
-        font-size: 0.8rem;
+        display: none;
     }
 
     .logout-btn {
@@ -1936,6 +1930,13 @@ a.rec-title:hover {
     font-weight: 600;
     font-size: 0.9rem;
     color: var(--text-secondary);
+}
+
+.diff-breakdown {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted, #888);
+    margin-left: 0.25rem;
 }
 
 /* Bar Chart Styles - More Visible */

@@ -24,7 +24,7 @@
     <!-- Ready Screen (for authenticated users) -->
     <div id="ready-screen" class="game-screen">
         <div class="login-card">
-            <h2>Ready to Play<span id="player-name-wrapper">, <span id="player-name"></span></span>?</h2>
+            <h2>Ready to Play?</h2>
             <p>6 questions, 10 seconds each. Good luck!</p>
 
             <!-- Difficulty Toggle -->
@@ -37,10 +37,6 @@
                     <span class="diff-icon">🔥</span>
                     <span class="diff-label">Expert</span>
                 </button>
-                <a href="{{ url_for('onboarding') }}" class="difficulty-btn profile-quiz-btn">
-                    <span class="diff-icon">🧠</span>
-                    <span class="diff-label">Profile Builder</span>
-                </a>
             </div>
 
             <button id="start-game-btn" class="play-button" style="margin: 1rem auto 0; display: flex;">
@@ -285,22 +281,21 @@ async function initGame() {
         const data = await res.json();
 
         if (data.authenticated) {
-            // Google user - show their name
+            // Google user
             currentUsername = data.user.username;
             isGoogleUser = true;
-            document.getElementById('player-name').textContent = currentUsername;
-            document.getElementById('player-name-wrapper').style.display = 'inline';
             localStorage.setItem('uptriv_username', currentUsername);
             await loadDifficulty();
             showScreen('ready-screen');
+            checkOnboardingComplete();
         } else {
-            // Anonymous user - create or get session, hide name
+            // Anonymous user - create or get session
             const session = await getOrCreateSession();
             if (session) {
                 currentUsername = session.username;
-                document.getElementById('player-name-wrapper').style.display = 'none';
                 await loadDifficulty();
                 showScreen('ready-screen');
+                checkOnboardingComplete();
             } else {
                 // Fallback to login screen if session creation fails
                 showScreen('login-screen');
@@ -313,9 +308,9 @@ async function initGame() {
             const session = await getOrCreateSession();
             if (session) {
                 currentUsername = session.username;
-                document.getElementById('player-name-wrapper').style.display = 'none';
                 await loadDifficulty();
                 showScreen('ready-screen');
+                checkOnboardingComplete();
             } else {
                 showScreen('login-screen');
             }
@@ -373,6 +368,28 @@ document.getElementById('start-game-btn').addEventListener('click', async () => 
         alert('Error starting game: ' + err.message);
     }
 });
+
+// Show Profile Builder only if onboarding is NOT complete
+async function checkOnboardingComplete() {
+    try {
+        const params = new URLSearchParams();
+        if (anonymousId) params.set('anonymous_id', anonymousId);
+        const res = await fetch(`/api/onboarding-status?${params.toString()}`);
+        const data = await res.json();
+        if (!data.is_complete) {
+            const toggle = document.querySelector('#ready-screen .difficulty-toggle');
+            if (toggle) {
+                const link = document.createElement('a');
+                link.href = '{{ url_for("onboarding") }}';
+                link.className = 'difficulty-btn profile-quiz-btn';
+                link.innerHTML = '<span class="diff-icon">🧠</span><span class="diff-label">Profile Builder</span>';
+                toggle.appendChild(link);
+            }
+        }
+    } catch (e) {
+        console.error('Error checking onboarding status:', e);
+    }
+}
 
 // Initialize on page load
 initGame();

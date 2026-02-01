@@ -1438,8 +1438,9 @@ def get_daily_questions_for_user(user_id):
     recently_used = get_recently_used_questions(difficulty, days=7)
 
     # Generate questions using date + difficulty as seed
+    # Use an isolated Random instance to avoid thread-safety issues with the global random state
     seed = int(hashlib.md5(f"{today}-{difficulty}".encode()).hexdigest(), 16)
-    random.seed(seed)
+    rng = random.Random(seed)
 
     # Choose question bank based on difficulty
     question_bank = HARD_QUESTIONS if difficulty == 'hard' else QUESTIONS
@@ -1456,7 +1457,7 @@ def get_daily_questions_for_user(user_id):
             available = category_questions
 
         # Use seeded random to pick consistently
-        q = random.choice(available)
+        q = rng.choice(available)
         questions.append({
             'category': cat_key,
             'category_name': CATEGORIES[cat_key]['name'],
@@ -1465,7 +1466,7 @@ def get_daily_questions_for_user(user_id):
             **q
         })
 
-    random.shuffle(questions)
+    rng.shuffle(questions)
 
     # Cache for this user
     cur.execute(
@@ -1486,7 +1487,7 @@ def calculate_user_stats(user_id):
     placeholder = '%s' if USE_POSTGRES else '?'
 
     cur.execute(f'''
-        SELECT category, subcategory, correct, time_taken
+        SELECT category, subcategory, correct, time_taken, COALESCE(difficulty, 'easy') as difficulty
         FROM game_results
         WHERE user_id = {placeholder}
     ''', (user_id,))
@@ -1505,14 +1506,30 @@ def calculate_user_stats(user_id):
 
     cat_stats = {cat: {'correct': 0, 'total': 0} for cat in CATEGORIES}
     sub_stats = {}
+    # Per-difficulty tracking
+    diff_cat_stats = {cat: {'easy_correct': 0, 'easy_total': 0, 'hard_correct': 0, 'hard_total': 0} for cat in CATEGORIES}
+    overall_diff = {'easy_correct': 0, 'easy_total': 0, 'hard_correct': 0, 'hard_total': 0}
 
     for r in results:
         cat = r['category']
         sub = r['subcategory']
         correct = r['correct']
+        difficulty = r['difficulty'] if r['difficulty'] in ('easy', 'hard') else 'easy'
 
         cat_stats[cat]['total'] += 1
         cat_stats[cat]['correct'] += correct
+
+        # Track per-difficulty
+        if difficulty == 'hard':
+            diff_cat_stats[cat]['hard_total'] += 1
+            diff_cat_stats[cat]['hard_correct'] += correct
+            overall_diff['hard_total'] += 1
+            overall_diff['hard_correct'] += correct
+        else:
+            diff_cat_stats[cat]['easy_total'] += 1
+            diff_cat_stats[cat]['easy_correct'] += correct
+            overall_diff['easy_total'] += 1
+            overall_diff['easy_correct'] += correct
 
         if sub not in sub_stats:
             sub_stats[sub] = {'correct': 0, 'total': 0, 'category': cat}
@@ -1525,6 +1542,14 @@ def calculate_user_stats(user_id):
             cat_stats[cat]['percentage'] = round(cat_stats[cat]['correct'] / total * 100)
         else:
             cat_stats[cat]['percentage'] = 0
+        # Merge difficulty stats into category stats
+        ds = diff_cat_stats[cat]
+        cat_stats[cat]['easy_correct'] = ds['easy_correct']
+        cat_stats[cat]['easy_total'] = ds['easy_total']
+        cat_stats[cat]['easy_percentage'] = round(ds['easy_correct'] / ds['easy_total'] * 100) if ds['easy_total'] > 0 else 0
+        cat_stats[cat]['hard_correct'] = ds['hard_correct']
+        cat_stats[cat]['hard_total'] = ds['hard_total']
+        cat_stats[cat]['hard_percentage'] = round(ds['hard_correct'] / ds['hard_total'] * 100) if ds['hard_total'] > 0 else 0
 
     for sub in sub_stats:
         total = sub_stats[sub]['total']
@@ -1558,6 +1583,9 @@ def calculate_user_stats(user_id):
     total_questions = sum(cat_stats[c]['total'] for c in cat_stats)
     overall = round(total_correct / total_questions * 100) if total_questions > 0 else 0
 
+    overall_easy_pct = round(overall_diff['easy_correct'] / overall_diff['easy_total'] * 100) if overall_diff['easy_total'] > 0 else 0
+    overall_hard_pct = round(overall_diff['hard_correct'] / overall_diff['hard_total'] * 100) if overall_diff['hard_total'] > 0 else 0
+
     return {
         'total_games': total_questions // 6,
         'total_questions': total_questions,
@@ -1565,7 +1593,11 @@ def calculate_user_stats(user_id):
         'subcategories': sub_stats,
         'strengths': strengths,
         'weaknesses': weaknesses,
-        'overall_percentage': overall
+        'overall_percentage': overall,
+        'overall_easy_percentage': overall_easy_pct,
+        'overall_easy_total': overall_diff['easy_total'],
+        'overall_hard_percentage': overall_hard_pct,
+        'overall_hard_total': overall_diff['hard_total']
     }
 
 
@@ -1962,6 +1994,15 @@ def get_or_create_anonymous_session():
             cur.execute(f'SELECT * FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
             user = cur.fetchone()
             if user:
+                # Record a visit so this user appears in admin active users
+                ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+                if ip and ',' in ip:
+                    ip = ip.split(',')[0].strip()
+                cur.execute(f'''
+                    INSERT INTO visits (path, ip_address, user_agent, user_id)
+                    VALUES ({ph}, {ph}, {ph}, {ph})
+                ''', ('/play', ip, request.user_agent.string[:500], user['id']))
+                conn.commit()
                 conn.close()
                 resp = jsonify({
                     'success': True,
@@ -1989,6 +2030,16 @@ def get_or_create_anonymous_session():
         # Get the new user's ID
         cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (new_anonymous_id,))
         new_user = cur.fetchone()
+
+        # Record a visit so this user appears in admin active users
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        if ip and ',' in ip:
+            ip = ip.split(',')[0].strip()
+        cur.execute(f'''
+            INSERT INTO visits (path, ip_address, user_agent, user_id)
+            VALUES ({ph}, {ph}, {ph}, {ph})
+        ''', ('/play', ip, request.user_agent.string[:500], new_user['id']))
+        conn.commit()
         conn.close()
 
         resp = jsonify({
@@ -2563,6 +2614,45 @@ def admin_page():
         daily_stats=daily_stats,
         today_logins=today_logins
     )
+
+
+@app.route('/admin/flush-questions', methods=['POST'])
+@login_required
+def flush_daily_questions():
+    """Admin-only: clear today's cached questions to force regeneration."""
+    if not current_user.email or current_user.email not in ADMIN_EMAILS:
+        return redirect(url_for('index'))
+
+    data = request.get_json() or {}
+    difficulty = data.get('difficulty', 'all')
+
+    today = get_user_today().isoformat()
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    if difficulty == 'all':
+        cur.execute(f'DELETE FROM daily_questions WHERE game_date = {ph}', (today,))
+    else:
+        # Delete cached questions matching the specified difficulty
+        # questions_json contains the difficulty field inside the JSON
+        cur.execute(f'SELECT id, questions_json FROM daily_questions WHERE game_date = {ph}', (today,))
+        rows = cur.fetchall()
+        ids_to_delete = []
+        for row in rows:
+            try:
+                questions = json.loads(row['questions_json'])
+                if questions and questions[0].get('difficulty') == difficulty:
+                    ids_to_delete.append(row['id'])
+            except:
+                pass
+        for row_id in ids_to_delete:
+            cur.execute(f'DELETE FROM daily_questions WHERE id = {ph}', (row_id,))
+
+    deleted = cur.rowcount if difficulty == 'all' else len(ids_to_delete)
+    conn.commit()
+    conn.close()
+    return jsonify({'success': True, 'deleted': deleted, 'date': today, 'difficulty': difficulty})
 
 
 # ============ GAME API ROUTES ============
