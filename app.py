@@ -1354,9 +1354,9 @@ def get_recently_used_questions(difficulty, days=7):
     cur = conn.cursor()
     ph = get_placeholder()
 
-    # Get recent dates
+    # Get recent dates (include today to prevent cross-difficulty duplicates)
     today = get_user_today()
-    recent_dates = [(today - timedelta(days=i)).isoformat() for i in range(1, days + 1)]
+    recent_dates = [(today - timedelta(days=i)).isoformat() for i in range(0, days + 1)]
 
     if not recent_dates:
         conn.close()
@@ -1456,8 +1456,14 @@ def get_daily_questions_for_user(user_id):
         if not available:
             available = category_questions
 
-        # Use seeded random to pick consistently
-        q = rng.choice(available)
+        # Use seeded random to pick, then fallback if it's still a recent repeat
+        rng.shuffle(available)
+        q = available[0]
+        for candidate in available:
+            if candidate['q'] not in recently_used:
+                q = candidate
+                break
+
         questions.append({
             'category': cat_key,
             'category_name': CATEGORIES[cat_key]['name'],
@@ -2695,7 +2701,7 @@ def preview_questions():
     conn = get_db()
     cur = conn.cursor()
     ph = get_placeholder()
-    recent_dates = [(preview_date - timedelta(days=i)).isoformat() for i in range(1, 8)]
+    recent_dates = [(preview_date - timedelta(days=i)).isoformat() for i in range(0, 8)]
     if recent_dates:
         placeholders = ','.join([ph] * len(recent_dates))
         cur.execute(f'''
@@ -2723,7 +2729,12 @@ def preview_questions():
             available = [q for q in category_questions if q['q'] not in recently_used]
             if not available:
                 available = category_questions
-            q = rng.choice(available)
+            rng.shuffle(available)
+            q = available[0]
+            for candidate in available:
+                if candidate['q'] not in recently_used:
+                    q = candidate
+                    break
             questions.append({
                 'category': cat_key,
                 'category_name': CATEGORIES[cat_key]['name'],
