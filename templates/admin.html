@@ -100,6 +100,22 @@
             <div id="flush-result" style="margin-top: 1rem; font-size: 0.85rem; display: none;"></div>
         </div>
 
+        <!-- Preview Tomorrow's Questions -->
+        <div class="admin-card" style="grid-column: 1 / -1;">
+            <h2>Preview Future Questions</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                Generate and preview questions for a future date. Read-only — nothing is cached or saved.
+            </p>
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <input type="date" id="preview-date" class="preview-date-input">
+                <button onclick="previewQuestions()" class="flush-btn" style="background: #10b981; color: white;">Preview Questions</button>
+            </div>
+            <div id="preview-result" style="margin-top: 1.5rem; display: none;">
+                <p id="preview-date-label" style="font-weight: 600; margin-bottom: 1rem;"></p>
+                <div id="preview-sections"></div>
+            </div>
+        </div>
+
         <!-- Today's Logins -->
         <div class="admin-card">
             <h2>Active Users Today ({{ today_logins|length }})</h2>
@@ -349,6 +365,53 @@
     color: white;
 }
 
+.preview-date-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.preview-section {
+    margin-bottom: 1.5rem;
+}
+
+.preview-section h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.preview-table th,
+.preview-table td {
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.preview-table th {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.preview-cat-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+}
+
 @media (max-width: 600px) {
     .admin-container {
         padding: 1rem;
@@ -367,6 +430,61 @@
 
 {% block scripts %}
 <script>
+// Set default preview date to tomorrow
+(function() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('preview-date').value = tomorrow.toISOString().split('T')[0];
+})();
+
+async function previewQuestions() {
+    const dateInput = document.getElementById('preview-date').value;
+    const resultEl = document.getElementById('preview-result');
+    const dateLabel = document.getElementById('preview-date-label');
+    const sectionsEl = document.getElementById('preview-sections');
+
+    resultEl.style.display = 'block';
+    sectionsEl.innerHTML = '<p style="color: var(--text-secondary);">Loading...</p>';
+    dateLabel.textContent = '';
+
+    try {
+        const body = dateInput ? { date: dateInput } : {};
+        const res = await fetch('/admin/preview-questions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!data.success) {
+            sectionsEl.innerHTML = `<p style="color: #ef4444;">Error: ${data.error || 'Unknown error'}</p>`;
+            return;
+        }
+
+        dateLabel.textContent = `Questions for ${data.date}`;
+        let html = '';
+
+        for (const [label, questions] of [['Normal', data.questions.normal], ['Expert', data.questions.expert]]) {
+            html += `<div class="preview-section"><h3>${label} (${questions.length} questions)</h3>`;
+            html += `<table class="preview-table"><thead><tr><th>#</th><th>Category</th><th>Question</th><th>Answer</th><th>Options</th></tr></thead><tbody>`;
+            questions.forEach((q, i) => {
+                const options = (q.options || []).join(', ');
+                html += `<tr>
+                    <td>${i + 1}</td>
+                    <td><span class="preview-cat-badge" style="background:${q.color}">${q.category_name}</span></td>
+                    <td>${q.q}</td>
+                    <td><strong>${q.answer}</strong></td>
+                    <td style="font-size:0.8rem;color:var(--text-secondary)">${options}</td>
+                </tr>`;
+            });
+            html += '</tbody></table></div>';
+        }
+
+        sectionsEl.innerHTML = html;
+    } catch (e) {
+        sectionsEl.innerHTML = `<p style="color: #ef4444;">Request failed: ${e.message}</p>`;
+    }
+}
+
 async function flushQuestions(difficulty) {
     const resultEl = document.getElementById('flush-result');
     resultEl.style.display = 'block';

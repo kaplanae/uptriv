@@ -2672,6 +2672,76 @@ def flush_daily_questions():
     })
 
 
+@app.route('/admin/preview-questions', methods=['POST'])
+@login_required
+def preview_questions():
+    """Admin-only: generate questions for a future date without caching anything."""
+    if not current_user.email or current_user.email not in ADMIN_EMAILS:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    data = request.get_json() or {}
+    date_str = data.get('date')
+
+    if date_str:
+        try:
+            preview_date = date.fromisoformat(date_str)
+        except ValueError:
+            return jsonify({'error': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+    else:
+        preview_date = get_user_today() + timedelta(days=1)
+
+    # Get recently used questions (same 7-day window relative to preview date)
+    recently_used = set()
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+    recent_dates = [(preview_date - timedelta(days=i)).isoformat() for i in range(1, 8)]
+    if recent_dates:
+        placeholders = ','.join([ph] * len(recent_dates))
+        cur.execute(f'''
+            SELECT DISTINCT questions_json FROM daily_questions
+            WHERE game_date IN ({placeholders})
+        ''', tuple(recent_dates))
+        for row in cur.fetchall():
+            try:
+                questions = json.loads(row['questions_json'])
+                for q in questions:
+                    recently_used.add(q.get('q'))
+            except:
+                pass
+    conn.close()
+
+    result = {}
+    for difficulty in ['easy', 'hard']:
+        seed = int(hashlib.md5(f"{preview_date.isoformat()}-{difficulty}".encode()).hexdigest(), 16)
+        rng = random.Random(seed)
+        question_bank = HARD_QUESTIONS if difficulty == 'hard' else QUESTIONS
+
+        questions = []
+        for cat_key in ['news', 'history', 'science', 'entertainment', 'sports', 'geography']:
+            category_questions = question_bank[cat_key]
+            available = [q for q in category_questions if q['q'] not in recently_used]
+            if not available:
+                available = category_questions
+            q = rng.choice(available)
+            questions.append({
+                'category': cat_key,
+                'category_name': CATEGORIES[cat_key]['name'],
+                'color': CATEGORIES[cat_key]['color'],
+                'difficulty': difficulty,
+                **q
+            })
+        rng.shuffle(questions)
+        label = 'normal' if difficulty == 'easy' else 'expert'
+        result[label] = questions
+
+    return jsonify({
+        'success': True,
+        'date': preview_date.isoformat(),
+        'questions': result
+    })
+
+
 # ============ GAME API ROUTES ============
 
 @app.route('/api/debug-time')
