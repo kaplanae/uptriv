@@ -15,8 +15,6 @@
             <nav>
                 <a href="{{ url_for('index') }}" class="logo">Up<span class="logo-accent">Triv</span></a>
                 <div class="nav-links">
-                    <a href="{{ url_for('index') }}" id="nav-home">Home</a>
-                    <a href="{{ url_for('play') }}">Play</a>
                     <a href="{{ url_for('history') }}">Profile</a>
                     <a href="{{ url_for('friends_page') }}" class="auth-only" style="display:none;">Friends</a>
                     <a href="{{ url_for('leaderboard_page') }}" class="auth-only" style="display:none;">Leaderboard</a>
@@ -53,14 +51,6 @@
     {% block scripts %}{% endblock %}
 
     <script>
-    // Hide Home link if already on the home page
-    (function() {
-        const homeLink = document.getElementById('nav-home');
-        if (homeLink && window.location.pathname === '/') {
-            homeLink.style.display = 'none';
-        }
-    })();
-
     // Check auth status and update UI
     async function checkAuth() {
         try {
