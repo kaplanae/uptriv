@@ -1348,27 +1348,25 @@ def get_user_difficulty(user_id):
     return result['difficulty'] if result and result['difficulty'] else 'easy'
 
 
-def get_recently_used_questions(difficulty, days=7):
-    """Get questions used in the last N days to avoid repeats across ALL modes."""
+def get_recently_used_questions(difficulty, days=None):
+    """Get all previously used questions to avoid repeats across ALL modes.
+    If days is None, checks all history. Otherwise limits to N days."""
     conn = get_db()
     cur = conn.cursor()
     ph = get_placeholder()
 
-    # Get recent dates (include today to prevent cross-difficulty duplicates)
-    today = get_user_today()
-    recent_dates = [(today - timedelta(days=i)).isoformat() for i in range(0, days + 1)]
-
-    if not recent_dates:
-        conn.close()
-        return set()
-
-    # Query recent questions from daily_questions table
+    # Query questions from daily_questions table
     # We look for any user's cached questions since they're the same for all users at same difficulty
-    placeholders = ','.join([ph] * len(recent_dates))
-    cur.execute(f'''
-        SELECT DISTINCT questions_json FROM daily_questions
-        WHERE game_date IN ({placeholders})
-    ''', tuple(recent_dates))
+    if days is not None:
+        today = get_user_today()
+        recent_dates = [(today - timedelta(days=i)).isoformat() for i in range(0, days + 1)]
+        placeholders = ','.join([ph] * len(recent_dates))
+        cur.execute(f'''
+            SELECT DISTINCT questions_json FROM daily_questions
+            WHERE game_date IN ({placeholders})
+        ''', tuple(recent_dates))
+    else:
+        cur.execute('SELECT DISTINCT questions_json FROM daily_questions')
 
     results = cur.fetchall()
     conn.close()
@@ -1435,7 +1433,7 @@ def get_daily_questions_for_user(user_id):
             pass
 
     # Get recently used questions to avoid repeats
-    recently_used = get_recently_used_questions(difficulty, days=7)
+    recently_used = get_recently_used_questions(difficulty)
 
     # Generate questions using date + difficulty as seed
     # Use an isolated Random instance to avoid thread-safety issues with the global random state
@@ -2696,25 +2694,18 @@ def preview_questions():
     else:
         preview_date = get_user_today() + timedelta(days=1)
 
-    # Get recently used questions (same 7-day window relative to preview date)
-    recently_used = set()
+    # Get all previously used questions to avoid repeats
     conn = get_db()
     cur = conn.cursor()
-    ph = get_placeholder()
-    recent_dates = [(preview_date - timedelta(days=i)).isoformat() for i in range(0, 8)]
-    if recent_dates:
-        placeholders = ','.join([ph] * len(recent_dates))
-        cur.execute(f'''
-            SELECT DISTINCT questions_json FROM daily_questions
-            WHERE game_date IN ({placeholders})
-        ''', tuple(recent_dates))
-        for row in cur.fetchall():
-            try:
-                questions = json.loads(row['questions_json'])
-                for q in questions:
-                    recently_used.add(q.get('q'))
-            except:
-                pass
+    cur.execute('SELECT DISTINCT questions_json FROM daily_questions')
+    recently_used = set()
+    for row in cur.fetchall():
+        try:
+            questions = json.loads(row['questions_json'])
+            for q in questions:
+                recently_used.add(q.get('q'))
+        except:
+            pass
     conn.close()
 
     result = {}
