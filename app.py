@@ -3449,6 +3449,8 @@ def api_leaderboard():
                   'profile_picture': current_user.profile_picture, 'is_self': True}]
 
     for friend in friends:
+        if friend['id'] == current_user.id:
+            continue
         friend['is_self'] = False
         all_users.append(friend)
 
