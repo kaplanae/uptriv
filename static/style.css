@@ -1588,12 +1588,42 @@ footer {
 }
 
 .recommendation-card {
+    position: relative;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-left: 4px solid var(--accent-primary);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rec-dismiss-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary, #888);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+    opacity: 0;
+}
+
+.recommendation-card:hover .rec-dismiss-btn {
+    opacity: 1;
+}
+
+.rec-dismiss-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary, #fff);
 }
 
 .recommendation-card:hover {

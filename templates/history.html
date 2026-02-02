@@ -541,11 +541,12 @@ function renderProfileQuiz(data) {
     }
 }
 
-function renderPlayerSummary(data) {
+function renderPlayerSummary(dataOrSummary) {
     const section = document.getElementById('player-summary-section');
-    const summary = data.player_summary;
+    // Accept either full stats object (with player_summary key) or a summary directly
+    const summary = dataOrSummary.player_summary || dataOrSummary;
 
-    if (!summary) {
+    if (!summary || !summary.skill_level) {
         section.style.display = 'none';
         return;
     }
@@ -609,9 +610,11 @@ function renderPlayerSummary(data) {
             const linkContent = rec.url
                 ? `<a href="${rec.url}" target="_blank" rel="noopener" class="rec-title">${rec.title}</a>`
                 : `<span class="rec-title">${rec.title}</span>`;
+            const safeTitle = rec.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
             return `
-                <div class="recommendation-card" style="border-left-color: ${catColor}">
+                <div class="recommendation-card" data-title="${safeTitle}" style="border-left-color: ${catColor}">
+                    ${!IS_VIEWING_OTHER ? `<button class="rec-dismiss-btn" onclick="dismissRecommendation(this)" title="Dismiss recommendation">&times;</button>` : ''}
                     <div class="rec-header">
                         <span class="rec-type" style="color: ${catColor}">${icon} ${typeLabel}</span>
                         <span class="rec-topic" style="background: ${catColor}22; color: ${catColor}">${rec.topic}</span>
@@ -681,6 +684,46 @@ function showToast() {
     setTimeout(() => {
         toast.classList.remove('show');
     }, 2000);
+}
+
+async function dismissRecommendation(btn) {
+    const card = btn.closest('.recommendation-card');
+    const title = card.dataset.title.replace(/&quot;/g, '"');
+
+    // Fade out the card
+    card.style.transition = 'opacity 0.3s, transform 0.3s';
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.95)';
+
+    try {
+        const res = await fetch('/api/dismiss-recommendation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title })
+        });
+        const data = await res.json();
+
+        // After fade completes, replace content
+        setTimeout(() => {
+            if (data.success && data.player_summary) {
+                renderPlayerSummary(data.player_summary);
+            } else {
+                // Just remove the card
+                card.remove();
+                // Hide section if no cards remain
+                const grid = card.closest('.recommendations-grid');
+                if (grid && grid.children.length === 0) {
+                    const section = grid.closest('.recommendations-section');
+                    if (section) section.style.display = 'none';
+                }
+            }
+        }, 300);
+    } catch (err) {
+        console.error('Error dismissing recommendation:', err);
+        // Revert fade on error
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
+    }
 }
 
 // Initial load

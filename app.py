@@ -1159,6 +1159,15 @@ def init_db():
                 expires_at TIMESTAMP NOT NULL
             )
         ''')
+
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS dismissed_recommendations (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id),
+                title TEXT NOT NULL,
+                dismissed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
     else:
         # SQLite schema
         cur.execute('''
@@ -1226,6 +1235,16 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 expires_at TIMESTAMP NOT NULL,
                 FOREIGN KEY (inviter_id) REFERENCES users(id)
+            )
+        ''')
+
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS dismissed_recommendations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                title TEXT NOT NULL,
+                dismissed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id)
             )
         ''')
 
@@ -1605,10 +1624,13 @@ def calculate_user_stats(user_id):
     }
 
 
-def generate_player_summary(stats):
+def generate_player_summary(stats, dismissed_titles=None):
     """Generate a personalized player summary with analysis and recommendations."""
     if stats['total_questions'] < 6:
         return None  # Not enough data
+
+    if dismissed_titles is None:
+        dismissed_titles = set()
 
     total_questions = stats['total_questions']
     overall = stats['overall_percentage']
@@ -1674,7 +1696,7 @@ def generate_player_summary(stats):
             if sub_name in cat_resources:
                 for resource in cat_resources[sub_name]:
                     resource_key = resource['title']
-                    if resource_key not in seen_resources:
+                    if resource_key not in seen_resources and resource_key not in dismissed_titles:
                         seen_resources.add(resource_key)
                         recommendations.append({
                             'topic': sub_name.replace('_', ' ').title(),
@@ -1695,7 +1717,7 @@ def generate_player_summary(stats):
                     for sub_key, resources in LEARNING_RESOURCES[cat_key].items():
                         for resource in resources:
                             resource_key = resource['title']
-                            if resource_key not in seen_resources:
+                            if resource_key not in seen_resources and resource_key not in dismissed_titles:
                                 seen_resources.add(resource_key)
                                 recommendations.append({
                                     'topic': CATEGORIES[cat_key]['name'],
@@ -1724,7 +1746,7 @@ def generate_player_summary(stats):
             if sub_name in cat_resources:
                 for resource in cat_resources[sub_name]:
                     resource_key = resource['title']
-                    if resource_key not in seen_interest and resource_key not in seen_resources:
+                    if resource_key not in seen_interest and resource_key not in seen_resources and resource_key not in dismissed_titles:
                         seen_interest.add(resource_key)
                         interest_recs.append({
                             'topic': sub_name.replace('_', ' ').title(),
@@ -1743,7 +1765,7 @@ def generate_player_summary(stats):
                     for sub_key, resources in LEARNING_RESOURCES[cat_key].items():
                         for resource in resources:
                             resource_key = resource['title']
-                            if resource_key not in seen_interest and resource_key not in seen_resources:
+                            if resource_key not in seen_interest and resource_key not in seen_resources and resource_key not in dismissed_titles:
                                 seen_interest.add(resource_key)
                                 interest_recs.append({
                                     'topic': CATEGORIES[cat_key]['name'],
@@ -3024,6 +3046,43 @@ def submit_answer():
     })
 
 
+@app.route('/api/dismiss-recommendation', methods=['POST'])
+def dismiss_recommendation():
+    if not current_user.is_authenticated:
+        return jsonify({'error': 'Login required'}), 401
+
+    data = request.get_json()
+    title = data.get('title', '').strip() if data else ''
+    if not title:
+        return jsonify({'error': 'Title is required'}), 400
+
+    user_id = current_user.id
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    # Insert dismissed title (allow duplicates silently)
+    cur.execute(
+        f'INSERT INTO dismissed_recommendations (user_id, title) VALUES ({ph}, {ph})',
+        (user_id, title)
+    )
+    conn.commit()
+
+    # Fetch all dismissed titles for this user
+    cur.execute(f'SELECT title FROM dismissed_recommendations WHERE user_id = {ph}', (user_id,))
+    dismissed_titles = {row['title'] for row in cur.fetchall()}
+    conn.close()
+
+    # Return refreshed recommendations
+    stats = calculate_user_stats(user_id)
+    summary = generate_player_summary(stats, dismissed_titles=dismissed_titles)
+
+    return jsonify({
+        'success': True,
+        'player_summary': summary
+    })
+
+
 @app.route('/api/get-stats', methods=['GET'])
 def get_stats():
     user_id = None
@@ -3044,11 +3103,21 @@ def get_stats():
     if not user_id:
         return jsonify({'error': 'No user specified'}), 400
 
+    # Fetch dismissed titles if user is logged in
+    dismissed_titles = set()
+    if current_user.is_authenticated and user_id == current_user.id:
+        conn = get_db()
+        cur = conn.cursor()
+        ph = get_placeholder()
+        cur.execute(f'SELECT title FROM dismissed_recommendations WHERE user_id = {ph}', (user_id,))
+        dismissed_titles = {row['title'] for row in cur.fetchall()}
+        conn.close()
+
     stats = calculate_user_stats(user_id)
     stats['categories_meta'] = CATEGORIES
 
     # Add player summary with recommendations
-    stats['player_summary'] = generate_player_summary(stats)
+    stats['player_summary'] = generate_player_summary(stats, dismissed_titles=dismissed_titles)
 
     return jsonify(stats)
 
