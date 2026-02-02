@@ -9,6 +9,11 @@
         <p class="leaderboard-subtitle">See how you rank against your friends</p>
     </div>
 
+    <div class="difficulty-toggle">
+        <button class="diff-btn active" data-difficulty="normal">Normal</button>
+        <button class="diff-btn" data-difficulty="expert">Expert</button>
+    </div>
+
     <div class="leaderboard-tabs">
         <button class="tab-btn active" data-category="overall">Overall</button>
         <button class="tab-btn" data-category="news">News</button>
@@ -32,6 +37,7 @@
 <script>
 let leaderboardData = null;
 let currentCategory = 'overall';
+let currentDifficulty = 'normal';
 let currentUsername = null;
 
 // Load leaderboard data
@@ -73,19 +79,31 @@ function showNoFriendsMessage() {
 
 function renderLeaderboard() {
     const container = document.getElementById('leaderboard-content');
+    const diffData = leaderboardData[currentDifficulty];
+
+    if (!diffData) {
+        container.innerHTML = `
+            <div class="no-friends-message">
+                <h3>No Data Yet</h3>
+                <p>Play some games to see rankings!</p>
+                <a href="{{ url_for('play') }}" class="btn btn-primary">Play Now</a>
+            </div>
+        `;
+        return;
+    }
 
     let rankings;
     if (currentCategory === 'overall') {
-        rankings = leaderboardData.overall || [];
+        rankings = diffData.overall || [];
     } else {
-        rankings = (leaderboardData.categories && leaderboardData.categories[currentCategory]) || [];
+        rankings = (diffData.categories && diffData.categories[currentCategory]) || [];
     }
 
     if (rankings.length === 0) {
         container.innerHTML = `
             <div class="no-friends-message">
                 <h3>No Data Yet</h3>
-                <p>Play some games to see rankings for this category!</p>
+                <p>Play some ${currentDifficulty === 'expert' ? 'Expert' : 'Normal'} games to see rankings for this category!</p>
                 <a href="{{ url_for('play') }}" class="btn btn-primary">Play Now</a>
             </div>
         `;
@@ -123,6 +141,18 @@ function renderLeaderboard() {
 
     container.innerHTML = `<div class="leaderboard-table">${rows}</div>`;
 }
+
+// Difficulty toggle
+document.querySelectorAll('.diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDifficulty = btn.dataset.difficulty;
+        if (leaderboardData) {
+            renderLeaderboard();
+        }
+    });
+});
 
 // Tab switching
 document.querySelectorAll('.tab-btn').forEach(btn => {

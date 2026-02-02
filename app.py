@@ -3452,180 +3452,143 @@ def api_leaderboard():
         friend['is_self'] = False
         all_users.append(friend)
 
-    # Calculate stats for all users
-    leaderboard = []
-    category_leaderboards = {cat: [] for cat in CATEGORIES}
+    # Calculate stats for all users — split by difficulty
+    leaderboard_normal = []
+    leaderboard_expert = []
+    category_leaderboards_normal = {cat: [] for cat in CATEGORIES}
+    category_leaderboards_expert = {cat: [] for cat in CATEGORIES}
 
     for user in all_users:
         stats = calculate_user_stats(user['id'])
+        user_info = {
+            'id': user['id'],
+            'username': user['username'],
+            'profile_picture': user.get('profile_picture'),
+            'is_self': user.get('is_self', False)
+        }
 
-        if stats['total_games'] > 0:
-            leaderboard.append({
-                'user': {
-                    'id': user['id'],
-                    'username': user['username'],
-                    'profile_picture': user.get('profile_picture'),
-                    'is_self': user.get('is_self', False)
-                },
-                'percentage': stats['overall_percentage'],
-                'total': stats['total_questions'],
-                'correct': sum(stats['categories'][c]['correct'] for c in stats['categories'])
+        # Normal (easy) overall
+        if stats.get('overall_easy_total', 0) > 0:
+            leaderboard_normal.append({
+                'user': user_info,
+                'percentage': stats['overall_easy_percentage'],
+                'total': stats['overall_easy_total'],
+                'correct': sum(stats['categories'][c].get('easy_correct', 0) for c in stats['categories'])
             })
 
-            # Category-specific leaderboards
-            for cat in CATEGORIES:
-                cat_stats = stats['categories'][cat]
-                if cat_stats['total'] > 0:
-                    category_leaderboards[cat].append({
-                        'user': {
-                            'id': user['id'],
-                            'username': user['username'],
-                            'profile_picture': user.get('profile_picture'),
-                            'is_self': user.get('is_self', False)
-                        },
-                        'percentage': cat_stats['percentage'],
-                        'correct': cat_stats['correct'],
-                        'total': cat_stats['total']
-                    })
+        # Expert (hard) overall
+        if stats.get('overall_hard_total', 0) > 0:
+            leaderboard_expert.append({
+                'user': user_info,
+                'percentage': stats['overall_hard_percentage'],
+                'total': stats['overall_hard_total'],
+                'correct': sum(stats['categories'][c].get('hard_correct', 0) for c in stats['categories'])
+            })
 
-    # Sort leaderboards
-    leaderboard.sort(key=lambda x: (-x['percentage'], -x['total']))
+        # Category-specific leaderboards per difficulty
+        for cat in CATEGORIES:
+            cat_stats = stats['categories'][cat]
+            if cat_stats.get('easy_total', 0) > 0:
+                category_leaderboards_normal[cat].append({
+                    'user': user_info,
+                    'percentage': cat_stats['easy_percentage'],
+                    'correct': cat_stats['easy_correct'],
+                    'total': cat_stats['easy_total']
+                })
+            if cat_stats.get('hard_total', 0) > 0:
+                category_leaderboards_expert[cat].append({
+                    'user': user_info,
+                    'percentage': cat_stats['hard_percentage'],
+                    'correct': cat_stats['hard_correct'],
+                    'total': cat_stats['hard_total']
+                })
 
-    for cat in category_leaderboards:
-        category_leaderboards[cat].sort(key=lambda x: (-x['percentage'], -x['total']))
-
-    # Add ranks
-    for i, entry in enumerate(leaderboard):
-        entry['rank'] = i + 1
-
-    for cat in category_leaderboards:
-        for i, entry in enumerate(category_leaderboards[cat]):
+    # Sort and rank helper
+    def sort_and_rank(lb):
+        lb.sort(key=lambda x: (-x['percentage'], -x['total']))
+        for i, entry in enumerate(lb):
             entry['rank'] = i + 1
 
+    sort_and_rank(leaderboard_normal)
+    sort_and_rank(leaderboard_expert)
+    for cat in CATEGORIES:
+        sort_and_rank(category_leaderboards_normal[cat])
+        sort_and_rank(category_leaderboards_expert[cat])
+
     # Add fake users to fill leaderboard if less than 10 real users
-    fake_users = [
-        {'name': 'Alex', 'pct': 92, 'games': 9},
-        {'name': 'Jordan', 'pct': 88, 'games': 8},
-        {'name': 'Taylor', 'pct': 85, 'games': 9},
-        {'name': 'Morgan', 'pct': 82, 'games': 7},
-        {'name': 'Casey', 'pct': 79, 'games': 6},
-        {'name': 'Riley', 'pct': 76, 'games': 8},
-        {'name': 'Quinn', 'pct': 73, 'games': 5},
-        {'name': 'Avery', 'pct': 70, 'games': 7},
-        {'name': 'Jamie', 'pct': 67, 'games': 4},
-        {'name': 'Drew', 'pct': 64, 'games': 3},
+    fake_users_normal = [
+        {'name': 'Alex', 'pct': 82, 'games': 9},
+        {'name': 'Jordan', 'pct': 78, 'games': 8},
+        {'name': 'Taylor', 'pct': 75, 'games': 9},
+        {'name': 'Morgan', 'pct': 72, 'games': 7},
+        {'name': 'Casey', 'pct': 69, 'games': 6},
+        {'name': 'Riley', 'pct': 66, 'games': 8},
+        {'name': 'Quinn', 'pct': 63, 'games': 5},
+        {'name': 'Avery', 'pct': 60, 'games': 7},
+        {'name': 'Jamie', 'pct': 57, 'games': 4},
+        {'name': 'Drew', 'pct': 54, 'games': 3},
+    ]
+    fake_users_expert = [
+        {'name': 'Alex', 'pct': 50, 'games': 7},
+        {'name': 'Jordan', 'pct': 46, 'games': 6},
+        {'name': 'Taylor', 'pct': 43, 'games': 7},
+        {'name': 'Morgan', 'pct': 40, 'games': 5},
+        {'name': 'Casey', 'pct': 37, 'games': 4},
+        {'name': 'Riley', 'pct': 34, 'games': 6},
+        {'name': 'Quinn', 'pct': 31, 'games': 3},
+        {'name': 'Avery', 'pct': 28, 'games': 5},
+        {'name': 'Jamie', 'pct': 25, 'games': 2},
+        {'name': 'Drew', 'pct': 22, 'games': 2},
     ]
 
     # Category-specific fake data with varied percentages
-    fake_category_data = {
-        'news': [
-            {'name': 'Alex', 'pct': 95, 'games': 8},
-            {'name': 'Morgan', 'pct': 89, 'games': 7},
-            {'name': 'Taylor', 'pct': 84, 'games': 9},
-            {'name': 'Casey', 'pct': 78, 'games': 6},
-            {'name': 'Riley', 'pct': 72, 'games': 5},
-        ],
-        'history': [
-            {'name': 'Jordan', 'pct': 91, 'games': 9},
-            {'name': 'Quinn', 'pct': 86, 'games': 7},
-            {'name': 'Alex', 'pct': 80, 'games': 8},
-            {'name': 'Avery', 'pct': 75, 'games': 6},
-            {'name': 'Drew', 'pct': 68, 'games': 4},
-        ],
-        'science': [
-            {'name': 'Taylor', 'pct': 94, 'games': 9},
-            {'name': 'Casey', 'pct': 87, 'games': 8},
-            {'name': 'Jordan', 'pct': 81, 'games': 7},
-            {'name': 'Jamie', 'pct': 74, 'games': 5},
-            {'name': 'Morgan', 'pct': 69, 'games': 6},
-        ],
-        'entertainment': [
-            {'name': 'Riley', 'pct': 96, 'games': 8},
-            {'name': 'Avery', 'pct': 90, 'games': 9},
-            {'name': 'Quinn', 'pct': 83, 'games': 7},
-            {'name': 'Alex', 'pct': 77, 'games': 6},
-            {'name': 'Taylor', 'pct': 71, 'games': 5},
-        ],
-        'sports': [
-            {'name': 'Morgan', 'pct': 93, 'games': 9},
-            {'name': 'Drew', 'pct': 88, 'games': 7},
-            {'name': 'Riley', 'pct': 82, 'games': 8},
-            {'name': 'Jordan', 'pct': 76, 'games': 6},
-            {'name': 'Casey', 'pct': 70, 'games': 5},
-        ],
-        'geography': [
-            {'name': 'Quinn', 'pct': 92, 'games': 8},
-            {'name': 'Jamie', 'pct': 85, 'games': 7},
-            {'name': 'Avery', 'pct': 79, 'games': 9},
-            {'name': 'Drew', 'pct': 73, 'games': 5},
-            {'name': 'Alex', 'pct': 67, 'games': 6},
-        ],
+    fake_category_normal = {
+        'news': [{'name': 'Alex', 'pct': 85, 'games': 8}, {'name': 'Morgan', 'pct': 79, 'games': 7}, {'name': 'Taylor', 'pct': 74, 'games': 9}, {'name': 'Casey', 'pct': 68, 'games': 6}, {'name': 'Riley', 'pct': 62, 'games': 5}],
+        'history': [{'name': 'Jordan', 'pct': 81, 'games': 9}, {'name': 'Quinn', 'pct': 76, 'games': 7}, {'name': 'Alex', 'pct': 70, 'games': 8}, {'name': 'Avery', 'pct': 65, 'games': 6}, {'name': 'Drew', 'pct': 58, 'games': 4}],
+        'science': [{'name': 'Taylor', 'pct': 84, 'games': 9}, {'name': 'Casey', 'pct': 77, 'games': 8}, {'name': 'Jordan', 'pct': 71, 'games': 7}, {'name': 'Jamie', 'pct': 64, 'games': 5}, {'name': 'Morgan', 'pct': 59, 'games': 6}],
+        'entertainment': [{'name': 'Riley', 'pct': 86, 'games': 8}, {'name': 'Avery', 'pct': 80, 'games': 9}, {'name': 'Quinn', 'pct': 73, 'games': 7}, {'name': 'Alex', 'pct': 67, 'games': 6}, {'name': 'Taylor', 'pct': 61, 'games': 5}],
+        'sports': [{'name': 'Morgan', 'pct': 83, 'games': 9}, {'name': 'Drew', 'pct': 78, 'games': 7}, {'name': 'Riley', 'pct': 72, 'games': 8}, {'name': 'Jordan', 'pct': 66, 'games': 6}, {'name': 'Casey', 'pct': 60, 'games': 5}],
+        'geography': [{'name': 'Quinn', 'pct': 82, 'games': 8}, {'name': 'Jamie', 'pct': 75, 'games': 7}, {'name': 'Avery', 'pct': 69, 'games': 9}, {'name': 'Drew', 'pct': 63, 'games': 5}, {'name': 'Alex', 'pct': 57, 'games': 6}],
+    }
+    fake_category_expert = {
+        'news': [{'name': 'Alex', 'pct': 52, 'games': 6}, {'name': 'Morgan', 'pct': 46, 'games': 5}, {'name': 'Taylor', 'pct': 41, 'games': 7}, {'name': 'Casey', 'pct': 35, 'games': 4}, {'name': 'Riley', 'pct': 30, 'games': 3}],
+        'history': [{'name': 'Jordan', 'pct': 48, 'games': 7}, {'name': 'Quinn', 'pct': 43, 'games': 5}, {'name': 'Alex', 'pct': 38, 'games': 6}, {'name': 'Avery', 'pct': 32, 'games': 4}, {'name': 'Drew', 'pct': 26, 'games': 3}],
+        'science': [{'name': 'Taylor', 'pct': 51, 'games': 7}, {'name': 'Casey', 'pct': 44, 'games': 6}, {'name': 'Jordan', 'pct': 39, 'games': 5}, {'name': 'Jamie', 'pct': 33, 'games': 3}, {'name': 'Morgan', 'pct': 27, 'games': 4}],
+        'entertainment': [{'name': 'Riley', 'pct': 53, 'games': 6}, {'name': 'Avery', 'pct': 47, 'games': 7}, {'name': 'Quinn', 'pct': 40, 'games': 5}, {'name': 'Alex', 'pct': 34, 'games': 4}, {'name': 'Taylor', 'pct': 29, 'games': 3}],
+        'sports': [{'name': 'Morgan', 'pct': 50, 'games': 7}, {'name': 'Drew', 'pct': 45, 'games': 5}, {'name': 'Riley', 'pct': 39, 'games': 6}, {'name': 'Jordan', 'pct': 33, 'games': 4}, {'name': 'Casey', 'pct': 28, 'games': 3}],
+        'geography': [{'name': 'Quinn', 'pct': 49, 'games': 6}, {'name': 'Jamie', 'pct': 42, 'games': 5}, {'name': 'Avery', 'pct': 36, 'games': 7}, {'name': 'Drew', 'pct': 30, 'games': 3}, {'name': 'Alex', 'pct': 25, 'games': 4}],
     }
 
-    def add_fake_users_to_overall(lb, fakes):
+    def add_fakes(lb, fakes, questions_per_game=6):
         if len(lb) < 10:
-            existing_count = len(lb)
             for i, fake in enumerate(fakes):
                 if len(lb) >= 10:
                     break
-                total = fake['games'] * 6  # Convert games to questions (6 per game)
+                total = fake['games'] * questions_per_game
                 correct = int(total * fake['pct'] / 100)
                 lb.append({
-                    'user': {
-                        'id': -1 - i,
-                        'username': fake['name'],
-                        'profile_picture': None,
-                        'is_self': False,
-                        'is_fake': True
-                    },
-                    'percentage': fake['pct'],
-                    'total': total,
-                    'correct': correct,
-                    'rank': existing_count + i + 1
+                    'user': {'id': -1 - i, 'username': fake['name'], 'profile_picture': None, 'is_self': False, 'is_fake': True},
+                    'percentage': fake['pct'], 'total': total, 'correct': correct
                 })
-            # Re-sort and re-rank
-            lb.sort(key=lambda x: (-x['percentage'], -x.get('total', 0)))
-            for i, entry in enumerate(lb):
-                entry['rank'] = i + 1
+            sort_and_rank(lb)
 
-    def add_fake_users_to_category(lb, fakes):
-        if len(lb) < 10:
-            existing_count = len(lb)
-            for i, fake in enumerate(fakes):
-                if len(lb) >= 10:
-                    break
-                # Category leaderboards use 'correct' and 'total' instead of 'games_played'
-                total = fake['games']
-                correct = int(total * fake['pct'] / 100)
-                lb.append({
-                    'user': {
-                        'id': -1 - i,
-                        'username': fake['name'],
-                        'profile_picture': None,
-                        'is_self': False,
-                        'is_fake': True
-                    },
-                    'percentage': fake['pct'],
-                    'correct': correct,
-                    'total': total,
-                    'rank': existing_count + i + 1
-                })
-            # Re-sort and re-rank
-            lb.sort(key=lambda x: (-x['percentage'], -x.get('total', 0)))
-            for i, entry in enumerate(lb):
-                entry['rank'] = i + 1
-
-    # Add fake users to overall leaderboard
-    add_fake_users_to_overall(leaderboard, fake_users)
-
-    # Add fake users to each category leaderboard
-    for cat in category_leaderboards:
-        if cat in fake_category_data:
-            add_fake_users_to_category(category_leaderboards[cat], fake_category_data[cat])
+    add_fakes(leaderboard_normal, fake_users_normal)
+    add_fakes(leaderboard_expert, fake_users_expert)
+    for cat in CATEGORIES:
+        if cat in fake_category_normal:
+            add_fakes(category_leaderboards_normal[cat], fake_category_normal[cat], 1)
+        if cat in fake_category_expert:
+            add_fakes(category_leaderboards_expert[cat], fake_category_expert[cat], 1)
 
     return jsonify({
-        'overall': leaderboard,
-        'categories': category_leaderboards
+        'normal': {
+            'overall': leaderboard_normal,
+            'categories': category_leaderboards_normal
+        },
+        'expert': {
+            'overall': leaderboard_expert,
+            'categories': category_leaderboards_expert
+        }
     })
 
 

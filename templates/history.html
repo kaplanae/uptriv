@@ -44,15 +44,9 @@
                     <span class="games-count" id="games-played">0 games</span>
                 </div>
 
-                <!-- Overall Score Bar -->
-                <div class="overall-stat-row">
-                    <div class="stat-label-row">
-                        <span class="stat-label">Overall</span>
-                        <span class="stat-pct" id="overall-pct">0%</span>
-                    </div>
-                    <div class="bar-chart-track">
-                        <div class="bar-chart-fill" id="overall-bar"></div>
-                    </div>
+                <!-- Overall Score Bars (Normal / Expert) -->
+                <div id="overall-bars">
+                    <!-- Will be populated by JS -->
                 </div>
 
                 <!-- Category Bars -->
@@ -343,71 +337,90 @@ function renderHistory(games) {
     });
 }
 
-function diffBreakdownHtml(easyTotal, easyPct, hardTotal, hardPct) {
-    const parts = [];
-    if (easyTotal > 0) parts.push(`${easyPct}% Normal`);
-    if (hardTotal > 0) parts.push(`${hardPct}% Expert`);
-    if (parts.length > 1) {
-        return `<span class="diff-breakdown">(${parts.join(', ')})</span>`;
-    }
-    return '';
+function pctColor(pct) {
+    if (pct >= 80) return '#22c55e';
+    if (pct >= 60) return '#84cc16';
+    if (pct >= 40) return '#eab308';
+    return '#ef4444';
+}
+
+function diffBarHtml(label, emoji, pct, total, color) {
+    if (total === 0) return '';
+    return `
+        <div class="overall-stat-row">
+            <div class="stat-label-row">
+                <span class="stat-label">${emoji} ${label}</span>
+                <span class="stat-pct">${pct}%</span>
+            </div>
+            <div class="bar-chart-track">
+                <div class="bar-chart-fill" style="width: ${pct}%; background-color: ${color};"></div>
+            </div>
+        </div>
+    `;
 }
 
 function renderOverallStats(data) {
-    // Update overall score
-    const pct = data.overall_percentage;
-    document.getElementById('overall-pct').textContent = `${pct}%`;
     document.getElementById('games-played').textContent = `${data.total_games} game${data.total_games !== 1 ? 's' : ''}`;
 
-    // Update overall bar
-    const overallBar = document.getElementById('overall-bar');
-    overallBar.style.width = `${pct}%`;
+    // Render overall Normal / Expert bars
+    const overallContainer = document.getElementById('overall-bars');
+    const easyPct = data.overall_easy_percentage || 0;
+    const hardPct = data.overall_hard_percentage || 0;
+    const easyTotal = data.overall_easy_total || 0;
+    const hardTotal = data.overall_hard_total || 0;
 
-    // Color based on percentage
-    let color;
-    if (pct >= 80) color = '#22c55e';
-    else if (pct >= 60) color = '#84cc16';
-    else if (pct >= 40) color = '#eab308';
-    else color = '#ef4444';
-    overallBar.style.backgroundColor = color;
+    overallContainer.innerHTML =
+        diffBarHtml('Normal', '🎯', easyPct, easyTotal, pctColor(easyPct)) +
+        diffBarHtml('Expert', '🔥', hardPct, hardTotal, pctColor(hardPct));
 
-    // Show overall difficulty breakdown
-    const overallBreakdown = diffBreakdownHtml(
-        data.overall_easy_total || 0, data.overall_easy_percentage || 0,
-        data.overall_hard_total || 0, data.overall_hard_percentage || 0
-    );
-    if (overallBreakdown) {
-        const overallRow = document.querySelector('.overall-stat-row');
-        const existing = overallRow.querySelector('.diff-breakdown');
-        if (existing) existing.remove();
-        overallRow.insertAdjacentHTML('beforeend', overallBreakdown);
-    }
-
-    // Render category bars
+    // Render category bars — split by Normal / Expert
     const container = document.getElementById('category-stats');
     container.innerHTML = '';
 
     for (const [cat, catMeta] of Object.entries(CATEGORIES)) {
         const stats = data.categories[cat] || { percentage: 0, correct: 0, total: 0 };
-        const breakdown = diffBreakdownHtml(
-            stats.easy_total || 0, stats.easy_percentage || 0,
-            stats.hard_total || 0, stats.hard_percentage || 0
-        );
-        const bar = document.createElement('div');
-        bar.className = 'cat-stat-row';
-        bar.innerHTML = `
-            <div class="stat-label-row">
+        const easyPct = stats.easy_percentage || 0;
+        const hardPct = stats.hard_percentage || 0;
+        const easyTotal = stats.easy_total || 0;
+        const hardTotal = stats.hard_total || 0;
+
+        if (easyTotal === 0 && hardTotal === 0) continue;
+
+        const block = document.createElement('div');
+        block.className = 'cat-stat-row';
+
+        let barsHtml = '';
+        if (easyTotal > 0) {
+            barsHtml += `
+                <div class="diff-bar-row">
+                    <span class="diff-bar-label">🎯</span>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width: ${easyPct}%; background-color: ${catMeta.color}; opacity: 0.7;"></div>
+                    </div>
+                    <span class="diff-bar-pct">${easyPct}%</span>
+                </div>`;
+        }
+        if (hardTotal > 0) {
+            barsHtml += `
+                <div class="diff-bar-row">
+                    <span class="diff-bar-label">🔥</span>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width: ${hardPct}%; background-color: ${catMeta.color};"></div>
+                    </div>
+                    <span class="diff-bar-pct">${hardPct}%</span>
+                </div>`;
+        }
+
+        block.innerHTML = `
+            <div class="stat-label-row" style="margin-bottom: 0.35rem;">
                 <span class="cat-stat-label">
                     <span class="cat-emoji">${CAT_EMOJIS[cat] || '❓'}</span>
                     <span style="color: ${catMeta.color}">${catMeta.name}</span>
                 </span>
-                <span class="stat-pct">${stats.percentage}% ${breakdown}</span>
             </div>
-            <div class="bar-chart-track">
-                <div class="bar-chart-fill" style="width: ${stats.percentage}%; background-color: ${catMeta.color};"></div>
-            </div>
+            ${barsHtml}
         `;
-        container.appendChild(bar);
+        container.appendChild(block);
     }
 
     // Render subcategory breakdown
