@@ -1708,6 +1708,54 @@ def generate_player_summary(stats):
             if len(recommendations) >= 6:
                 break
 
+    # Interest-based recommendations from strong subcategories (>= 70% with >= 3 attempts)
+    interest_recs = []
+    seen_interest = set()
+    strong_subs = []
+    for sub_name, sub_stats in subcategories.items():
+        if sub_stats['total'] >= 3 and sub_stats['percentage'] >= 70:
+            strong_subs.append((sub_name, sub_stats))
+    strong_subs.sort(key=lambda x: x[1]['percentage'], reverse=True)
+
+    for sub_name, sub_stats in strong_subs[:6]:
+        cat = sub_stats['category']
+        if cat in LEARNING_RESOURCES:
+            cat_resources = LEARNING_RESOURCES[cat]
+            if sub_name in cat_resources:
+                for resource in cat_resources[sub_name]:
+                    resource_key = resource['title']
+                    if resource_key not in seen_interest and resource_key not in seen_resources:
+                        seen_interest.add(resource_key)
+                        interest_recs.append({
+                            'topic': sub_name.replace('_', ' ').title(),
+                            'category': cat,
+                            **resource
+                        })
+                        break
+        if len(interest_recs) >= 6:
+            break
+
+    # If not enough, add from strong categories
+    if len(interest_recs) < 4:
+        for cat_key, cat_stats in sorted_cats[:3]:  # 3 best categories
+            if cat_stats['total'] >= 3 and cat_stats['percentage'] >= 60:
+                if cat_key in LEARNING_RESOURCES:
+                    for sub_key, resources in LEARNING_RESOURCES[cat_key].items():
+                        for resource in resources:
+                            resource_key = resource['title']
+                            if resource_key not in seen_interest and resource_key not in seen_resources:
+                                seen_interest.add(resource_key)
+                                interest_recs.append({
+                                    'topic': CATEGORIES[cat_key]['name'],
+                                    'category': cat_key,
+                                    **resource
+                                })
+                                break
+                        if len(interest_recs) >= 6:
+                            break
+            if len(interest_recs) >= 6:
+                break
+
     return {
         'skill_level': skill_level,
         'skill_desc': skill_desc,
@@ -1715,7 +1763,8 @@ def generate_player_summary(stats):
         'weakness_text': weakness_text,
         'total_questions': total_questions,
         'overall': overall,
-        'recommendations': recommendations[:6]  # Max 6 recommendations
+        'recommendations': recommendations[:6],
+        'interest_recs': interest_recs[:6]
     }
 
 

@@ -113,6 +113,19 @@
             </div>
         </div>
 
+        <div class="recommendations-section" id="interests-section" style="display: none;">
+            <h3 class="recommendations-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Based on Your Interests
+            </h3>
+            <p class="recommendations-subtitle">Go deeper in the topics you're great at</p>
+            <div class="recommendations-grid" id="interests-grid">
+                <!-- Will be populated by JS -->
+            </div>
+        </div>
+
         <div class="recommendations-section" id="recommendations-section" style="display: none;">
             <h3 class="recommendations-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -579,33 +592,20 @@ function renderPlayerSummary(data) {
         weaknessEl.style.display = 'none';
     }
 
-    // Render recommendations
-    const recsSection = document.getElementById('recommendations-section');
-    const recsGrid = document.getElementById('recommendations-grid');
+    // Shared rendering for recommendation cards
+    function renderRecCards(recs) {
+        const icons = {
+            'watch': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+            'read': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+            'listen': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>`,
+            'stream': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>`
+        };
+        const typeLabels = { 'watch': 'Watch', 'read': 'Read', 'listen': 'Listen', 'stream': 'Stream' };
 
-    if (summary.recommendations && summary.recommendations.length > 0) {
-        recsSection.style.display = 'block';
-        recsGrid.innerHTML = summary.recommendations.map(rec => {
+        return recs.map(rec => {
             const catColor = CATEGORIES[rec.category]?.color || '#888';
-
-            // Icons for different types
-            const icons = {
-                'watch': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
-                'read': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
-                'listen': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>`,
-                'stream': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>`
-            };
-
-            const typeLabels = {
-                'watch': 'Watch',
-                'read': 'Read',
-                'listen': 'Listen',
-                'stream': 'Stream'
-            };
-
             const icon = icons[rec.type] || icons['read'];
             const typeLabel = typeLabels[rec.type] || 'Read';
-
             const linkContent = rec.url
                 ? `<a href="${rec.url}" target="_blank" rel="noopener" class="rec-title">${rec.title}</a>`
                 : `<span class="rec-title">${rec.title}</span>`;
@@ -621,6 +621,26 @@ function renderPlayerSummary(data) {
                 </div>
             `;
         }).join('');
+    }
+
+    // Render interest-based recommendations (strengths)
+    const interestsSection = document.getElementById('interests-section');
+    const interestsGrid = document.getElementById('interests-grid');
+
+    if (summary.interest_recs && summary.interest_recs.length > 0) {
+        interestsSection.style.display = 'block';
+        interestsGrid.innerHTML = renderRecCards(summary.interest_recs);
+    } else {
+        interestsSection.style.display = 'none';
+    }
+
+    // Render gap-filling recommendations (weaknesses)
+    const recsSection = document.getElementById('recommendations-section');
+    const recsGrid = document.getElementById('recommendations-grid');
+
+    if (summary.recommendations && summary.recommendations.length > 0) {
+        recsSection.style.display = 'block';
+        recsGrid.innerHTML = renderRecCards(summary.recommendations);
     } else {
         recsSection.style.display = 'none';
     }
