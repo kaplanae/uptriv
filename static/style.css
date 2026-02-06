@@ -685,14 +685,15 @@ footer {
     animation: slideUp 0.3s ease backwards;
     outline: none;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-.option-btn:focus {
-    outline: none;
-}
-
+.option-btn:focus,
 .option-btn:focus-visible {
-    border-color: var(--accent-primary);
+    outline: none;
+    border-color: var(--border);
 }
 
 @keyframes slideUp {
@@ -700,9 +701,11 @@ footer {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.option-btn:hover:not(:disabled) {
-    background: var(--bg-hover);
-    border-color: var(--accent-primary);
+@media (hover: hover) and (pointer: fine) {
+    .option-btn:hover:not(:disabled) {
+        background: var(--bg-hover);
+        border-color: var(--accent-primary);
+    }
 }
 
 .option-btn:disabled {
