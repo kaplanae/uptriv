@@ -704,7 +704,7 @@ HARD_QUESTIONS = {
         {'q': 'The Hundred Years\' War was fought primarily between which two countries?', 'a': 'England and France', 'options': ['England and France', 'Spain and Portugal', 'Germany and Italy', 'Austria and Prussia'], 'sub': 'wars'},
         {'q': 'Which US president established the National Park Service?', 'a': 'Woodrow Wilson', 'options': ['Woodrow Wilson', 'Theodore Roosevelt', 'William Taft', 'Calvin Coolidge'], 'sub': 'presidents'},
         {'q': 'The Partition of India in 1947 created which two nations?', 'a': 'India and Pakistan', 'options': ['India and Pakistan', 'India and Bangladesh', 'India and Sri Lanka', 'India and Myanmar'], 'sub': 'modern'},
-        {'q': 'What year was the Battle of Hastings?', 'a': '1066', 'options': ['1066', '1215', '1415', '1066'], 'sub': 'medieval'},
+        {'q': 'What year was the Battle of Hastings?', 'a': '1066', 'options': ['1066', '1215', '1415', '1346'], 'sub': 'medieval'},
         {'q': 'Who was the first Holy Roman Emperor?', 'a': 'Charlemagne', 'options': ['Charlemagne', 'Otto I', 'Frederick I', 'Charles V'], 'sub': 'medieval'},
         {'q': 'The Thirty Years\' War primarily devastated which region?', 'a': 'Central Europe (Germany)', 'options': ['Central Europe (Germany)', 'France', 'England', 'Spain'], 'sub': 'wars'},
         {'q': 'What was the code name for the D-Day invasion?', 'a': 'Operation Overlord', 'options': ['Operation Overlord', 'Operation Torch', 'Operation Market Garden', 'Operation Barbarossa'], 'sub': 'wars'},
