@@ -683,6 +683,16 @@ footer {
     cursor: pointer;
     transition: all 0.2s;
     animation: slideUp 0.3s ease backwards;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.option-btn:focus {
+    outline: none;
+}
+
+.option-btn:focus-visible {
+    border-color: var(--accent-primary);
 }
 
 @keyframes slideUp {
