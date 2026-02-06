@@ -10,6 +10,8 @@ try:
     print("Flask-Login imported")
     from flask_mail import Mail, Message
     print("Flask-Mail imported")
+    import resend
+    print("Resend imported")
     from authlib.integrations.flask_client import OAuth
     print("Authlib imported")
     import sqlite3
@@ -45,6 +47,9 @@ app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@uptriv.app')
 mail = Mail(app)
+
+# Resend setup
+resend.api_key = os.environ.get('RESEND_API_KEY')
 
 # Flask-Login setup
 login_manager = LoginManager()
@@ -3486,12 +3491,13 @@ def api_invite_friend():
 
     # Try to send email, but always return the link as fallback
     email_sent = False
-    if app.config.get('MAIL_USERNAME') and app.config.get('MAIL_PASSWORD'):
+    if resend.api_key:
         try:
-            msg = Message(
-                subject=f'{current_user.username} invited you to UpTriv!',
-                recipients=[email],
-                html=f'''
+            resend.emails.send({
+                "from": "UpTriv <noreply@uptriv.com>",
+                "to": [email],
+                "subject": f"{current_user.username} invited you to UpTriv!",
+                "html": f'''
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h1 style="color: #667eea;">You're Invited to UpTriv!</h1>
                     <p><strong>{current_user.username}</strong> wants you to join them on UpTriv - a daily brain training trivia game.</p>
@@ -3512,11 +3518,10 @@ def api_invite_friend():
                     <p style="color: #666; font-size: 14px;">This invite expires in 7 days.</p>
                 </div>
                 '''
-            )
-            mail.send(msg)
+            })
             email_sent = True
         except Exception as e:
-            print(f"Email error: {e}")
+            print(f"Resend email error: {e}")
 
     if email_sent:
         return jsonify({'success': True, 'message': f'Invite sent to {email}', 'invite_url': invite_url})
