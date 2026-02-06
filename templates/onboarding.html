@@ -405,8 +405,12 @@ function showQuestion() {
     const optionsGrid = document.getElementById('options-grid');
     optionsGrid.innerHTML = '';
 
-    // Shuffle options
-    const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+    // Shuffle options using Fisher-Yates algorithm
+    const shuffledOptions = [...q.options];
+    for (let i = shuffledOptions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+    }
 
     shuffledOptions.forEach((option, i) => {
         const btn = document.createElement('button');
