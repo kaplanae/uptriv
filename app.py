@@ -1796,14 +1796,14 @@ def generate_player_summary(stats, dismissed_titles=None):
 
 
 def get_user_today():
-    """Get today's date adjusted for US Eastern timezone."""
+    """Get today's date adjusted for US Central timezone."""
     from datetime import timezone
     utc_now = datetime.now(timezone.utc)
-    # Offset for US Eastern (UTC-5, or UTC-4 during DST)
-    # Simple approach: subtract 5 hours from UTC
-    eastern_offset = timedelta(hours=-5)
-    eastern_now = utc_now + eastern_offset
-    return eastern_now.date()
+    # Offset for US Central (UTC-6, or UTC-5 during DST)
+    # Simple approach: subtract 6 hours from UTC
+    central_offset = timedelta(hours=-6)
+    central_now = utc_now + central_offset
+    return central_now.date()
 
 def has_played_today(user_id, difficulty=None):
     """Check if user has already played today, optionally at a specific difficulty."""
@@ -2621,12 +2621,12 @@ def admin_page():
     # Get visit stats
     today = get_user_today().isoformat()
 
-    # Today's visits
-    cur.execute(f"SELECT COUNT(*) as count FROM visits WHERE DATE(visited_at) = {ph}", (today,))
+    # Today's visits (convert UTC to Central time)
+    cur.execute(f"SELECT COUNT(*) as count FROM visits WHERE DATE(visited_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') = {ph}", (today,))
     today_visits = cur.fetchone()['count']
 
-    # Today's unique IPs
-    cur.execute(f"SELECT COUNT(DISTINCT ip_address) as count FROM visits WHERE DATE(visited_at) = {ph}", (today,))
+    # Today's unique IPs (convert UTC to Central time)
+    cur.execute(f"SELECT COUNT(DISTINCT ip_address) as count FROM visits WHERE DATE(visited_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') = {ph}", (today,))
     today_unique = cur.fetchone()['count']
 
     # Total visits all time
@@ -2659,23 +2659,25 @@ def admin_page():
     ''')
     page_visits = [dict(row) for row in cur.fetchall()]
 
-    # Daily visits for last 7 days
+    # Daily visits for last 7 days (convert UTC to Central time)
     cur.execute('''
-        SELECT DATE(visited_at) as date, COUNT(*) as visits, COUNT(DISTINCT ip_address) as unique_visitors
+        SELECT DATE(visited_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') as date,
+               COUNT(*) as visits,
+               COUNT(DISTINCT ip_address) as unique_visitors
         FROM visits
-        GROUP BY DATE(visited_at)
+        GROUP BY DATE(visited_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago')
         ORDER BY date DESC
         LIMIT 7
     ''')
     daily_stats = [dict(row) for row in cur.fetchall()]
 
-    # Recent logins (users who visited today)
+    # Recent logins (users who visited today, convert UTC to Central time)
     cur.execute(f'''
         SELECT DISTINCT u.username, u.email, u.profile_picture,
             u.google_id, u.anonymous_id, u.created_at
         FROM visits v
         JOIN users u ON v.user_id = u.id
-        WHERE DATE(v.visited_at) = {ph}
+        WHERE DATE(v.visited_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Chicago') = {ph}
         ORDER BY u.username
     ''', (today,))
     today_logins = [dict(row) for row in cur.fetchall()]
