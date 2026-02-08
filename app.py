@@ -2518,6 +2518,13 @@ def track_visit():
     if request.path.startswith('/api/') or request.path.startswith('/static/'):
         return
 
+    # Only track legitimate app routes (filter out bot spam)
+    valid_paths = {'/', '/play', '/onboarding', '/login', '/history', '/friends',
+                   '/leaderboard', '/admin', '/auth/google', '/auth/google/callback',
+                   '/logout', '/favicon.ico', '/robots.txt'}
+    if request.path not in valid_paths:
+        return
+
     try:
         conn = get_db()
         cur = conn.cursor()
