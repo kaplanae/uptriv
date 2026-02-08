@@ -742,7 +742,7 @@ HARD_QUESTIONS = {
         {'q': 'The Reconquista was the Christian reconquest of which peninsula?', 'a': 'Iberian Peninsula', 'options': ['Iberian Peninsula', 'Italian Peninsula', 'Balkan Peninsula', 'Scandinavian Peninsula'], 'sub': 'medieval'},
         {'q': 'What year did the United States enter World War I?', 'a': '1917', 'options': ['1917', '1914', '1915', '1916'], 'sub': 'wars'},
         {'q': 'The Sepoy Mutiny of 1857 occurred in which country?', 'a': 'India', 'options': ['India', 'China', 'Egypt', 'South Africa'], 'sub': 'world_history'},
-        {'q': 'Who founded the Mongol Empire?', 'a': 'Genghis Khan', 'options': ['Genghis Khan', 'Kublai Khan', 'Tamerlane', 'Attila'], 'sub': 'medieval'},
+        {'q': 'What document did King John sign in 1215?', 'a': 'Magna Carta', 'options': ['Magna Carta', 'Bill of Rights', 'Declaration of Arbroath', 'Domesday Book'], 'sub': 'medieval'},
         {'q': 'The Bay of Pigs invasion was an attempt to overthrow which leader?', 'a': 'Fidel Castro', 'options': ['Fidel Castro', 'Che Guevara', 'Hugo Chavez', 'Daniel Ortega'], 'sub': 'modern'},
         {'q': 'What was the name of the first permanent English settlement in America?', 'a': 'Jamestown', 'options': ['Jamestown', 'Plymouth', 'Roanoke', 'Boston'], 'sub': 'world_history'},
         {'q': 'The Russo-Japanese War ended with what treaty?', 'a': 'Treaty of Portsmouth', 'options': ['Treaty of Portsmouth', 'Treaty of Shimonoseki', 'Treaty of Kanagawa', 'Treaty of Versailles'], 'sub': 'wars'},
