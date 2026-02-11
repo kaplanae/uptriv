@@ -106,14 +106,25 @@
 
     <!-- Results Screen -->
     <div id="results-screen" class="game-screen">
-        <div class="results-card">
-            <h2>Game Complete!</h2>
-            <div class="score-display">
-                <div class="score-circle" id="score-circle">
-                    <span class="score-number" id="score-number">0</span>
-                    <span class="score-label">/ 6</span>
+        <div class="results-card results-card--compact">
+            <!-- Share section at top -->
+            <div class="results-share-section">
+                <div class="results-share-row">
+                    <div class="results-difficulty-label" id="results-difficulty-label"></div>
+                    <div class="results-emoji-row" id="results-emoji-row"></div>
+                    <button class="share-btn" id="results-share-btn" title="Share results">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                    </button>
                 </div>
+                <div class="results-score-line" id="results-score-line"></div>
             </div>
+
             <div class="results-breakdown" id="results-breakdown">
                 <!-- Results will be inserted here -->
             </div>
@@ -134,6 +145,13 @@
                 <a href="{{ url_for('history') }}" class="btn btn-primary">View Profile</a>
                 <p class="come-back">Come back tomorrow for new questions!</p>
             </div>
+        </div>
+
+        <div id="share-toast" class="share-toast">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Copied to clipboard!</span>
         </div>
     </div>
 
@@ -520,6 +538,7 @@ async function selectAnswer(answer) {
         // Store result
         results.push({
             category: questions[currentQuestionIndex].category_name,
+            categoryKey: questions[currentQuestionIndex].category,
             color: questions[currentQuestionIndex].color,
             correct: correct
         });
@@ -590,21 +609,37 @@ function nextQuestion() {
     }
 }
 
+const CAT_EMOJIS = {
+    'news': '🌍',
+    'history': '📜',
+    'science': '🔬',
+    'entertainment': '🎬',
+    'sports': '🏆',
+    'geography': '🗺️'
+};
+
 function showResults() {
     showScreen('results-screen');
 
-    // Update score
-    document.getElementById('score-number').textContent = score;
+    // Difficulty label
+    const diffLabel = document.getElementById('results-difficulty-label');
+    diffLabel.textContent = currentDifficulty === 'hard' ? '🔥 Expert' : '🎯 Normal';
+    diffLabel.className = `results-difficulty-label ${currentDifficulty === 'hard' ? 'hard' : 'easy'}`;
 
-    // Color the score circle based on performance
-    const scoreCircle = document.getElementById('score-circle');
-    if (score === 6) {
-        scoreCircle.classList.add('perfect');
-    } else if (score >= 4) {
-        scoreCircle.classList.add('good');
-    } else {
-        scoreCircle.classList.add('needs-work');
-    }
+    // Emoji row (matches history page style)
+    const emojiRow = document.getElementById('results-emoji-row');
+    emojiRow.innerHTML = results.map(r => {
+        const emoji = CAT_EMOJIS[r.categoryKey] || '❓';
+        const statusClass = r.correct ? 'correct' : 'incorrect';
+        return `<span class="preview-emoji ${statusClass}">${emoji}</span>`;
+    }).join('');
+
+    // Score line
+    const scoreLine = document.getElementById('results-score-line');
+    scoreLine.textContent = `${score} / ${results.length}`;
+
+    // Share button
+    document.getElementById('results-share-btn').onclick = shareResults;
 
     // Show breakdown with percentages
     const breakdown = document.getElementById('results-breakdown');
@@ -628,6 +663,24 @@ function showResults() {
     // Check if user qualifies for hard mode (only for easy mode players)
     if (currentDifficulty === 'easy') {
         checkHardModeEligibility();
+    }
+}
+
+async function shareResults() {
+    // Build share text locally from results
+    const squares = results.map(r => r.correct ? '🟩' : '🟥').join('');
+    const diffLabel = currentDifficulty === 'hard' ? '🔥 Expert' : '🎯 Normal';
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const shareText = `UpTriv ${diffLabel}\n${dateStr}\n${score}/${results.length} ${squares}\nwww.uptriv.com`;
+
+    try {
+        await navigator.clipboard.writeText(shareText);
+        const toast = document.getElementById('share-toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    } catch (err) {
+        console.error('Error copying to clipboard:', err);
     }
 }
 

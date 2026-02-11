@@ -436,6 +436,8 @@ QUESTIONS = {
         {'q': 'What ancient trade route connected China to the Mediterranean?', 'a': 'Silk Road', 'options': ['Silk Road', 'Spice Route', 'Amber Road', 'Tea Road'], 'sub': 'ancient'},
         {'q': 'Who was the first explorer to circumnavigate the globe?', 'a': 'Ferdinand Magellan', 'options': ['Ferdinand Magellan', 'Christopher Columbus', 'Vasco da Gama', 'Francis Drake'], 'sub': 'world_history'},
         {'q': 'What was the primary purpose of the Lewis and Clark expedition?', 'a': 'Explore western territories', 'options': ['Explore western territories', 'Find gold', 'Establish trade', 'Map the coast'], 'sub': 'presidents'},
+        {'q': 'What was the shortest war in recorded history?', 'a': 'Anglo-Zanzibar War', 'options': ['Anglo-Zanzibar War', 'Six-Day War', 'Football War', 'Falklands War'], 'sub': 'wars'},
+        {'q': 'What year was the first email sent?', 'a': '1971', 'options': ['1971', '1969', '1975', '1983'], 'sub': 'modern'},
     ],
     'science': [
         {'q': 'What is the closest planet to the Sun?', 'a': 'Mercury', 'options': ['Mercury', 'Venus', 'Mars', 'Earth'], 'sub': 'space'},
@@ -488,6 +490,8 @@ QUESTIONS = {
         {'q': 'What scale is commonly used to measure the magnitude of earthquakes?', 'a': 'Richter scale', 'options': ['Richter scale', 'Mercalli scale', 'Beaufort scale', 'Mohs scale'], 'sub': 'earth_science'},
         {'q': 'What planet rotates on its side?', 'a': 'Uranus', 'options': ['Uranus', 'Neptune', 'Venus', 'Pluto'], 'sub': 'space'},
         {'q': 'What is the human body\'s largest muscle?', 'a': 'Gluteus maximus', 'options': ['Gluteus maximus', 'Quadriceps', 'Latissimus dorsi', 'Biceps'], 'sub': 'human_body'},
+        {'q': 'What is the name of NASA\'s Mars helicopter?', 'a': 'Ingenuity', 'options': ['Ingenuity', 'Perseverance', 'Curiosity', 'Spirit'], 'sub': 'space'},
+        {'q': 'What year did the Hubble Space Telescope launch?', 'a': '1990', 'options': ['1990', '1985', '1995', '2000'], 'sub': 'space'},
     ],
     'entertainment': [
         {'q': 'Which film won the Academy Award for Best Picture in 2024?', 'a': 'Oppenheimer', 'options': ['Oppenheimer', 'Barbie', 'Killers of the Flower Moon', 'Poor Things'], 'sub': 'movies'},
@@ -592,6 +596,8 @@ QUESTIONS = {
         {'q': 'Which country won the 2022 FIFA World Cup?', 'a': 'Argentina', 'options': ['Argentina', 'France', 'Brazil', 'Croatia'], 'sub': 'soccer'},
         {'q': 'What is the term for three goals in a hockey game by one player?', 'a': 'Hat trick', 'options': ['Hat trick', 'Triple', 'Trifecta', 'Three-peat'], 'sub': 'hockey'},
         {'q': 'Who is the all-time leading scorer in FIFA World Cup history?', 'a': 'Miroslav Klose', 'options': ['Miroslav Klose', 'Ronaldo', 'Pelé', 'Gerd Müller'], 'sub': 'soccer'},
+        {'q': 'What city is hosting the 2026 Winter Olympics?', 'a': 'Milan-Cortina', 'options': ['Milan-Cortina', 'Salt Lake City', 'Sapporo', 'Barcelona'], 'sub': 'olympics'},
+        {'q': 'Which three countries are co-hosting the 2026 FIFA World Cup?', 'a': 'USA, Canada, Mexico', 'options': ['USA, Canada, Mexico', 'USA, UK, Ireland', 'Spain, Portugal, Morocco', 'Germany, Austria, Switzerland'], 'sub': 'soccer'},
     ],
     'geography': [
         {'q': 'What is the capital of Australia?', 'a': 'Canberra', 'options': ['Canberra', 'Sydney', 'Melbourne', 'Brisbane'], 'sub': 'capitals'},
@@ -750,6 +756,8 @@ HARD_QUESTIONS = {
         {'q': 'The Dreyfus Affair was a political scandal in which country?', 'a': 'France', 'options': ['France', 'Germany', 'Britain', 'Russia'], 'sub': 'modern'},
         {'q': 'What was the primary cause of the Taiping Rebellion?', 'a': 'Religious and political reform', 'options': ['Religious and political reform', 'Foreign invasion', 'Famine', 'Tax revolt'], 'sub': 'world_history'},
         {'q': 'The Nuremberg Trials prosecuted leaders of which regime?', 'a': 'Nazi Germany', 'options': ['Nazi Germany', 'Imperial Japan', 'Fascist Italy', 'Soviet Union'], 'sub': 'wars'},
+        {'q': 'Who is credited as the first computer programmer?', 'a': 'Ada Lovelace', 'options': ['Ada Lovelace', 'Charles Babbage', 'Alan Turing', 'Grace Hopper'], 'sub': 'modern'},
+        {'q': 'What was the first country to grant women the right to vote?', 'a': 'New Zealand', 'options': ['New Zealand', 'United States', 'United Kingdom', 'Australia'], 'sub': 'modern'},
     ],
     'science': [
         {'q': 'What is the half-life of Carbon-14, used in radiocarbon dating?', 'a': '5,730 years', 'options': ['5,730 years', '1,200 years', '12,000 years', '50,000 years'], 'sub': 'chemistry'},
@@ -801,6 +809,8 @@ HARD_QUESTIONS = {
         {'q': 'Which planet rotates backwards compared to most others?', 'a': 'Venus', 'options': ['Venus', 'Mercury', 'Uranus', 'Neptune'], 'sub': 'space'},
         {'q': 'What is the name of the smallest unit of an element?', 'a': 'Atom', 'options': ['Atom', 'Molecule', 'Ion', 'Electron'], 'sub': 'chemistry'},
         {'q': 'What percentage of the human brain is water?', 'a': '~75%', 'options': ['~75%', '~50%', '~90%', '~60%'], 'sub': 'biology'},
+        {'q': 'What is the only letter that does not appear on the periodic table?', 'a': 'J', 'options': ['J', 'Q', 'X', 'Z'], 'sub': 'chemistry'},
+        {'q': 'What metal has the highest melting point?', 'a': 'Tungsten', 'options': ['Tungsten', 'Iron', 'Titanium', 'Platinum'], 'sub': 'chemistry'},
     ],
     'entertainment': [
         {'q': 'Which film holds the record for most Academy Award wins?', 'a': 'Ben-Hur, Titanic, and LOTR: ROTK', 'options': ['Ben-Hur, Titanic, and LOTR: ROTK', 'Gone with the Wind', 'West Side Story', 'The Godfather'], 'sub': 'movies'},
@@ -902,6 +912,8 @@ HARD_QUESTIONS = {
         {'q': 'Which tennis player has won the most Grand Slam singles titles (women)?', 'a': 'Margaret Court', 'options': ['Margaret Court', 'Serena Williams', 'Steffi Graf', 'Chris Evert'], 'sub': 'tennis'},
         {'q': 'What is the highest score ever recorded in an NBA game by one team?', 'a': '186 points', 'options': ['186 points', '173 points', '162 points', '150 points'], 'sub': 'basketball'},
         {'q': 'Who was the first woman to run a sub-4 minute mile?', 'a': 'No woman has', 'options': ['No woman has', 'Sifan Hassan', 'Faith Kipyegon', 'Svetlana Masterkova'], 'sub': 'olympics'},
+        {'q': 'What country has hosted the most Olympic Games?', 'a': 'United States', 'options': ['United States', 'France', 'United Kingdom', 'Germany'], 'sub': 'olympics'},
+        {'q': 'What is the only city to host the Summer Olympics three times?', 'a': 'London', 'options': ['London', 'Paris', 'Athens', 'Los Angeles'], 'sub': 'olympics'},
     ],
     'geography': [
         {'q': 'What is the deepest point in the world\'s oceans?', 'a': 'Challenger Deep', 'options': ['Challenger Deep', 'Puerto Rico Trench', 'Java Trench', 'Philippine Trench'], 'sub': 'landmarks'},
