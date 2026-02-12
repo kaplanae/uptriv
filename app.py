@@ -968,6 +968,29 @@ HARD_QUESTIONS = {
     ]
 }
 
+# Curated questions for specific dates (overrides random selection)
+# Used for launch days or special events where question quality matters most
+CURATED_QUESTIONS = {
+    '2026-02-12': {
+        'easy': {
+            'news': 'Who won the 2024 U.S. Presidential Election?',
+            'history': 'Who was the first man to walk on the moon?',
+            'science': 'What is the largest planet in our solar system?',
+            'entertainment': 'Who played Iron Man in the Marvel Cinematic Universe?',
+            'sports': 'Which country has won the most FIFA World Cup titles?',
+            'geography': 'What is the capital of Australia?',
+        },
+        'hard': {
+            'news': 'What cryptocurrency exchange collapsed in November 2022?',
+            'history': 'What was the code name for the D-Day invasion?',
+            'science': 'What is the name of the closest star to our solar system?',
+            'entertainment': 'Which film has the highest box office gross of all time (unadjusted)?',
+            'sports': 'What country has hosted the most Olympic Games?',
+            'geography': 'Which country has the most languages spoken within its borders?',
+        }
+    }
+}
+
 # Onboarding quiz questions - 50 questions for building user knowledge profile
 # Medium difficulty - not too easy, not too hard
 ONBOARDING_QUESTIONS = [
@@ -1467,6 +1490,48 @@ def get_daily_questions_for_user(user_id):
                 return cached_questions
         except:
             pass
+
+    # Check for curated questions for this date (used for launch days / special events)
+    curated = CURATED_QUESTIONS.get(today)
+    if curated:
+        diff_key = difficulty  # 'easy' or 'hard'
+        curated_picks = curated.get(diff_key)
+        if curated_picks:
+            question_bank = HARD_QUESTIONS if difficulty == 'hard' else QUESTIONS
+            questions = []
+            for cat_key in ['news', 'history', 'science', 'entertainment', 'sports', 'geography']:
+                target_q = curated_picks.get(cat_key)
+                if target_q:
+                    match = next((q for q in question_bank[cat_key] if q['q'] == target_q), None)
+                    if match:
+                        questions.append({
+                            'category': cat_key,
+                            'category_name': CATEGORIES[cat_key]['name'],
+                            'color': CATEGORIES[cat_key]['color'],
+                            'difficulty': difficulty,
+                            **match
+                        })
+                        continue
+                # Fallback: pick first question from category if curated not found
+                q = question_bank[cat_key][0]
+                questions.append({
+                    'category': cat_key,
+                    'category_name': CATEGORIES[cat_key]['name'],
+                    'color': CATEGORIES[cat_key]['color'],
+                    'difficulty': difficulty,
+                    **q
+                })
+            # Shuffle order so categories aren't always the same sequence
+            rng_curated = random.Random(int(hashlib.md5(f"{today}-{difficulty}-curated".encode()).hexdigest(), 16))
+            rng_curated.shuffle(questions)
+            # Cache for this user
+            cur.execute(
+                f'INSERT INTO daily_questions (game_date, user_id, questions_json) VALUES ({placeholder}, {placeholder}, {placeholder})',
+                (today, user_id, json.dumps(questions))
+            )
+            conn.commit()
+            conn.close()
+            return questions
 
     # Get recently used questions to avoid repeats
     recently_used = get_recently_used_questions(difficulty)
@@ -2806,37 +2871,73 @@ def preview_questions():
     conn.close()
 
     result = {}
+    curated = CURATED_QUESTIONS.get(preview_date.isoformat())
+    is_curated = False
+
     for difficulty in ['easy', 'hard']:
-        seed = int(hashlib.md5(f"{preview_date.isoformat()}-{difficulty}".encode()).hexdigest(), 16)
-        rng = random.Random(seed)
         question_bank = HARD_QUESTIONS if difficulty == 'hard' else QUESTIONS
 
-        questions = []
-        for cat_key in ['news', 'history', 'science', 'entertainment', 'sports', 'geography']:
-            category_questions = question_bank[cat_key]
-            available = [q for q in category_questions if q['q'] not in recently_used]
-            if not available:
-                available = category_questions
-            rng.shuffle(available)
-            q = available[0]
-            for candidate in available:
-                if candidate['q'] not in recently_used:
-                    q = candidate
-                    break
-            questions.append({
-                'category': cat_key,
-                'category_name': CATEGORIES[cat_key]['name'],
-                'color': CATEGORIES[cat_key]['color'],
-                'difficulty': difficulty,
-                **q
-            })
-        rng.shuffle(questions)
+        # Check for curated questions first
+        if curated and curated.get(difficulty):
+            curated_picks = curated[difficulty]
+            questions = []
+            for cat_key in ['news', 'history', 'science', 'entertainment', 'sports', 'geography']:
+                target_q = curated_picks.get(cat_key)
+                if target_q:
+                    match = next((q for q in question_bank[cat_key] if q['q'] == target_q), None)
+                    if match:
+                        questions.append({
+                            'category': cat_key,
+                            'category_name': CATEGORIES[cat_key]['name'],
+                            'color': CATEGORIES[cat_key]['color'],
+                            'difficulty': difficulty,
+                            **match
+                        })
+                        continue
+                # Fallback
+                q = question_bank[cat_key][0]
+                questions.append({
+                    'category': cat_key,
+                    'category_name': CATEGORIES[cat_key]['name'],
+                    'color': CATEGORIES[cat_key]['color'],
+                    'difficulty': difficulty,
+                    **q
+                })
+            rng_curated = random.Random(int(hashlib.md5(f"{preview_date.isoformat()}-{difficulty}-curated".encode()).hexdigest(), 16))
+            rng_curated.shuffle(questions)
+            is_curated = True
+        else:
+            seed = int(hashlib.md5(f"{preview_date.isoformat()}-{difficulty}".encode()).hexdigest(), 16)
+            rng = random.Random(seed)
+
+            questions = []
+            for cat_key in ['news', 'history', 'science', 'entertainment', 'sports', 'geography']:
+                category_questions = question_bank[cat_key]
+                available = [q for q in category_questions if q['q'] not in recently_used]
+                if not available:
+                    available = category_questions
+                rng.shuffle(available)
+                q = available[0]
+                for candidate in available:
+                    if candidate['q'] not in recently_used:
+                        q = candidate
+                        break
+                questions.append({
+                    'category': cat_key,
+                    'category_name': CATEGORIES[cat_key]['name'],
+                    'color': CATEGORIES[cat_key]['color'],
+                    'difficulty': difficulty,
+                    **q
+                })
+            rng.shuffle(questions)
+
         label = 'normal' if difficulty == 'easy' else 'expert'
         result[label] = questions
 
     return jsonify({
         'success': True,
         'date': preview_date.isoformat(),
+        'curated': is_curated,
         'questions': result
     })
 
