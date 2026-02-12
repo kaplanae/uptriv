@@ -109,6 +109,7 @@
         <div class="results-card results-card--compact">
             <!-- Share section at top -->
             <div class="results-share-section">
+                <div class="results-username" id="results-username"></div>
                 <div class="results-score-line" id="results-score-line"></div>
                 <div class="results-emoji-row" id="results-emoji-row"></div>
                 <div class="share-wrapper">
@@ -631,6 +632,15 @@ const CAT_EMOJIS = {
 
 function showResults() {
     showScreen('results-screen');
+
+    // Username line
+    const usernameEl = document.getElementById('results-username');
+    if (currentUsername) {
+        usernameEl.textContent = currentUsername;
+        usernameEl.style.display = '';
+    } else {
+        usernameEl.style.display = 'none';
+    }
 
     // Score line
     const diffLabel = currentDifficulty === 'hard' ? '🔥 Expert' : '🎯 Normal';

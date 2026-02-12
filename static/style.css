@@ -803,6 +803,13 @@ footer {
     border-bottom: 1px solid var(--border);
 }
 
+.results-username {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+}
+
 .results-score-line {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 1.5rem;
