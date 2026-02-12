@@ -820,6 +820,7 @@ footer {
 .results-emoji-row {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     gap: 8px;
     align-items: center;
     justify-content: center;
@@ -3513,7 +3514,41 @@ a.rec-title:hover {
 
     /* Results screen */
     .results-card {
-        padding: 1.5rem;
+        padding: 1rem;
+    }
+
+    .results-card--compact {
+        padding: 1rem;
+    }
+
+    .results-share-section {
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .results-username {
+        font-size: 0.75rem;
+    }
+
+    .results-score-line {
+        font-size: 1.2rem;
+    }
+
+    .results-emoji-row {
+        gap: 5px;
+    }
+
+    .results-emoji-row .preview-emoji {
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+
+    .results-share-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
     }
 
     .results-breakdown {
@@ -3530,9 +3565,19 @@ a.rec-title:hover {
         padding: 1.5rem;
     }
 
-    .check-icon svg {
-        width: 60px;
-        height: 60px;
+    .ap-result-block {
+        gap: 0.5rem;
+        padding: 1rem 0;
+    }
+
+    .ap-result-block .results-score-line {
+        font-size: 1.1rem;
+    }
+
+    .ap-result-block .results-emoji-row .preview-emoji {
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
     }
 
     /* History page */
