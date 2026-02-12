@@ -973,7 +973,7 @@ HARD_QUESTIONS = {
 CURATED_QUESTIONS = {
     '2026-02-12': {
         'easy': {
-            'news': 'Who won the 2024 U.S. Presidential Election?',
+            'news': 'Which AI chatbot launched by OpenAI went viral in late 2022?',
             'history': 'Who was the first man to walk on the moon?',
             'science': 'What is the largest planet in our solar system?',
             'entertainment': 'Who played Iron Man in the Marvel Cinematic Universe?',
