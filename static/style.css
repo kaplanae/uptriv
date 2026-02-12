@@ -877,6 +877,12 @@ footer {
     display: block;
 }
 
+@media (max-width: 768px) {
+    .share-menu {
+        display: none !important;
+    }
+}
+
 .share-menu-item {
     display: flex;
     align-items: center;

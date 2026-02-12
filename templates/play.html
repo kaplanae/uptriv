@@ -695,18 +695,27 @@ function isMobile() {
 async function shareResults() {
     const shareText = getShareText();
 
-    if (isMobile() && navigator.share) {
-        try {
-            await navigator.share({ text: shareText });
-        } catch (err) {
-            if (err.name !== 'AbortError') console.error('Share failed:', err);
+    if (isMobile()) {
+        // Mobile: native share sheet, fallback to clipboard
+        if (navigator.share) {
+            try {
+                await navigator.share({ text: shareText });
+            } catch (err) {
+                if (err.name !== 'AbortError') console.error('Share failed:', err);
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(shareText);
+                showShareToast();
+            } catch (err) {
+                console.error('Clipboard failed:', err);
+            }
         }
     } else {
         // Desktop: show share menu
         const menu = document.getElementById('share-menu');
         menu.classList.toggle('show');
 
-        // Close menu when clicking outside
         const closeMenu = (e) => {
             if (!e.target.closest('.share-wrapper')) {
                 menu.classList.remove('show');
@@ -823,29 +832,13 @@ function renderAlreadyPlayedResults(todayResults) {
             <div class="ap-result-block">
                 <div class="results-score-line">${diffLabel}  ${data.score} / ${data.total}</div>
                 <div class="results-emoji-row">${emojis}</div>
-                <div class="share-wrapper">
-                    <button class="results-share-btn ap-share-btn" data-share-text="${shareText.replace(/"/g, '&quot;')}">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                        </svg>
-                        Share Results
-                    </button>
-                    <div class="share-menu ap-share-menu">
-                        <button class="share-menu-item" data-action="x">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                            Post on X
-                        </button>
-                        <button class="share-menu-item" data-action="facebook">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                            Share on Facebook
-                        </button>
-                        <button class="share-menu-item" data-action="copy">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                            Copy to Clipboard
-                        </button>
-                    </div>
-                </div>
+                <button class="results-share-btn ap-share-btn" data-share-text="${shareText.replace(/"/g, '&quot;')}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Share Results
+                </button>
             </div>
         `;
     }
@@ -854,51 +847,18 @@ function renderAlreadyPlayedResults(todayResults) {
 
     // Attach share handlers for already-played share buttons
     section.querySelectorAll('.ap-share-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const shareText = btn.dataset.shareText;
-            const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0 && window.innerWidth < 768);
-
-            if (mobile && navigator.share) {
-                navigator.share({ text: shareText }).catch(() => {});
-            } else {
-                const menu = btn.closest('.share-wrapper').querySelector('.ap-share-menu');
-                document.querySelectorAll('.ap-share-menu.show').forEach(m => m.classList.remove('show'));
-                menu.classList.toggle('show');
-                menu._shareText = shareText;
-
-                const closeMenu = (ev) => {
-                    if (!ev.target.closest('.share-wrapper')) {
-                        menu.classList.remove('show');
-                        document.removeEventListener('click', closeMenu);
-                    }
-                };
-                setTimeout(() => document.addEventListener('click', closeMenu), 0);
-            }
-        });
-    });
-
-    section.querySelectorAll('.ap-share-menu .share-menu-item').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
-            const action = btn.dataset.action;
-            const menu = btn.closest('.ap-share-menu');
-            const shareText = menu._shareText;
-            menu.classList.remove('show');
-            const encoded = encodeURIComponent(shareText);
-            const url = encodeURIComponent('https://www.uptriv.com');
+            const shareText = btn.dataset.shareText;
 
-            if (action === 'x') {
-                window.open(`https://x.com/intent/tweet?text=${encoded}`, '_blank', 'width=550,height=420');
-            } else if (action === 'facebook') {
-                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encoded}`, '_blank', 'width=550,height=420');
-            } else if (action === 'copy') {
-                try {
-                    await navigator.clipboard.writeText(shareText);
-                    showShareToast();
-                } catch (err) {
-                    console.error('Clipboard failed:', err);
+            if (isMobile()) {
+                if (navigator.share) {
+                    try { await navigator.share({ text: shareText }); } catch (err) {}
+                } else {
+                    try { await navigator.clipboard.writeText(shareText); showShareToast(); } catch (err) {}
                 }
+            } else {
+                try { await navigator.clipboard.writeText(shareText); showShareToast(); } catch (err) {}
             }
         });
     });
