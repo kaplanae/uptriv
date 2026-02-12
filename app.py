@@ -3088,11 +3088,36 @@ def start_game():
             else:
                 message = "You've already played Easy mode today! Try Hard mode for an extra challenge, or come back tomorrow."
 
+            # Fetch today's results to show on the already-played screen
+            conn = get_db()
+            cur = conn.cursor()
+            ph = get_placeholder()
+            today = get_user_today().isoformat()
+            cur.execute(f'''
+                SELECT category, correct, difficulty
+                FROM game_results
+                WHERE user_id = {ph} AND game_date = {ph}
+                ORDER BY id
+            ''', (user_id, today))
+            rows = cur.fetchall()
+            conn.close()
+
+            today_results = {}
+            for diff in played_today:
+                diff_results = [r for r in rows if (r['difficulty'] or 'easy') == diff]
+                score = sum(1 for r in diff_results if r['correct'])
+                today_results[diff] = {
+                    'score': score,
+                    'total': len(diff_results),
+                    'results': [{'category': r['category'], 'correct': bool(r['correct'])} for r in diff_results]
+                }
+
             return jsonify({
                 'error': 'already_played',
                 'message': message,
                 'played_difficulties': played_today,
-                'can_play_hard': can_play_hard
+                'can_play_hard': can_play_hard,
+                'today_results': today_results
             }), 400
 
         questions = get_daily_questions_for_user(user_id)

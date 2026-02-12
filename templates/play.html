@@ -170,14 +170,8 @@
     <!-- Already Played Screen -->
     <div id="already-played-screen" class="game-screen">
         <div class="already-played-card">
-            <div class="check-icon">
-                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                    <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-            </div>
-            <h2>You Already Played Today!</h2>
-            <p id="already-played-message">New questions drop at midnight. Come back tomorrow!</p>
+            <h2>Today's Results</h2>
+            <div id="ap-results-section"></div>
 
             <!-- Expert Mode Button -->
             <div id="play-hard-now" style="background: #fee2e2; border: 2px solid #ef4444; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
@@ -369,6 +363,9 @@ document.getElementById('start-game-btn').addEventListener('click', async () => 
             if (data.played_difficulties && data.played_difficulties.includes('hard')) {
                 document.getElementById('play-hard-now').style.display = 'none';
             }
+
+            // Show today's results
+            renderAlreadyPlayedResults(data.today_results || {});
 
             showScreen('already-played-screen');
             return;
@@ -800,6 +797,111 @@ function initAlreadyPlayedDifficulty() {
     document.querySelectorAll('#already-played-screen .difficulty-btn').forEach(b => b.classList.remove('active'));
     const activeBtn = document.querySelector(`#already-played-screen [data-difficulty="${currentDifficulty}"]`);
     if (activeBtn) activeBtn.classList.add('active');
+}
+
+function renderAlreadyPlayedResults(todayResults) {
+    const section = document.getElementById('ap-results-section');
+    if (!todayResults || Object.keys(todayResults).length === 0) {
+        section.innerHTML = '<p style="color: var(--text-secondary);">Come back tomorrow for new questions!</p>';
+        return;
+    }
+
+    let html = '';
+    for (const [diff, data] of Object.entries(todayResults)) {
+        const diffLabel = diff === 'hard' ? '🔥 Expert' : '🎯 Normal';
+        const emojis = data.results.map(r => {
+            const catEmoji = CAT_EMOJIS[r.category] || '❓';
+            const cls = r.correct ? 'correct' : 'incorrect';
+            return `<span class="preview-emoji ${cls}">${catEmoji}</span>`;
+        }).join('');
+        const squares = data.results.map(r => r.correct ? '🟩' : '🟥').join('');
+        const today = new Date();
+        const dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const shareText = `UpTriv ${diffLabel}\n${dateStr}\n${data.score}/${data.total} ${squares}\nwww.uptriv.com`;
+
+        html += `
+            <div class="ap-result-block">
+                <div class="results-score-line">${diffLabel}  ${data.score} / ${data.total}</div>
+                <div class="results-emoji-row">${emojis}</div>
+                <div class="share-wrapper">
+                    <button class="results-share-btn ap-share-btn" data-share-text="${shareText.replace(/"/g, '&quot;')}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        Share Results
+                    </button>
+                    <div class="share-menu ap-share-menu">
+                        <button class="share-menu-item" data-action="x">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            Post on X
+                        </button>
+                        <button class="share-menu-item" data-action="facebook">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Share on Facebook
+                        </button>
+                        <button class="share-menu-item" data-action="copy">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            Copy to Clipboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    html += '<p class="come-back" style="margin-top: 1rem;">New questions drop at midnight!</p>';
+    section.innerHTML = html;
+
+    // Attach share handlers for already-played share buttons
+    section.querySelectorAll('.ap-share-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const shareText = btn.dataset.shareText;
+            const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0 && window.innerWidth < 768);
+
+            if (mobile && navigator.share) {
+                navigator.share({ text: shareText }).catch(() => {});
+            } else {
+                const menu = btn.closest('.share-wrapper').querySelector('.ap-share-menu');
+                document.querySelectorAll('.ap-share-menu.show').forEach(m => m.classList.remove('show'));
+                menu.classList.toggle('show');
+                menu._shareText = shareText;
+
+                const closeMenu = (ev) => {
+                    if (!ev.target.closest('.share-wrapper')) {
+                        menu.classList.remove('show');
+                        document.removeEventListener('click', closeMenu);
+                    }
+                };
+                setTimeout(() => document.addEventListener('click', closeMenu), 0);
+            }
+        });
+    });
+
+    section.querySelectorAll('.ap-share-menu .share-menu-item').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const action = btn.dataset.action;
+            const menu = btn.closest('.ap-share-menu');
+            const shareText = menu._shareText;
+            menu.classList.remove('show');
+            const encoded = encodeURIComponent(shareText);
+            const url = encodeURIComponent('https://www.uptriv.com');
+
+            if (action === 'x') {
+                window.open(`https://x.com/intent/tweet?text=${encoded}`, '_blank', 'width=550,height=420');
+            } else if (action === 'facebook') {
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${encoded}`, '_blank', 'width=550,height=420');
+            } else if (action === 'copy') {
+                try {
+                    await navigator.clipboard.writeText(shareText);
+                    showShareToast();
+                } catch (err) {
+                    console.error('Clipboard failed:', err);
+                }
+            }
+        });
+    });
 }
 
 // Play Hard Mode Now function (called directly from button onclick)
