@@ -384,6 +384,7 @@ QUESTIONS = {
         {'q': 'What cryptocurrency was created by the pseudonymous Satoshi Nakamoto?', 'a': 'Bitcoin', 'options': ['Bitcoin', 'Ethereum', 'Litecoin', 'Ripple'], 'sub': 'current_events'},
         {'q': 'Which company owns Instagram?', 'a': 'Meta', 'options': ['Meta', 'Google', 'Twitter', 'Snapchat'], 'sub': 'current_events'},
         {'q': 'What virus caused a global pandemic starting in Wuhan, China?', 'a': 'SARS-CoV-2', 'options': ['SARS-CoV-2', 'MERS', 'H5N1', 'Zika'], 'sub': 'current_events'},
+        {'q': 'Who owns The Washington Post?', 'a': 'Jeff Bezos', 'options': ['Jeff Bezos', 'Rupert Murdoch', 'Elon Musk', 'Mark Zuckerberg'], 'sub': 'famous_people'},
     ],
     'history': [
         {'q': 'In what year did World War II end?', 'a': '1945', 'options': ['1945', '1944', '1946', '1943'], 'sub': 'wars'},
@@ -973,7 +974,7 @@ HARD_QUESTIONS = {
 CURATED_QUESTIONS = {
     '2026-02-12': {
         'easy': {
-            'news': 'Which AI chatbot launched by OpenAI went viral in late 2022?',
+            'news': 'Who owns The Washington Post?',
             'history': 'Who was the first man to walk on the moon?',
             'science': 'What is the largest planet in our solar system?',
             'entertainment': 'Who played Iron Man in the Marvel Cinematic Universe?',
