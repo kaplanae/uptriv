@@ -3644,28 +3644,11 @@ def api_invite_friend():
             resend.Emails.send({
                 "from": "UpTriv <noreply@uptriv.com>",
                 "to": [email],
-                "subject": f"{current_user.username} invited you to UpTriv!",
-                "html": f'''
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h1 style="color: #667eea;">You're Invited to UpTriv!</h1>
-                    <p><strong>{current_user.username}</strong> wants you to join them on UpTriv - a daily brain training trivia game.</p>
-                    <p>Challenge yourself with 6 questions across different categories:</p>
-                    <ul>
-                        <li>World & U.S. News</li>
-                        <li>History</li>
-                        <li>Science & Nature</li>
-                        <li>Entertainment</li>
-                        <li>Sports</li>
-                        <li>Geography</li>
-                    </ul>
-                    <p>
-                        <a href="{invite_url}" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
-                            Join UpTriv
-                        </a>
-                    </p>
-                    <p style="color: #666; font-size: 14px;">This invite expires in 7 days.</p>
-                </div>
-                '''
+                "subject": f"{current_user.username} invited you to play trivia",
+                "html": f'''<p>Hey!</p>
+<p>{current_user.username} thinks you'd like UpTriv — it's a daily trivia game (like Wordle but for trivia). 6 questions, takes about 2 minutes.</p>
+<p>Here's your invite link: <a href="{invite_url}">{invite_url}</a></p>
+<p>See you there!</p>'''
             })
             email_sent = True
         except Exception as e:
