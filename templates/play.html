@@ -658,21 +658,36 @@ function showResults() {
 }
 
 async function shareResults() {
-    // Build share text locally from results
     const squares = results.map(r => r.correct ? '🟩' : '🟥').join('');
     const diffLabel = currentDifficulty === 'hard' ? '🔥 Expert' : '🎯 Normal';
     const today = new Date();
     const dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const shareText = `UpTriv ${diffLabel}\n${dateStr}\n${score}/${results.length} ${squares}\nwww.uptriv.com`;
 
-    try {
-        await navigator.clipboard.writeText(shareText);
-        const toast = document.getElementById('share-toast');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000);
-    } catch (err) {
-        console.error('Error copying to clipboard:', err);
+    // Use native share sheet on mobile, clipboard on desktop
+    if (navigator.share) {
+        try {
+            await navigator.share({ text: shareText });
+        } catch (err) {
+            // User cancelled share — not an error
+            if (err.name !== 'AbortError') {
+                console.error('Share failed:', err);
+            }
+        }
+    } else {
+        try {
+            await navigator.clipboard.writeText(shareText);
+            showShareToast();
+        } catch (err) {
+            console.error('Clipboard failed:', err);
+        }
     }
+}
+
+function showShareToast() {
+    const toast = document.getElementById('share-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
 async function checkHardModeEligibility() {

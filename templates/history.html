@@ -670,8 +670,16 @@ async function shareGame(event, date, difficulty) {
         const data = await response.json();
 
         if (data.share_text) {
-            await navigator.clipboard.writeText(data.share_text);
-            showToast();
+            if (navigator.share) {
+                try {
+                    await navigator.share({ text: data.share_text });
+                } catch (err) {
+                    if (err.name !== 'AbortError') console.error('Share failed:', err);
+                }
+            } else {
+                await navigator.clipboard.writeText(data.share_text);
+                showToast();
+            }
         }
     } catch (err) {
         console.error('Error sharing:', err);
