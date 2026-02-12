@@ -831,8 +831,10 @@ footer {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1.25rem;
-    background: var(--accent-primary);
-    color: white;
+    appearance: none;
+    -webkit-appearance: none;
+    background: #667eea;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     font-size: 0.9rem;
