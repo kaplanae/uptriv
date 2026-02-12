@@ -3641,7 +3641,7 @@ def api_invite_friend():
     email_sent = False
     if resend.api_key:
         try:
-            resend.emails.send({
+            resend.Emails.send({
                 "from": "UpTriv <noreply@uptriv.com>",
                 "to": [email],
                 "subject": f"{current_user.username} invited you to UpTriv!",
