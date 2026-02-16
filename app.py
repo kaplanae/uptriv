@@ -4,7 +4,7 @@ import sys
 print(f"Python version: {sys.version}")
 
 try:
-    from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+    from flask import Flask, render_template, request, jsonify, session, redirect, url_for, Response
     print("Flask imported")
     from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
     print("Flask-Login imported")
@@ -2585,6 +2585,31 @@ def check_hard_mode_eligibility():
     })
 
 
+@app.route('/api/played-today')
+def api_played_today():
+    """Return which difficulties the user has played today."""
+    user_id = None
+    if current_user.is_authenticated:
+        user_id = current_user.id
+    else:
+        anonymous_id = request.args.get('anonymous_id')
+        if anonymous_id:
+            conn = get_db()
+            cur = conn.cursor()
+            ph = get_placeholder()
+            cur.execute(f'SELECT id FROM users WHERE anonymous_id = {ph}', (anonymous_id,))
+            user = cur.fetchone()
+            conn.close()
+            if user:
+                user_id = user['id']
+
+    if not user_id:
+        return jsonify({'played': []})
+
+    played = get_played_difficulties_today(user_id)
+    return jsonify({'played': played})
+
+
 # ============ VISIT TRACKING ============
 
 # Admin email(s) allowed to access admin page
@@ -2641,6 +2666,55 @@ def before_request():
 
 
 # ============ PAGE ROUTES ============
+
+@app.route('/robots.txt')
+def robots_txt():
+    content = """User-agent: *
+Allow: /
+Allow: /play
+Allow: /history/
+Disallow: /api/
+Disallow: /admin
+Disallow: /auth/
+Disallow: /onboarding
+
+Sitemap: https://www.uptriv.com/sitemap.xml
+"""
+    return Response(content, mimetype='text/plain')
+
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    from datetime import date
+    today = date.today().isoformat()
+
+    urls = [
+        ('https://www.uptriv.com/', today, '1.0', 'daily'),
+        ('https://www.uptriv.com/play', today, '0.9', 'daily'),
+    ]
+
+    # Add public user profiles
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("SELECT username FROM users WHERE username IS NOT NULL AND username != ''")
+        users = cur.fetchall()
+        conn.close()
+        for u in users:
+            username = u['username']
+            if username:
+                urls.append((f'https://www.uptriv.com/history/{username}', today, '0.5', 'weekly'))
+    except Exception:
+        pass
+
+    xml_parts = ['<?xml version="1.0" encoding="UTF-8"?>']
+    xml_parts.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+    for loc, lastmod, priority, changefreq in urls:
+        xml_parts.append(f'  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><priority>{priority}</priority><changefreq>{changefreq}</changefreq></url>')
+    xml_parts.append('</urlset>')
+
+    return Response('\n'.join(xml_parts), mimetype='application/xml')
+
 
 @app.route('/')
 def index():

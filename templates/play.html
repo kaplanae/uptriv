@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
-{% block title %}Play - UpTriv{% endblock %}
+{% block title %}Play Today's Trivia Challenge - UpTriv{% endblock %}
+{% block meta_description %}Play today's UpTriv trivia challenge — 6 questions across News, History, Science, Entertainment, Sports, and Geography. Beat the 10-second clock and see how you compare.{% endblock %}
 
 {% block content %}
 <div class="game-container">
@@ -112,13 +113,18 @@
                 <div class="results-username" id="results-username"></div>
                 <div class="results-score-line" id="results-score-line"></div>
                 <div class="results-emoji-row" id="results-emoji-row"></div>
-                <button class="results-share-btn" id="results-share-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                    Share Results
-                </button>
+                <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                    <button class="results-share-btn" id="results-share-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        Share Results
+                    </button>
+                    <button id="play-other-mode-btn" class="results-share-btn" style="display: none; background: #ef4444;" onclick="playOtherModeNow()">
+                        <span id="play-other-mode-label">Play Expert</span>
+                    </button>
+                </div>
             </div>
 
             <div class="results-breakdown" id="results-breakdown">
@@ -662,6 +668,36 @@ function showResults() {
     if (currentDifficulty === 'easy') {
         checkHardModeEligibility();
     }
+
+    // Check if the other mode is available to play
+    checkOtherModeAvailable();
+}
+
+async function checkOtherModeAvailable() {
+    try {
+        const url = anonymousId
+            ? `/api/played-today?anonymous_id=${encodeURIComponent(anonymousId)}`
+            : '/api/played-today';
+        const res = await fetch(url);
+        const data = await res.json();
+        const played = data.played || [];
+
+        const otherMode = currentDifficulty === 'hard' ? 'easy' : 'hard';
+        if (!played.includes(otherMode)) {
+            const btn = document.getElementById('play-other-mode-btn');
+            const label = document.getElementById('play-other-mode-label');
+            if (otherMode === 'hard') {
+                label.textContent = 'Play Expert';
+                btn.style.background = '#ef4444';
+            } else {
+                label.textContent = 'Play Normal';
+                btn.style.background = '#667eea';
+            }
+            btn.style.display = '';
+        }
+    } catch (e) {
+        console.error('Error checking other mode:', e);
+    }
 }
 
 function getShareText() {
@@ -846,6 +882,44 @@ async function playHardModeNow() {
     } catch (e) {
         console.error('Error in playHardModeNow:', e);
         alert('Hard mode failed: ' + e.message);
+    }
+}
+
+async function playOtherModeNow() {
+    const otherDifficulty = currentDifficulty === 'hard' ? 'easy' : 'hard';
+    try {
+        const setDiffRes = await fetch('/api/set-difficulty', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ difficulty: otherDifficulty, anonymous_id: anonymousId })
+        });
+        if (!setDiffRes.ok) {
+            alert('Failed to set difficulty. Please try again.');
+            return;
+        }
+        currentDifficulty = otherDifficulty;
+        const response = await fetch('/api/start-game', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ anonymous_id: anonymousId })
+        });
+        const data = await response.json();
+        if (data.error === 'already_played') {
+            alert(data.message || "You've already played this mode today!");
+            return;
+        }
+        if (data.error) {
+            alert(data.message || data.error);
+            return;
+        }
+        questions = data.questions;
+        score = 0;
+        currentQuestion = 0;
+        results = [];
+        startCountdown();
+    } catch (e) {
+        console.error('Error in playOtherModeNow:', e);
+        alert('Failed to start game: ' + e.message);
     }
 }
 

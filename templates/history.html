@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if view_username %}{{ view_username }}'s Profile{% else %}Profile{% endif %} - UpTriv{% endblock %}
+{% block title %}{% if view_username %}{{ view_username }}'s Trivia Profile{% else %}Your Trivia Profile{% endif %} - UpTriv{% endblock %}
+{% block meta_description %}{% if view_username %}See {{ view_username }}'s trivia stats on UpTriv — performance across News, History, Science, Entertainment, Sports, and Geography.{% else %}Track your daily trivia performance, game history, and category strengths on UpTriv.{% endif %}{% endblock %}
+{% block og_title %}{% if view_username %}{{ view_username }}'s Trivia Profile - UpTriv{% else %}Your Trivia Profile - UpTriv{% endif %}{% endblock %}
+{% block og_description %}{% if view_username %}Check out {{ view_username }}'s trivia stats on UpTriv.{% else %}Track your trivia performance on UpTriv.{% endif %}{% endblock %}
 
 {% block content %}
 <div class="history-container">

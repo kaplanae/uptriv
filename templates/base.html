@@ -4,6 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}UpTriv - Daily Brain Training{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Play UpTriv — a free daily trivia game with 6 categories: News, History, Science, Entertainment, Sports, and Geography. New questions every day, beat the clock, track your progress.{% endblock %}">
+    <link rel="canonical" href="{{ request.url }}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="UpTriv">
+    <meta property="og:title" content="{% block og_title %}UpTriv - Daily Trivia Challenge{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Free daily trivia game — 6 categories, 6 questions, new challenge every day. How many can you get right?{% endblock %}">
+    <meta property="og:image" content="{{ url_for('static', filename='banner2.jpg', _external=True) }}">
+    <meta property="og:url" content="{{ request.url }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}UpTriv - Daily Trivia Challenge{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Free daily trivia — 6 categories, 6 questions, new challenge every day.{% endblock %}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='banner2.jpg', _external=True) }}">
+
+    <meta name="theme-color" content="#667eea">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='uptrivlogo.png') }}">
+
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "UpTriv",
+        "url": "https://www.uptriv.com",
+        "description": "A free daily trivia game with 6 categories. New questions every day — test your knowledge in News, History, Science, Entertainment, Sports, and Geography.",
+        "applicationCategory": "Game",
+        "genre": "Trivia",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    {% endblock %}
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
