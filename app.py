@@ -2703,7 +2703,8 @@ def sitemap_xml():
         for u in users:
             username = u['username']
             if username:
-                urls.append((f'https://www.uptriv.com/history/{username}', today, '0.5', 'weekly'))
+                from urllib.parse import quote
+                urls.append((f'https://www.uptriv.com/history/{quote(username)}', today, '0.5', 'weekly'))
     except Exception:
         pass
 
