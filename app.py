@@ -383,7 +383,6 @@ QUESTIONS = {
         {'q': 'Who is the Prime Minister of Canada?', 'a': 'Justin Trudeau', 'options': ['Justin Trudeau', 'Stephen Harper', 'Pierre Poilievre', 'Jean Chrétien'], 'sub': 'politics'},
         {'q': 'What cryptocurrency was created by the pseudonymous Satoshi Nakamoto?', 'a': 'Bitcoin', 'options': ['Bitcoin', 'Ethereum', 'Litecoin', 'Ripple'], 'sub': 'current_events'},
         {'q': 'Which company owns Instagram?', 'a': 'Meta', 'options': ['Meta', 'Google', 'Twitter', 'Snapchat'], 'sub': 'current_events'},
-        {'q': 'What virus caused a global pandemic starting in Wuhan, China?', 'a': 'SARS-CoV-2', 'options': ['SARS-CoV-2', 'MERS', 'H5N1', 'Zika'], 'sub': 'current_events'},
         {'q': 'Who owns The Washington Post?', 'a': 'Jeff Bezos', 'options': ['Jeff Bezos', 'Rupert Murdoch', 'Elon Musk', 'Mark Zuckerberg'], 'sub': 'famous_people'},
     ],
     'history': [
@@ -599,6 +598,35 @@ QUESTIONS = {
         {'q': 'Who is the all-time leading scorer in FIFA World Cup history?', 'a': 'Miroslav Klose', 'options': ['Miroslav Klose', 'Ronaldo', 'Pelé', 'Gerd Müller'], 'sub': 'soccer'},
         {'q': 'What city is hosting the 2026 Winter Olympics?', 'a': 'Milan-Cortina', 'options': ['Milan-Cortina', 'Salt Lake City', 'Sapporo', 'Barcelona'], 'sub': 'olympics'},
         {'q': 'Which three countries are co-hosting the 2026 FIFA World Cup?', 'a': 'USA, Canada, Mexico', 'options': ['USA, Canada, Mexico', 'USA, UK, Ireland', 'Spain, Portugal, Morocco', 'Germany, Austria, Switzerland'], 'sub': 'soccer'},
+        {'q': 'What sport is played on the largest field?', 'a': 'Polo', 'options': ['Polo', 'Soccer', 'Cricket', 'Rugby'], 'sub': 'misc'},
+        {'q': 'How many dimples are on a standard golf ball?', 'a': '336', 'options': ['336', '250', '400', '500'], 'sub': 'golf'},
+        {'q': 'What is the only position in football that can be tackled behind the line of scrimmage?', 'a': 'Quarterback', 'options': ['Quarterback', 'Running back', 'Wide receiver', 'Any position'], 'sub': 'football'},
+        {'q': 'In baseball, how many strikes make an out?', 'a': '3', 'options': ['3', '2', '4', '5'], 'sub': 'baseball'},
+        {'q': 'What is the term for two strokes under par on a golf hole?', 'a': 'Eagle', 'options': ['Eagle', 'Birdie', 'Albatross', 'Bogey'], 'sub': 'golf'},
+        {'q': 'Which NHL team plays in Detroit?', 'a': 'Red Wings', 'options': ['Red Wings', 'Pistons', 'Tigers', 'Lions'], 'sub': 'hockey'},
+        {'q': 'What is the width of a tennis court for singles play in feet?', 'a': '27 feet', 'options': ['27 feet', '36 feet', '30 feet', '24 feet'], 'sub': 'tennis'},
+        {'q': 'In baseball, what is a hit that allows the batter to reach second base?', 'a': 'Double', 'options': ['Double', 'Triple', 'Single', 'Home run'], 'sub': 'baseball'},
+        {'q': 'What color jersey does the leader of the Tour de France wear?', 'a': 'Yellow', 'options': ['Yellow', 'Red', 'Green', 'Blue'], 'sub': 'misc'},
+        {'q': 'How many downs does a team get to move 10 yards in football?', 'a': '4', 'options': ['4', '3', '5', '6'], 'sub': 'football'},
+        {'q': 'What is the penalty area in soccer also commonly called?', 'a': 'The box', 'options': ['The box', 'The zone', 'The circle', 'The crease'], 'sub': 'soccer'},
+        {'q': 'Which sport uses the terms "love," "deuce," and "advantage"?', 'a': 'Tennis', 'options': ['Tennis', 'Badminton', 'Squash', 'Table tennis'], 'sub': 'tennis'},
+        {'q': 'What is the name of the ice hockey puck made of?', 'a': 'Vulcanized rubber', 'options': ['Vulcanized rubber', 'Hard plastic', 'Compressed foam', 'Solid wood'], 'sub': 'hockey'},
+        {'q': 'How many bases are on a baseball diamond?', 'a': '4', 'options': ['4', '3', '5', '6'], 'sub': 'baseball'},
+        {'q': 'What sport is known as "the gentleman\'s game"?', 'a': 'Cricket', 'options': ['Cricket', 'Golf', 'Tennis', 'Polo'], 'sub': 'misc'},
+        {'q': 'What does NFL stand for?', 'a': 'National Football League', 'options': ['National Football League', 'National Federation League', 'North Football League', 'National Football Leaders'], 'sub': 'football'},
+        {'q': 'In golf, what is the term for one stroke over par?', 'a': 'Bogey', 'options': ['Bogey', 'Birdie', 'Eagle', 'Double'], 'sub': 'golf'},
+        {'q': 'What shape is a boxing ring?', 'a': 'Square', 'options': ['Square', 'Circle', 'Octagon', 'Rectangle'], 'sub': 'misc'},
+        {'q': 'How many players are on a volleyball team on the court?', 'a': '6', 'options': ['6', '5', '7', '8'], 'sub': 'misc'},
+        {'q': 'What is the only position in hockey that can legally use their hands to stop the puck?', 'a': 'Goalie', 'options': ['Goalie', 'Defenseman', 'Center', 'Any position'], 'sub': 'hockey'},
+        {'q': 'How many laps make up a standard NASCAR race at Daytona?', 'a': '200', 'options': ['200', '300', '150', '500'], 'sub': 'misc'},
+        {'q': 'What is the farthest distance from the green that counts as "on the green" in golf?', 'a': 'The fringe', 'options': ['The fringe', 'The rough', 'The fairway', 'The collar'], 'sub': 'golf'},
+        {'q': 'In baseball, what is the area where batters warm up called?', 'a': 'On-deck circle', 'options': ['On-deck circle', 'Batting cage', 'Warm-up zone', 'Batter\'s box'], 'sub': 'baseball'},
+        {'q': 'How many field goals is a 3-pointer worth in basketball?', 'a': '3 points', 'options': ['3 points', '2 points', '4 points', '1 point'], 'sub': 'basketball'},
+        {'q': 'What sport uses a try, conversion, and scrum?', 'a': 'Rugby', 'options': ['Rugby', 'Football', 'Cricket', 'Lacrosse'], 'sub': 'misc'},
+        {'q': 'Which NFL position is abbreviated QB?', 'a': 'Quarterback', 'options': ['Quarterback', 'Quaterback', 'Quick blocker', 'Quality back'], 'sub': 'football'},
+        {'q': 'What is the blue line in hockey used for?', 'a': 'Marking the offensive zone', 'options': ['Marking the offensive zone', 'Marking the goal area', 'Penalty area', 'Center ice'], 'sub': 'hockey'},
+        {'q': 'How many Olympic rings represent the five continents?', 'a': '5', 'options': ['5', '4', '6', '7'], 'sub': 'olympics'},
+        {'q': 'What surface is the Australian Open tennis tournament played on?', 'a': 'Hard court', 'options': ['Hard court', 'Clay', 'Grass', 'Carpet'], 'sub': 'tennis'},
     ],
     'geography': [
         {'q': 'What is the capital of Australia?', 'a': 'Canberra', 'options': ['Canberra', 'Sydney', 'Melbourne', 'Brisbane'], 'sub': 'capitals'},
@@ -749,7 +777,6 @@ HARD_QUESTIONS = {
         {'q': 'The Reconquista was the Christian reconquest of which peninsula?', 'a': 'Iberian Peninsula', 'options': ['Iberian Peninsula', 'Italian Peninsula', 'Balkan Peninsula', 'Scandinavian Peninsula'], 'sub': 'medieval'},
         {'q': 'What year did the United States enter World War I?', 'a': '1917', 'options': ['1917', '1914', '1915', '1916'], 'sub': 'wars'},
         {'q': 'The Sepoy Mutiny of 1857 occurred in which country?', 'a': 'India', 'options': ['India', 'China', 'Egypt', 'South Africa'], 'sub': 'world_history'},
-        {'q': 'What document did King John sign in 1215?', 'a': 'Magna Carta', 'options': ['Magna Carta', 'Bill of Rights', 'Declaration of Arbroath', 'Domesday Book'], 'sub': 'medieval'},
         {'q': 'The Bay of Pigs invasion was an attempt to overthrow which leader?', 'a': 'Fidel Castro', 'options': ['Fidel Castro', 'Che Guevara', 'Hugo Chavez', 'Daniel Ortega'], 'sub': 'modern'},
         {'q': 'What was the name of the first permanent English settlement in America?', 'a': 'Jamestown', 'options': ['Jamestown', 'Plymouth', 'Roanoke', 'Boston'], 'sub': 'world_history'},
         {'q': 'The Russo-Japanese War ended with what treaty?', 'a': 'Treaty of Portsmouth', 'options': ['Treaty of Portsmouth', 'Treaty of Shimonoseki', 'Treaty of Kanagawa', 'Treaty of Versailles'], 'sub': 'wars'},
@@ -784,7 +811,6 @@ HARD_QUESTIONS = {
         {'q': 'What is the escape velocity from Earth?', 'a': '11.2 km/s', 'options': ['11.2 km/s', '7.9 km/s', '15.0 km/s', '25.0 km/s'], 'sub': 'space'},
         {'q': 'What is the name of the effect where light changes wavelength due to motion?', 'a': 'Doppler effect', 'options': ['Doppler effect', 'Photoelectric effect', 'Compton effect', 'Zeeman effect'], 'sub': 'physics'},
         {'q': 'Which element has the atomic number 79?', 'a': 'Gold', 'options': ['Gold', 'Silver', 'Platinum', 'Mercury'], 'sub': 'chemistry'},
-        {'q': 'What causes the Northern and Southern Lights?', 'a': 'Solar wind particles', 'options': ['Solar wind particles', 'Moonlight reflection', 'Volcanic gases', 'Ocean currents'], 'sub': 'earth_science'},
         {'q': 'What is the name of the closest star to our solar system?', 'a': 'Proxima Centauri', 'options': ['Proxima Centauri', 'Alpha Centauri A', 'Sirius', 'Barnard\'s Star'], 'sub': 'space'},
         {'q': 'What is the SI unit of electrical resistance?', 'a': 'Ohm', 'options': ['Ohm', 'Volt', 'Ampere', 'Watt'], 'sub': 'physics'},
         {'q': 'Which vitamin is synthesized by gut bacteria?', 'a': 'Vitamin K', 'options': ['Vitamin K', 'Vitamin C', 'Vitamin A', 'Vitamin E'], 'sub': 'biology'},
@@ -915,6 +941,35 @@ HARD_QUESTIONS = {
         {'q': 'Who was the first woman to run a sub-4 minute mile?', 'a': 'No woman has', 'options': ['No woman has', 'Sifan Hassan', 'Faith Kipyegon', 'Svetlana Masterkova'], 'sub': 'olympics'},
         {'q': 'What country has hosted the most Olympic Games?', 'a': 'United States', 'options': ['United States', 'France', 'United Kingdom', 'Germany'], 'sub': 'olympics'},
         {'q': 'What is the only city to host the Summer Olympics three times?', 'a': 'London', 'options': ['London', 'Paris', 'Athens', 'Los Angeles'], 'sub': 'olympics'},
+        {'q': 'What is the name of the annual horse race held in Louisville, Kentucky?', 'a': 'Kentucky Derby', 'options': ['Kentucky Derby', 'Preakness Stakes', 'Belmont Stakes', 'Breeders Cup'], 'sub': 'misc'},
+        {'q': 'Which pitcher threw the most no-hitters in MLB history?', 'a': 'Nolan Ryan', 'options': ['Nolan Ryan', 'Sandy Koufax', 'Bob Feller', 'Justin Verlander'], 'sub': 'baseball'},
+        {'q': 'What is the penalty for a false start in the NFL?', 'a': '5 yards', 'options': ['5 yards', '10 yards', '15 yards', 'Loss of down'], 'sub': 'football'},
+        {'q': 'Which country has won the most Davis Cup titles in tennis?', 'a': 'United States', 'options': ['United States', 'Australia', 'France', 'Great Britain'], 'sub': 'tennis'},
+        {'q': 'What is the name of the hockey move where a player fakes a shot then pulls the puck around the goalie?', 'a': 'Deke', 'options': ['Deke', 'Dangle', 'Snipe', 'Celly'], 'sub': 'hockey'},
+        {'q': 'Which baseball team plays at Wrigley Field?', 'a': 'Chicago Cubs', 'options': ['Chicago Cubs', 'Chicago White Sox', 'Milwaukee Brewers', 'St. Louis Cardinals'], 'sub': 'baseball'},
+        {'q': 'What is the yardage of the longest field goal in NFL history?', 'a': '66 yards', 'options': ['66 yards', '64 yards', '63 yards', '70 yards'], 'sub': 'football'},
+        {'q': 'Who was the first golfer to win all four major championships?', 'a': 'Gene Sarazen', 'options': ['Gene Sarazen', 'Bobby Jones', 'Ben Hogan', 'Jack Nicklaus'], 'sub': 'golf'},
+        {'q': 'What is the "yips" in sports?', 'a': 'Loss of fine motor skills under pressure', 'options': ['Loss of fine motor skills under pressure', 'A type of injury', 'A celebration dance', 'A training technique'], 'sub': 'misc'},
+        {'q': 'Which NHL goalie has the most career wins?', 'a': 'Martin Brodeur', 'options': ['Martin Brodeur', 'Patrick Roy', 'Roberto Luongo', 'Ed Belfour'], 'sub': 'hockey'},
+        {'q': 'What is the "Grand Slam" in golf?', 'a': 'Winning all four majors', 'options': ['Winning all four majors', 'Winning three majors', 'A hole-in-one on a par 5', 'Winning the same major twice'], 'sub': 'golf'},
+        {'q': 'Who invented the sport of volleyball?', 'a': 'William G. Morgan', 'options': ['William G. Morgan', 'James Naismith', 'Walter Camp', 'Abner Doubleday'], 'sub': 'misc'},
+        {'q': 'What does the "FIFA" in FIFA World Cup stand for?', 'a': 'Fédération Internationale de Football Association', 'options': ['Fédération Internationale de Football Association', 'Federation of International Football Authorities', 'Football International Federation Association', 'Federal International Football Alliance'], 'sub': 'soccer'},
+        {'q': 'Which MLB player was known as "The Iron Horse"?', 'a': 'Lou Gehrig', 'options': ['Lou Gehrig', 'Babe Ruth', 'Joe DiMaggio', 'Cal Ripken Jr.'], 'sub': 'baseball'},
+        {'q': 'What Olympic sport combines cross-country skiing and rifle shooting?', 'a': 'Biathlon', 'options': ['Biathlon', 'Pentathlon', 'Triathlon', 'Decathlon'], 'sub': 'olympics'},
+        {'q': 'Who was the first NBA player to be named MVP unanimously?', 'a': 'Stephen Curry', 'options': ['Stephen Curry', 'LeBron James', 'Michael Jordan', 'Shaquille O\'Neal'], 'sub': 'basketball'},
+        {'q': 'In tennis, what is it called when a player wins a game without the opponent scoring?', 'a': 'A love game', 'options': ['A love game', 'A shutout', 'A bagel', 'A golden game'], 'sub': 'tennis'},
+        {'q': 'What distance is the penalty spot from the goal line in soccer?', 'a': '12 yards', 'options': ['12 yards', '10 yards', '15 yards', '18 yards'], 'sub': 'soccer'},
+        {'q': 'Which NFL team is the only one to go 0-16 in a season?', 'a': '2008 Detroit Lions', 'options': ['2008 Detroit Lions', '2017 Cleveland Browns', '1976 Tampa Bay Buccaneers', '2001 Carolina Panthers'], 'sub': 'football'},
+        {'q': 'What is the circumference of an official baseball in inches?', 'a': '9 inches', 'options': ['9 inches', '10 inches', '8 inches', '11 inches'], 'sub': 'baseball'},
+        {'q': 'Which country has won the most gold medals in Olympic ice hockey?', 'a': 'Canada', 'options': ['Canada', 'Soviet Union/Russia', 'United States', 'Sweden'], 'sub': 'hockey'},
+        {'q': 'What is the minimum number of clubs a golfer can carry in a round?', 'a': 'No minimum', 'options': ['No minimum', '7', '10', '5'], 'sub': 'golf'},
+        {'q': 'Who was the first Black player in Major League Baseball?', 'a': 'Jackie Robinson', 'options': ['Jackie Robinson', 'Satchel Paige', 'Willie Mays', 'Hank Aaron'], 'sub': 'baseball'},
+        {'q': 'What year were women first allowed to compete in the Olympic Games?', 'a': '1900', 'options': ['1900', '1896', '1912', '1920'], 'sub': 'olympics'},
+        {'q': 'What is the term for scoring two goals in soccer?', 'a': 'Brace', 'options': ['Brace', 'Double', 'Pair', 'Combo'], 'sub': 'soccer'},
+        {'q': 'Which sport was invented by James Naismith?', 'a': 'Basketball', 'options': ['Basketball', 'Volleyball', 'Handball', 'Lacrosse'], 'sub': 'basketball'},
+        {'q': 'What is the name of the line that divides a tennis court in half for serves?', 'a': 'Center service line', 'options': ['Center service line', 'Baseline', 'Net line', 'Alley line'], 'sub': 'tennis'},
+        {'q': 'How many weight classes are there in Olympic boxing?', 'a': '13', 'options': ['13', '10', '8', '17'], 'sub': 'misc'},
+        {'q': 'What is the distance of an Ironman triathlon swim leg?', 'a': '2.4 miles', 'options': ['2.4 miles', '1.2 miles', '3.0 miles', '1.0 miles'], 'sub': 'misc'},
     ],
     'geography': [
         {'q': 'What is the deepest point in the world\'s oceans?', 'a': 'Challenger Deep', 'options': ['Challenger Deep', 'Puerto Rico Trench', 'Java Trench', 'Philippine Trench'], 'sub': 'landmarks'},
@@ -945,7 +1000,6 @@ HARD_QUESTIONS = {
         {'q': 'What is the smallest country in Asia by area?', 'a': 'Maldives', 'options': ['Maldives', 'Singapore', 'Bahrain', 'Brunei'], 'sub': 'countries'},
         {'q': 'Which mountain range separates France from Spain?', 'a': 'Pyrenees', 'options': ['Pyrenees', 'Alps', 'Carpathians', 'Apennines'], 'sub': 'landmarks'},
         {'q': 'What is the capital of Mongolia?', 'a': 'Ulaanbaatar', 'options': ['Ulaanbaatar', 'Darkhan', 'Erdenet', 'Choibalsan'], 'sub': 'capitals'},
-        {'q': 'Which country spans the most time zones?', 'a': 'France', 'options': ['France', 'Russia', 'United States', 'China'], 'sub': 'countries'},
         {'q': 'What is the deepest lake in the United States?', 'a': 'Crater Lake', 'options': ['Crater Lake', 'Lake Tahoe', 'Lake Superior', 'Lake Chelan'], 'sub': 'landmarks'},
         {'q': 'Which European country has the lowest population density?', 'a': 'Iceland', 'options': ['Iceland', 'Norway', 'Finland', 'Sweden'], 'sub': 'countries'},
         {'q': 'What is the capital of Malta?', 'a': 'Valletta', 'options': ['Valletta', 'Mdina', 'Sliema', 'St. Julian\'s'], 'sub': 'capitals'},
@@ -1173,10 +1227,29 @@ def init_db():
                 id SERIAL PRIMARY KEY,
                 game_date DATE NOT NULL,
                 user_id INTEGER,
+                difficulty TEXT,
                 questions_json TEXT NOT NULL,
                 UNIQUE(game_date, user_id)
             )
         ''')
+
+        # Add difficulty column to daily_questions if it doesn't exist
+        try:
+            cur.execute("ALTER TABLE daily_questions ADD COLUMN difficulty TEXT")
+            conn.commit()
+        except Exception:
+            conn.rollback()
+
+        # Partial unique index so only one global row per (date, difficulty)
+        try:
+            cur.execute('''
+                CREATE UNIQUE INDEX idx_daily_global
+                ON daily_questions(game_date, difficulty)
+                WHERE user_id IS NULL
+            ''')
+            conn.commit()
+        except Exception:
+            conn.rollback()
 
         cur.execute('''
             CREATE TABLE IF NOT EXISTS friendships (
@@ -1248,10 +1321,29 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 game_date DATE NOT NULL,
                 user_id INTEGER,
+                difficulty TEXT,
                 questions_json TEXT NOT NULL,
                 UNIQUE(game_date, user_id)
             )
         ''')
+
+        # Add difficulty column to daily_questions if it doesn't exist (SQLite)
+        try:
+            cur.execute("ALTER TABLE daily_questions ADD COLUMN difficulty TEXT")
+            conn.commit()
+        except Exception:
+            conn.rollback()
+
+        # Partial unique index for global rows (SQLite supports this since 3.8.0)
+        try:
+            cur.execute('''
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_daily_global
+                ON daily_questions(game_date, difficulty)
+                WHERE user_id IS NULL
+            ''')
+            conn.commit()
+        except Exception:
+            conn.rollback()
 
         cur.execute('''
             CREATE TABLE IF NOT EXISTS friendships (
@@ -1444,59 +1536,12 @@ def get_recently_used_questions(difficulty, days=None):
     return used_questions
 
 
-def get_daily_questions_for_user(user_id):
-    """Get today's questions - same for all users at same difficulty (like Wordle/Connections)."""
-    today = get_user_today().isoformat()
-    difficulty = get_user_difficulty(user_id)
-
-    conn = get_db()
-    cur = conn.cursor()
-    placeholder = '%s' if USE_POSTGRES else '?'
-
-    # Check if user already has today's questions cached FOR THIS DIFFICULTY
-    cur.execute(f'SELECT questions_json FROM daily_questions WHERE game_date = {placeholder} AND user_id = {placeholder}', (today, user_id))
-    result = cur.fetchone()
-
-    if result:
-        cached_questions = json.loads(result['questions_json'])
-        # Only use cache if it matches the current difficulty
-        if cached_questions and cached_questions[0].get('difficulty') == difficulty:
-            conn.close()
-            return cached_questions
-        # Otherwise, delete the old cache and generate new questions
-        cur.execute(f'DELETE FROM daily_questions WHERE game_date = {placeholder} AND user_id = {placeholder}', (today, user_id))
-        conn.commit()
-
-    # Check if ANY user has today's questions for this difficulty (global cache)
-    # This ensures all users at same difficulty get the same questions
-    cur.execute(f'''
-        SELECT questions_json FROM daily_questions
-        WHERE game_date = {placeholder}
-        LIMIT 10
-    ''', (today,))
-    existing_today = cur.fetchall()
-
-    for row in existing_today:
-        try:
-            cached_questions = json.loads(row['questions_json'])
-            # Check if this cache is for the same difficulty
-            if cached_questions and cached_questions[0].get('difficulty') == difficulty:
-                # Use the same questions as other users at this difficulty
-                cur.execute(
-                    f'INSERT INTO daily_questions (game_date, user_id, questions_json) VALUES ({placeholder}, {placeholder}, {placeholder})',
-                    (today, user_id, json.dumps(cached_questions))
-                )
-                conn.commit()
-                conn.close()
-                return cached_questions
-        except:
-            pass
-
+def _generate_daily_questions(today, difficulty):
+    """Generate the canonical set of daily questions for a given date and difficulty."""
     # Check for curated questions for this date (used for launch days / special events)
     curated = CURATED_QUESTIONS.get(today)
     if curated:
-        diff_key = difficulty  # 'easy' or 'hard'
-        curated_picks = curated.get(diff_key)
+        curated_picks = curated.get(difficulty)
         if curated_picks:
             question_bank = HARD_QUESTIONS if difficulty == 'hard' else QUESTIONS
             questions = []
@@ -1522,27 +1567,17 @@ def get_daily_questions_for_user(user_id):
                     'difficulty': difficulty,
                     **q
                 })
-            # Shuffle order so categories aren't always the same sequence
             rng_curated = random.Random(int(hashlib.md5(f"{today}-{difficulty}-curated".encode()).hexdigest(), 16))
             rng_curated.shuffle(questions)
-            # Cache for this user
-            cur.execute(
-                f'INSERT INTO daily_questions (game_date, user_id, questions_json) VALUES ({placeholder}, {placeholder}, {placeholder})',
-                (today, user_id, json.dumps(questions))
-            )
-            conn.commit()
-            conn.close()
             return questions
 
     # Get recently used questions to avoid repeats
     recently_used = get_recently_used_questions(difficulty)
 
     # Generate questions using date + difficulty as seed
-    # Use an isolated Random instance to avoid thread-safety issues with the global random state
     seed = int(hashlib.md5(f"{today}-{difficulty}".encode()).hexdigest(), 16)
     rng = random.Random(seed)
 
-    # Choose question bank based on difficulty
     question_bank = HARD_QUESTIONS if difficulty == 'hard' else QUESTIONS
 
     questions = []
@@ -1552,11 +1587,11 @@ def get_daily_questions_for_user(user_id):
         # Filter out recently used questions
         available = [q for q in category_questions if q['q'] not in recently_used]
 
-        # If all questions were recently used, allow repeats from oldest first
+        # If all questions were recently used, allow repeats
         if not available:
             available = category_questions
 
-        # Use seeded random to pick, then fallback if it's still a recent repeat
+        # Use seeded random to pick, prefer non-recently-used
         rng.shuffle(available)
         q = available[0]
         for candidate in available:
@@ -1573,16 +1608,77 @@ def get_daily_questions_for_user(user_id):
         })
 
     rng.shuffle(questions)
-
-    # Cache for this user
-    cur.execute(
-        f'INSERT INTO daily_questions (game_date, user_id, questions_json) VALUES ({placeholder}, {placeholder}, {placeholder})',
-        (today, user_id, json.dumps(questions))
-    )
-    conn.commit()
-    conn.close()
-
     return questions
+
+
+def get_daily_questions_for_user(user_id):
+    """Get today's questions - same for all users at same difficulty.
+    Uses a single global row (user_id=NULL) per (date, difficulty) as the source of truth."""
+    today = get_user_today().isoformat()
+    difficulty = get_user_difficulty(user_id)
+
+    conn = get_db()
+    cur = conn.cursor()
+    ph = get_placeholder()
+
+    # 1. Look for the global row for today's date and difficulty
+    cur.execute(
+        f'SELECT questions_json FROM daily_questions WHERE game_date = {ph} AND difficulty = {ph} AND user_id IS NULL',
+        (today, difficulty)
+    )
+    result = cur.fetchone()
+
+    if result:
+        conn.close()
+        return json.loads(result['questions_json'])
+
+    # 2. No global row yet — generate questions and try to insert
+    questions = _generate_daily_questions(today, difficulty)
+    questions_json = json.dumps(questions)
+
+    if USE_POSTGRES:
+        # Use INSERT ... ON CONFLICT DO NOTHING to handle race conditions
+        cur.execute(
+            f'''INSERT INTO daily_questions (game_date, user_id, difficulty, questions_json)
+                VALUES ({ph}, NULL, {ph}, {ph})
+                ON CONFLICT DO NOTHING''',
+            (today, difficulty, questions_json)
+        )
+        conn.commit()
+
+        # Re-read to get the winning row (in case another request won the race)
+        cur.execute(
+            f'SELECT questions_json FROM daily_questions WHERE game_date = {ph} AND difficulty = {ph} AND user_id IS NULL',
+            (today, difficulty)
+        )
+        result = cur.fetchone()
+        conn.close()
+        if result:
+            return json.loads(result['questions_json'])
+        # Shouldn't happen, but fall back to what we generated
+        return questions
+    else:
+        # SQLite: use INSERT OR IGNORE
+        try:
+            cur.execute(
+                f'''INSERT OR IGNORE INTO daily_questions (game_date, user_id, difficulty, questions_json)
+                    VALUES ({ph}, NULL, {ph}, {ph})''',
+                (today, difficulty, questions_json)
+            )
+            conn.commit()
+        except Exception:
+            conn.rollback()
+
+        # Re-read
+        cur.execute(
+            f'SELECT questions_json FROM daily_questions WHERE game_date = {ph} AND difficulty = {ph} AND user_id IS NULL',
+            (today, difficulty)
+        )
+        result = cur.fetchone()
+        conn.close()
+        if result:
+            return json.loads(result['questions_json'])
+        return questions
 
 
 def calculate_user_stats(user_id):
@@ -2059,8 +2155,8 @@ def logout():
 
 @app.route('/login')
 def login_page():
-    """Login page."""
-    return render_template('login.html')
+    """Redirect to home page where Google sign-in lives."""
+    return redirect(url_for('index'))
 
 
 @app.route('/api/me')
@@ -2884,20 +2980,9 @@ def flush_daily_questions():
         cur.execute(f'DELETE FROM game_results WHERE game_date = {ph}', (today,))
         results_deleted = cur.rowcount
     else:
-        # Delete cached questions matching the specified difficulty
-        cur.execute(f'SELECT id, questions_json FROM daily_questions WHERE game_date = {ph}', (today,))
-        rows = cur.fetchall()
-        ids_to_delete = []
-        for row in rows:
-            try:
-                questions = json.loads(row['questions_json'])
-                if questions and questions[0].get('difficulty') == difficulty:
-                    ids_to_delete.append(row['id'])
-            except:
-                pass
-        for row_id in ids_to_delete:
-            cur.execute(f'DELETE FROM daily_questions WHERE id = {ph}', (row_id,))
-        questions_deleted = len(ids_to_delete)
+        # Delete cached global questions matching the specified difficulty
+        cur.execute(f'DELETE FROM daily_questions WHERE game_date = {ph} AND difficulty = {ph}', (today, difficulty))
+        questions_deleted = cur.rowcount
 
         # Clear game results for today at this difficulty (so everyone can replay it)
         cur.execute(f'DELETE FROM game_results WHERE game_date = {ph} AND COALESCE(difficulty, \'easy\') = {ph}', (today, difficulty))
@@ -3106,8 +3191,7 @@ def reset_today():
     cur = conn.cursor()
     ph = get_placeholder()
 
-    # Delete today's questions and results
-    cur.execute(f'DELETE FROM daily_questions WHERE user_id = {ph} AND game_date = {ph}', (current_user.id, today))
+    # Delete today's game results (global questions row stays intact for other users)
     cur.execute(f'DELETE FROM game_results WHERE user_id = {ph} AND game_date = {ph}', (current_user.id, today))
 
     conn.commit()
