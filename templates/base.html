@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}UpTriv - Daily Brain Training{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Play UpTriv — a free daily trivia game with 6 categories: News, History, Science, Entertainment, Sports, and Geography. New questions every day, beat the clock, track your progress.{% endblock %}">
-    <link rel="canonical" href="{{ request.base_url }}">
+    <link rel="canonical" href="https://www.uptriv.com{{ request.path }}">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -13,7 +13,7 @@
     <meta property="og:title" content="{% block og_title %}UpTriv - Daily Trivia Challenge{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Free daily trivia game — 6 categories, 6 questions, new challenge every day. How many can you get right?{% endblock %}">
     <meta property="og:image" content="{{ url_for('static', filename='banner2.jpg', _external=True) }}">
-    <meta property="og:url" content="{{ request.base_url }}">
+    <meta property="og:url" content="https://www.uptriv.com{{ request.path }}">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
