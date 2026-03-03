@@ -621,7 +621,7 @@ QUESTIONS = {
         {'q': 'How many laps make up a standard NASCAR race at Daytona?', 'a': '200', 'options': ['200', '300', '150', '500'], 'sub': 'misc'},
         {'q': 'What is the farthest distance from the green that counts as "on the green" in golf?', 'a': 'The fringe', 'options': ['The fringe', 'The rough', 'The fairway', 'The collar'], 'sub': 'golf'},
         {'q': 'In baseball, what is the area where batters warm up called?', 'a': 'On-deck circle', 'options': ['On-deck circle', 'Batting cage', 'Warm-up zone', 'Batter\'s box'], 'sub': 'baseball'},
-        {'q': 'How many field goals is a 3-pointer worth in basketball?', 'a': '3 points', 'options': ['3 points', '2 points', '4 points', '1 point'], 'sub': 'basketball'},
+        {'q': 'How many points is a 3-pointer worth in basketball?', 'a': '3 points', 'options': ['3 points', '2 points', '4 points', '1 point'], 'sub': 'basketball'},
         {'q': 'What sport uses a try, conversion, and scrum?', 'a': 'Rugby', 'options': ['Rugby', 'Football', 'Cricket', 'Lacrosse'], 'sub': 'misc'},
         {'q': 'Which NFL position is abbreviated QB?', 'a': 'Quarterback', 'options': ['Quarterback', 'Quaterback', 'Quick blocker', 'Quality back'], 'sub': 'football'},
         {'q': 'What is the blue line in hockey used for?', 'a': 'Marking the offensive zone', 'options': ['Marking the offensive zone', 'Marking the goal area', 'Penalty area', 'Center ice'], 'sub': 'hockey'},
