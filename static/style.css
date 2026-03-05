@@ -3,24 +3,24 @@
    ============================================ */
 
 :root {
-    --bg-primary: #0a0a0f;
-    --bg-secondary: #12121a;
-    --bg-card: #1a1a24;
-    --bg-hover: #22222e;
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0b0;
-    --text-muted: #606070;
-    --border: #2a2a3a;
+    --bg-primary: #0E0C08;
+    --bg-secondary: #171410;
+    --bg-card: #1F1C16;
+    --bg-hover: #2A2620;
+    --text-primary: #EDE8D8;
+    --text-secondary: #9E8E72;
+    --text-muted: #5E5040;
+    --border: #302A20;
     --accent-news: #FF6B6B;
     --accent-history: #4ECDC4;
     --accent-science: #45B7D1;
-    --accent-entertainment: #96CEB4;
-    --accent-sports: #FFEAA7;
-    --accent-primary: #667eea;
-    --accent-secondary: #764ba2;
+    --accent-entertainment: #7EC8A0;
+    --accent-sports: #F4C87A;
+    --accent-primary: #F59E0B;
+    --accent-secondary: #D97706;
     --success: #22c55e;
     --error: #ef4444;
-    --warning: #eab308;
+    --warning: #F59E0B;
 }
 
 * {
@@ -30,7 +30,7 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Syne', sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
     min-height: 100vh;
@@ -51,7 +51,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(10, 10, 15, 0.9);
+    background: rgba(14, 12, 8, 0.94);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
 }
@@ -71,7 +71,7 @@ nav {
     align-items: center;
     text-decoration: none;
     flex-shrink: 0;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.4rem;
     font-weight: 700;
     color: #ffffff !important;
@@ -79,7 +79,7 @@ nav {
 }
 
 .logo-accent {
-    color: #4ECDC4;
+    color: var(--accent-primary);
 }
 
 .nav-links {
@@ -195,7 +195,7 @@ footer {
 .hero {
     padding: 2.5rem 2rem;
     text-align: center;
-    background: radial-gradient(ellipse at top, rgba(102, 126, 234, 0.15) 0%, transparent 60%);
+    background: radial-gradient(ellipse at top, rgba(245, 158, 11, 0.1) 0%, transparent 60%);
 }
 
 .hero-content {
@@ -204,11 +204,11 @@ footer {
 }
 
 .hero h1 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 800;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%);
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -232,12 +232,12 @@ footer {
     font-weight: 600;
     font-size: 1rem;
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
 }
 
 .cta-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 6px 30px rgba(245, 158, 11, 0.45);
 }
 
 /* ============================================
@@ -251,7 +251,7 @@ footer {
 }
 
 .categories-preview h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.25rem;
     text-align: center;
     margin-bottom: 1rem;
@@ -308,7 +308,7 @@ footer {
 }
 
 .category-card h3 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 0.9rem;
     color: var(--cat-color);
     margin-bottom: 0.25rem;
@@ -330,7 +330,7 @@ footer {
 }
 
 .how-it-works h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.25rem;
     text-align: center;
     margin-bottom: 1rem;
@@ -357,14 +357,14 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1rem;
     font-weight: 700;
     margin: 0 auto 0.5rem;
 }
 
 .step h3 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 0.95rem;
     margin-bottom: 0.25rem;
 }
@@ -424,7 +424,7 @@ footer {
 }
 
 .login-card h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.75rem;
     margin-bottom: 0.5rem;
 }
@@ -485,7 +485,7 @@ footer {
 
 .difficulty-btn.active {
     border-color: var(--accent-primary);
-    background: rgba(102, 126, 234, 0.15);
+    background: rgba(245, 158, 11, 0.12);
 }
 
 .difficulty-btn.active[data-difficulty="hard"] {
@@ -515,12 +515,12 @@ footer {
 .profile-quiz-btn {
     text-decoration: none;
     border-color: var(--accent-secondary);
-    background: rgba(118, 75, 162, 0.1);
+    background: rgba(245, 158, 11, 0.08);
 }
 
 .profile-quiz-btn:hover {
     border-color: var(--accent-secondary);
-    background: rgba(118, 75, 162, 0.2);
+    background: rgba(245, 158, 11, 0.15);
 }
 
 .profile-quiz-btn .diff-label {
@@ -545,7 +545,7 @@ footer {
 
 .play-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
 }
 
 /* Countdown Screen */
@@ -558,7 +558,7 @@ footer {
 }
 
 .countdown-number {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 8rem;
     font-weight: 700;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
@@ -609,14 +609,14 @@ footer {
 }
 
 .question-counter {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1rem;
     color: var(--text-secondary);
 }
 
 .category-badge {
     padding: 0.5rem 1rem;
-    background: rgba(102, 126, 234, 0.2);
+    background: rgba(245, 158, 11, 0.15);
     border-radius: 20px;
     font-weight: 500;
     font-size: 0.9rem;
@@ -630,7 +630,7 @@ footer {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -661,10 +661,11 @@ footer {
 }
 
 .question-text {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Lora', serif;
     font-size: 1.35rem;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.55;
+    font-weight: 400;
 }
 
 .options-grid {
@@ -714,7 +715,7 @@ footer {
 
 .option-btn.selected {
     border-color: var(--accent-primary);
-    background: rgba(102, 126, 234, 0.2);
+    background: rgba(245, 158, 11, 0.15);
 }
 
 .option-btn.correct {
@@ -769,7 +770,7 @@ footer {
 }
 
 .feedback-text {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.5rem;
     font-weight: 600;
     margin-top: 0.5rem;
@@ -811,7 +812,7 @@ footer {
 }
 
 .results-score-line {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -1019,7 +1020,7 @@ footer {
 }
 
 .already-played-card h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.75rem;
     margin-bottom: 0.5rem;
 }
@@ -1131,7 +1132,7 @@ footer {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
 }
 
 .btn-secondary {
@@ -1164,7 +1165,7 @@ footer {
 }
 
 .profile-header h1 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 2rem;
 }
 
@@ -1218,7 +1219,7 @@ footer {
 }
 
 .no-data-state h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     margin-bottom: 0.5rem;
 }
 
@@ -1292,7 +1293,7 @@ footer {
 }
 
 .overall-pct {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.75rem;
     font-weight: 700;
     position: relative;
@@ -1369,7 +1370,7 @@ footer {
 }
 
 .insight-card h3 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1427,7 +1428,7 @@ footer {
 }
 
 .section-title {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.5rem;
     display: flex;
     align-items: center;
@@ -1484,7 +1485,7 @@ footer {
 }
 
 .subcat-cat-name {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 600;
     font-size: 1rem;
 }
@@ -1549,7 +1550,7 @@ footer {
 }
 
 .subcat-pct {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 600;
     font-size: 0.9rem;
     text-align: right;
@@ -1596,7 +1597,7 @@ footer {
     padding: 0.5rem 1.25rem;
     border-radius: 50px;
     border: 2px solid;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
 }
 
 .skill-level {
@@ -1635,7 +1636,7 @@ footer {
 }
 
 .recommendations-title {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.25rem;
     display: flex;
     align-items: center;
@@ -1736,7 +1737,7 @@ footer {
 
 .rec-title {
     display: block;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 600;
     font-size: 1rem;
     color: var(--text-primary);
@@ -1921,7 +1922,7 @@ a.rec-title:hover {
 }
 
 .history-header h1 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 2rem;
     margin-bottom: 0.5rem;
 }
@@ -1974,7 +1975,7 @@ a.rec-title:hover {
 }
 
 .stats-header h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
     margin: 0;
@@ -2014,7 +2015,7 @@ a.rec-title:hover {
 }
 
 .stat-label {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 600;
     font-size: 0.95rem;
 }
@@ -2032,7 +2033,7 @@ a.rec-title:hover {
 }
 
 .stat-pct {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 600;
     font-size: 0.9rem;
     color: var(--text-secondary);
@@ -2069,7 +2070,7 @@ a.rec-title:hover {
 }
 
 .diff-bar-pct {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 600;
     font-size: 0.8rem;
     color: var(--text-secondary);
@@ -2129,7 +2130,7 @@ a.rec-title:hover {
 }
 
 .subcat-pct {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 600;
     font-size: 0.85rem;
     min-width: 40px;
@@ -2250,7 +2251,7 @@ a.rec-title:hover {
 }
 
 .game-date {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 600;
     font-size: 1rem;
 }
@@ -2266,7 +2267,7 @@ a.rec-title:hover {
 }
 
 .difficulty-badge.easy {
-    background: rgba(102, 126, 234, 0.15);
+    background: rgba(245, 158, 11, 0.12);
     color: var(--accent-primary);
 }
 
@@ -2293,7 +2294,7 @@ a.rec-title:hover {
 
 .date-header h3 {
     margin: 0;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -2340,7 +2341,7 @@ a.rec-title:hover {
 }
 
 .difficulty-label.easy {
-    background: rgba(102, 126, 234, 0.15);
+    background: rgba(245, 158, 11, 0.12);
     color: var(--accent-primary);
 }
 
@@ -2640,7 +2641,7 @@ a.rec-title:hover {
 }
 
 .friends-header h1 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 2rem;
     margin-bottom: 0.5rem;
 }
@@ -2674,7 +2675,7 @@ a.rec-title:hover {
 }
 
 .username-value {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
@@ -2750,7 +2751,7 @@ a.rec-title:hover {
 }
 
 .friends-section h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.25rem;
     margin-bottom: 1rem;
     display: flex;
@@ -2808,7 +2809,7 @@ a.rec-title:hover {
 
 .friend-card.pending {
     border-color: var(--accent-primary);
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(245, 158, 11, 0.08);
 }
 
 .friend-info {
@@ -2959,7 +2960,7 @@ a.rec-title:hover {
 }
 
 .leaderboard-header h1 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 2rem;
     margin-bottom: 0.5rem;
 }
@@ -3059,12 +3060,12 @@ a.rec-title:hover {
 }
 
 .leaderboard-row.current-user {
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(245, 158, 11, 0.08);
     border-left: 4px solid var(--accent-primary);
 }
 
 .rank {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-muted);
@@ -3099,7 +3100,7 @@ a.rec-title:hover {
 }
 
 .score-pct {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.1rem;
     font-weight: 700;
     text-align: right;
@@ -3118,7 +3119,7 @@ a.rec-title:hover {
 }
 
 .no-friends-message h3 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Syne', sans-serif;
     margin-bottom: 0.5rem;
 }
 
@@ -3366,8 +3367,8 @@ a.rec-title:hover {
 }
 
 .recommendation.easy {
-    background: rgba(102, 126, 234, 0.1);
-    border: 1px solid rgba(102, 126, 234, 0.3);
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 .rec-icon {
