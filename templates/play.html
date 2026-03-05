@@ -539,7 +539,10 @@ async function selectAnswer(answer) {
             category: questions[currentQuestionIndex].category_name,
             categoryKey: questions[currentQuestionIndex].category,
             color: questions[currentQuestionIndex].color,
-            correct: correct
+            correct: correct,
+            question: questions[currentQuestionIndex].question,
+            userAnswer: answer,
+            correctAnswer: data.correct_answer
         });
 
         if (correct) score++;
@@ -654,11 +657,16 @@ function showResults() {
         item.className = `result-item ${r.correct ? 'correct' : 'incorrect'}`;
         item.style.animationDelay = `${i * 0.1}s`;
         const pct = r.percent_correct || 0;
+        const answerLine = r.correct
+            ? `<span class="result-answer correct-answer">✓ ${r.correctAnswer}</span>`
+            : `<span class="result-answer wrong-answer">✗ ${r.userAnswer || 'No answer'}</span>
+               <span class="result-answer correct-answer">✓ ${r.correctAnswer}</span>`;
         item.innerHTML = `
             <div class="result-main">
                 <span class="result-category" style="color: ${r.color}">${r.category}</span>
-                <span class="result-icon">${r.correct ? '✓' : '✗'}</span>
             </div>
+            <p class="result-question">${r.question}</p>
+            <div class="result-answers">${answerLine}</div>
             <span class="result-percent">${pct}% got it right</span>
         `;
         breakdown.appendChild(item);

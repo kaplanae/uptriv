@@ -896,6 +896,34 @@ footer {
     color: var(--error);
 }
 
+.result-question {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0.25rem 0 0.4rem 0;
+    line-height: 1.35;
+}
+
+.result-answers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.25rem;
+}
+
+.result-answer {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.result-answer.correct-answer {
+    color: var(--success);
+}
+
+.result-answer.wrong-answer {
+    color: var(--error);
+    text-decoration: line-through;
+}
+
 .result-percent {
     font-size: 0.8rem;
     color: var(--text-muted);
