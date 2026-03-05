@@ -3,24 +3,24 @@
    ============================================ */
 
 :root {
-    --bg-primary: #F8F8F5;
-    --bg-secondary: #F0F0EC;
-    --bg-card: #FFFFFF;
-    --bg-hover: #EBEBEB;
-    --text-primary: #111111;
-    --text-secondary: #525252;
-    --text-muted: #9CA3AF;
-    --border: #E2E2E2;
-    --accent-news: #DC2626;
-    --accent-history: #0D9488;
-    --accent-science: #0284C7;
-    --accent-entertainment: #059669;
-    --accent-sports: #D97706;
-    --accent-primary: #2563EB;
-    --accent-secondary: #1D4ED8;
-    --success: #16A34A;
-    --error: #DC2626;
-    --warning: #D97706;
+    --bg-primary: #09090B;
+    --bg-secondary: #111113;
+    --bg-card: #18181B;
+    --bg-hover: #232326;
+    --text-primary: #FAFAFA;
+    --text-secondary: #A1A1AA;
+    --text-muted: #52525B;
+    --border: #27272A;
+    --accent-news: #F87171;
+    --accent-history: #34D399;
+    --accent-science: #38BDF8;
+    --accent-entertainment: #A78BFA;
+    --accent-sports: #FCD34D;
+    --accent-primary: #06B6D4;
+    --accent-secondary: #0891B2;
+    --success: #22C55E;
+    --error: #EF4444;
+    --warning: #F59E0B;
 }
 
 * {
@@ -51,7 +51,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(248, 248, 245, 0.97);
+    background: rgba(9, 9, 11, 0.92);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
 }
@@ -195,7 +195,7 @@ footer {
 .hero {
     padding: 2.5rem 2rem;
     text-align: center;
-    background: linear-gradient(180deg, #EBF3FF 0%, var(--bg-primary) 75%);
+    background: radial-gradient(ellipse at top, rgba(6, 182, 212, 0.12) 0%, transparent 65%);
 }
 
 .hero-content {
@@ -230,12 +230,12 @@ footer {
     font-weight: 600;
     font-size: 1rem;
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
 }
 
 .cta-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 6px 30px rgba(6, 182, 212, 0.4);
 }
 
 /* ============================================
@@ -483,7 +483,7 @@ footer {
 
 .difficulty-btn.active {
     border-color: var(--accent-primary);
-    background: rgba(37, 99, 235, 0.08);
+    background: rgba(6, 182, 212, 0.1);
 }
 
 .difficulty-btn.active[data-difficulty="hard"] {
@@ -513,12 +513,12 @@ footer {
 .profile-quiz-btn {
     text-decoration: none;
     border-color: var(--accent-secondary);
-    background: rgba(37, 99, 235, 0.05);
+    background: rgba(6, 182, 212, 0.07);
 }
 
 .profile-quiz-btn:hover {
     border-color: var(--accent-secondary);
-    background: rgba(37, 99, 235, 0.1);
+    background: rgba(6, 182, 212, 0.12);
 }
 
 .profile-quiz-btn .diff-label {
@@ -543,7 +543,7 @@ footer {
 
 .play-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
 }
 
 /* Countdown Screen */
@@ -614,7 +614,7 @@ footer {
 
 .category-badge {
     padding: 0.5rem 1rem;
-    background: rgba(37, 99, 235, 0.1);
+    background: rgba(6, 182, 212, 0.12);
     border-radius: 20px;
     font-weight: 500;
     font-size: 0.9rem;
@@ -713,7 +713,7 @@ footer {
 
 .option-btn.selected {
     border-color: var(--accent-primary);
-    background: rgba(37, 99, 235, 0.1);
+    background: rgba(6, 182, 212, 0.12);
 }
 
 .option-btn.correct {
@@ -1130,7 +1130,7 @@ footer {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
 }
 
 .btn-secondary {
@@ -2265,7 +2265,7 @@ a.rec-title:hover {
 }
 
 .difficulty-badge.easy {
-    background: rgba(37, 99, 235, 0.08);
+    background: rgba(6, 182, 212, 0.1);
     color: var(--accent-primary);
 }
 
@@ -2339,7 +2339,7 @@ a.rec-title:hover {
 }
 
 .difficulty-label.easy {
-    background: rgba(37, 99, 235, 0.08);
+    background: rgba(6, 182, 212, 0.1);
     color: var(--accent-primary);
 }
 
@@ -2807,7 +2807,7 @@ a.rec-title:hover {
 
 .friend-card.pending {
     border-color: var(--accent-primary);
-    background: rgba(37, 99, 235, 0.05);
+    background: rgba(6, 182, 212, 0.07);
 }
 
 .friend-info {
@@ -3058,7 +3058,7 @@ a.rec-title:hover {
 }
 
 .leaderboard-row.current-user {
-    background: rgba(37, 99, 235, 0.05);
+    background: rgba(6, 182, 212, 0.07);
     border-left: 4px solid var(--accent-primary);
 }
 
@@ -3365,8 +3365,8 @@ a.rec-title:hover {
 }
 
 .recommendation.easy {
-    background: rgba(37, 99, 235, 0.05);
-    border: 1px solid rgba(37, 99, 235, 0.2);
+    background: rgba(6, 182, 212, 0.07);
+    border: 1px solid rgba(6, 182, 212, 0.25);
 }
 
 .rec-icon {
