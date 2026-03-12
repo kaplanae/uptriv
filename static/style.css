@@ -188,6 +188,63 @@ footer {
     font-size: 0.85rem;
 }
 
+footer a {
+    color: var(--text-muted);
+    text-decoration: underline;
+}
+
+/* ============================================
+   PRIVACY PAGE
+   ============================================ */
+
+.privacy-page {
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 0 1.5rem 4rem;
+}
+
+.privacy-page h1 {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+}
+
+.privacy-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2.5rem;
+}
+
+.privacy-page section {
+    margin-bottom: 2rem;
+}
+
+.privacy-page h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.privacy-page h3 {
+    font-size: 1rem;
+    margin: 1rem 0 0.25rem;
+    color: var(--text);
+}
+
+.privacy-page p, .privacy-page li {
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.privacy-page ul {
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.privacy-page a {
+    color: var(--accent);
+}
+
 /* ============================================
    HERO SECTION
    ============================================ */
@@ -204,12 +261,11 @@ footer {
 }
 
 .hero h1 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 2.75rem;
-    font-weight: 800;
+    font-weight: 600;
     margin-bottom: 0.5rem;
     color: var(--text-primary);
-    letter-spacing: -0.02em;
 }
 
 .hero-subtitle {
@@ -249,7 +305,7 @@ footer {
 }
 
 .categories-preview h2 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 1.25rem;
     text-align: center;
     margin-bottom: 1rem;
@@ -328,7 +384,7 @@ footer {
 }
 
 .how-it-works h2 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 1.25rem;
     text-align: center;
     margin-bottom: 1rem;

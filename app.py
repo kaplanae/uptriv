@@ -56,6 +56,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login_page'
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    from flask import request as req
+    return redirect(url_for('login_page', _external=True, next=req.path), 302)
+
 # OAuth setup
 oauth = OAuth(app)
 google = None
@@ -2156,7 +2161,7 @@ def logout():
 @app.route('/login')
 def login_page():
     """Redirect to home page where Google sign-in lives."""
-    return redirect(url_for('index'))
+    return redirect(url_for('index', _external=True))
 
 
 @app.route('/api/me')
@@ -2787,13 +2792,21 @@ def sitemap_xml():
     urls = [
         ('https://www.uptriv.com/', today, '1.0', 'daily'),
         ('https://www.uptriv.com/play', today, '0.9', 'daily'),
+        ('https://www.uptriv.com/privacy', today, '0.3', 'monthly'),
     ]
 
     # Add public user profiles
     try:
         conn = get_db()
         cur = conn.cursor()
-        cur.execute("SELECT username FROM users WHERE username IS NOT NULL AND username != ''")
+        cur.execute("""
+            SELECT u.username FROM users u
+            WHERE u.username IS NOT NULL AND u.username != ''
+            AND EXISTS (
+                SELECT 1 FROM game_results g WHERE g.user_id = u.id
+                GROUP BY g.user_id HAVING COUNT(DISTINCT g.game_date) >= 3
+            )
+        """)
         users = cur.fetchall()
         conn.close()
         for u in users:
@@ -2815,11 +2828,20 @@ def sitemap_xml():
 
 @app.route('/')
 def index():
+    if request.args:
+        return redirect(url_for('index', _external=True), 301)
     return render_template('index.html', categories=CATEGORIES)
+
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
 
 
 @app.route('/play')
 def play():
+    if request.args:
+        return redirect(url_for('play', _external=True), 301)
     return render_template('play.html', categories=CATEGORIES)
 
 
@@ -2831,7 +2853,7 @@ def onboarding():
 @app.route('/profile')
 def profile():
     # Redirect to the new Profile page (formerly History)
-    return redirect(url_for('history'))
+    return redirect(url_for('history', _external=True))
 
 
 @app.route('/profile/<username>')
@@ -2847,7 +2869,46 @@ def history():
 
 @app.route('/history/<username>')
 def history_user(username):
-    return render_template('history.html', categories=CATEGORIES, view_username=username)
+    if request.args:
+        return redirect(url_for('history_user', username=username, _external=True), 301)
+    # Pre-fetch basic stats for server-side rendering (SEO)
+    profile_stats = None
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        p = '%s' if USE_POSTGRES else '?'
+        cur.execute(f'SELECT id FROM users WHERE username = {p}', (username,))
+        user_row = cur.fetchone()
+        if user_row:
+            uid = user_row['id']
+            cur.execute(f'''
+                SELECT COUNT(DISTINCT game_date) AS games_played,
+                       SUM(correct) AS total_correct,
+                       COUNT(*) AS total_questions
+                FROM game_results WHERE user_id = {p}
+            ''', (uid,))
+            overall = cur.fetchone()
+            cur.execute(f'''
+                SELECT category,
+                       SUM(correct) * 100 / COUNT(*) AS cat_pct
+                FROM game_results WHERE user_id = {p}
+                GROUP BY category ORDER BY cat_pct DESC LIMIT 1
+            ''', (uid,))
+            best = cur.fetchone()
+            if overall and overall['games_played']:
+                total_q = overall['total_questions']
+                overall_pct = round(overall['total_correct'] * 100 / total_q) if total_q else 0
+                profile_stats = {
+                    'games_played': overall['games_played'],
+                    'overall_pct': overall_pct,
+                    'best_category': best['category'].title() if best else None,
+                    'best_pct': best['cat_pct'] if best else None,
+                }
+        cur.close()
+        conn.close()
+    except Exception:
+        pass
+    return render_template('history.html', categories=CATEGORIES, view_username=username, profile_stats=profile_stats)
 
 
 @app.route('/friends')
